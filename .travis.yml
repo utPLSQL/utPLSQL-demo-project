@@ -1,0 +1,53 @@
+sudo: required
+
+language: java
+jdk:
+  - oraclejdk8
+
+addons:
+  sonarqube:
+    token:
+      secure: ${SONAR_TOKEN}
+    branches:
+      - develop
+      - master
+
+cache:
+  directories:
+    - node_modules
+
+env:
+  global:
+    #Oracle 11g XE R2 variables
+    - ORACLE_COOKIE=sqldev
+    - ORACLE_FILE=oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
+    - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+    - ORACLE_SID=XE
+    # utPLSQL variables
+    - UTPLSQL_VERSION="v3.0.0-beta"
+    - UTPLSQL_FILE="utPLSQLv3.0.0.562-beta"
+    # project variables
+    - DB_USER=ut3_demo
+    - DB_PASS=LHZYPbWvYdu2ctp8
+
+before_install:
+  # download Oracle XE installer for Travis
+  - curl -L -O 'https://github.com/cbandy/travis-oracle/archive/v2.0.1.tar.gz'
+  - mkdir -p .travis/oracle
+  - tar x -C .travis/oracle --strip-components=1 -f v2.0.1.tar.gz
+  # download utPLSQL
+  - curl -L -O "https://github.com/utPLSQL/utPLSQL/releases/download/${UTPLSQL_VERSION}/${UTPLSQL_FILE}.tar.gz"
+  - tar -xzf ${UTPLSQL_FILE}.tar.gz
+  - cp ${UTPLSQL_FILE}/client_source/sqlplus/ut_run.sql .
+
+install:
+  - . .travis/oracle/download.sh
+  - . .travis/oracle/install.sh
+  #
+  - . .travis/setup_account.sh
+  - . .travis/install_utplsql.sh
+  - . source/install.sh
+  - . test/install.sh
+
+script:
+  - . tests/run.sh
