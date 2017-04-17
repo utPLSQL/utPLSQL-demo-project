@@ -6,22 +6,20 @@ jdk:
 
 addons:
   sonarqube:
+    organization: utplsql
     token:
       secure: ${SONAR_TOKEN}
     branches:
       - develop
       - master
 
-cache:
-  directories:
-    - node_modules
-
 env:
   global:
     #Oracle 11g XE R2 variables
-    - ORACLE_COOKIE=sqldev
-    - ORACLE_FILE=oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
     - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+    - ORACLE_FILE=oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
+    #Adding SQLPlus to path
+    - PATH=$PATH:$ORACLE_HOME/bin
     - ORACLE_SID=XE
     # utPLSQL variables
     - UTPLSQL_VERSION="v3.0.0-beta"
@@ -31,23 +29,30 @@ env:
     - DB_PASS=LHZYPbWvYdu2ctp8
 
 before_install:
+  - npm install -g phantomjs-prebuilt casperjs
   # download Oracle XE installer for Travis
   - curl -L -O 'https://github.com/cbandy/travis-oracle/archive/v2.0.1.tar.gz'
   - mkdir -p .travis/oracle
   - tar x -C .travis/oracle --strip-components=1 -f v2.0.1.tar.gz
+#  - .travis/oracle/download.sh
+  - bash .travis/download.sh -p xe11g
   # download utPLSQL
   - curl -L -O "https://github.com/utPLSQL/utPLSQL/releases/download/${UTPLSQL_VERSION}/${UTPLSQL_FILE}.tar.gz"
   - tar -xzf ${UTPLSQL_FILE}.tar.gz
   - cp ${UTPLSQL_FILE}/client_source/sqlplus/ut_run.sql .
 
 install:
-  - . .travis/oracle/download.sh
-  - . .travis/oracle/install.sh
-  #
-  - . .travis/setup_account.sh
-  - . .travis/install_utplsql.sh
-  - . source/install.sh
-  - . test/install.sh
+  # Install Oracle Database
+  - .travis/oracle/install.sh
+  # Install utPLSQL
+  - .travis/install_utplsql.sh
+  - .travis/setup_account.sh
+  # Instal project sources and tests
+  - source/install.sh
+  - test/install.sh
 
 script:
-  - . tests/run.sh
+  # Run tests
+  - test/run.sh
+  # Run sonar scanner and publish to sonar
+  - sonar-scanner

@@ -2,4 +2,6 @@
 
 set -ev
 
-"$ORACLE_HOME/bin/sqlplus" /nolog ${DB_USER}/${DB_PASS} @ut_run -f=ut_documentation_reporter -s -f=ut_sonar_coverage_reporter -o=sonar-coverage.xml
+CURRENT_DIR="$(dirname "$(readlink -f "$0")")"
+
+sqlplus ${DB_USER}/${DB_PASS} @${CURRENT_DIR}/run.sql
