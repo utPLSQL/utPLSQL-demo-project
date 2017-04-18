@@ -3,7 +3,7 @@
 set -ev
 
 #adding sonar test reporter
-sqlplus -L -S / <<SQL
+sqlplus -L -S / AS SYSDBA <<SQL
 alter session set current_schema=ut3;
 
 @@test/ut_sonar_test_reporter.tps
