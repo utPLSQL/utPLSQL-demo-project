@@ -16,8 +16,9 @@ addons:
 env:
   global:
     #Oracle 11g XE R2 variables
-    - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+    - ORACLE_COOKIE=sqldev
     - ORACLE_FILE=oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
+    - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
     #Adding SQLPlus to path
     - PATH=$PATH:$ORACLE_HOME/bin
     - ORACLE_SID=XE
@@ -31,11 +32,11 @@ env:
 before_install:
   - npm install -g phantomjs-prebuilt casperjs
   # download Oracle XE installer for Travis
-  - curl -L -O 'https://github.com/cbandy/travis-oracle/archive/v2.0.1.tar.gz'
-  - mkdir -p .travis/oracle
-  - tar x -C .travis/oracle --strip-components=1 -f v2.0.1.tar.gz
-#  - .travis/oracle/download.sh
-  - bash .travis/download.sh -p xe11g
+#  - curl -L -O 'https://github.com/cbandy/travis-oracle/archive/v2.0.1.tar.gz'
+#  - mkdir -p .travis/oracle
+#  - tar x -C .travis/oracle --strip-components=1 -f v2.0.1.tar.gz
+  - .travis/oracle/download.sh
+#  - bash .travis/download.sh -p xe11g
   # download utPLSQL
   - curl -L -O "https://github.com/utPLSQL/utPLSQL/releases/download/${UTPLSQL_VERSION}/${UTPLSQL_FILE}.tar.gz"
   - tar -xzf ${UTPLSQL_FILE}.tar.gz
