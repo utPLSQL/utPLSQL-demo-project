@@ -2,7 +2,7 @@
 
 set -ev
 
-cd $UTPLSQL_FILE/source
+cd $UTPLSQL_DIR/source
 
 sqlplus -S -L / AS SYSDBA @install_headless.sql
 
