@@ -17,7 +17,18 @@ create or replace package body test_betwnstr as
 
   procedure null_string is
   begin
-    ut.expect( betwnstr( null, 2, 5 ) ).to_( be_null );
+    ut.expect( betwnstr( null, 2, 5 ) ).to_( be_null() );
+  end;
+
+  procedure bad_params is
+  begin
+    ut.expect( betwnstr( '1234567', 'a', 'b' ) ).to_( be_null() );
+  end;
+
+  procedure bad_test
+  is
+  begin
+    ut.expect( betwnstr( '1234567', 0, 500 ) ).to_( equal('1') );
   end;
 
   procedure disabled_test is
