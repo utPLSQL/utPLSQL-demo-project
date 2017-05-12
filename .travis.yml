@@ -48,6 +48,6 @@ install:
 
 script:
   # Run tests
-  - ./ut_run ${DB_USER}/${DB_PASS} -source_path=source -test_path=test -f=ut_documentation_reporter -c -f=ut_coverage_sonar_reporter -o=coverage.xml -f=ut_sonar_test_reporter -o=test_results.xml
+  - ./ut_run ${DB_USER}/${DB_PASS} -f=ut_documentation_reporter -c -f=ut_coverage_sonar_reporter -o=coverage.xml -f=ut_sonar_test_reporter -o=test_results.xml
   # Run sonar scanner and publish to sonar
   - sonar-scanner
