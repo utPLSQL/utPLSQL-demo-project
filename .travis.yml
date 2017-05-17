@@ -34,7 +34,8 @@ before_install:
   - .travis/oracle/download.sh
   # download latest utPLSQL develop branch
   - git clone --depth 1 --branch develop https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
-  - cp ${UTPLSQL_DIR}/client_source/sqlplus/* .
+  - curl -Lk -o client.zip $(curl --silent https://api.github.com/repos/utPLSQL/utPLSQL-sql-cli/releases/latest | awk '/zipball_url/ { print $2 }' | sed -r 's/"|,//g')
+  - echo $(unzip -d client client.zip && f=(client/*) && mv client/*/* . && rm -rf "${f[@]}")
 
 install:
   # Install Oracle Database
@@ -48,6 +49,6 @@ install:
 
 script:
   # Run tests
-  - ./ut_run ${DB_USER}/${DB_PASS} -f=ut_documentation_reporter -c -f=ut_coverage_sonar_reporter -o=coverage.xml -f=ut_sonar_test_reporter -o=test_results.xml
+  - ./ut_run ${DB_USER}/${DB_PASS} -source_path=source -test_path=test -f=ut_documentation_reporter -c -f=ut_coverage_sonar_reporter -o=coverage.xml -f=ut_sonar_test_reporter -o=test_results.xml
   # Run sonar scanner and publish to sonar
   - sonar-scanner
