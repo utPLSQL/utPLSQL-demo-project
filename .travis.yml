@@ -32,12 +32,14 @@ before_install:
   - npm install -g phantomjs-prebuilt casperjs
   # download Oracle XE installer for Travis
   - .travis/oracle/download.sh
-  # download latest utPLSQL develop branch
-  - git clone --depth 1 --branch develop https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
-  - curl -Lk -o client.zip $(curl --silent https://api.github.com/repos/utPLSQL/utPLSQL-sql-cli/releases/latest | awk '/zipball_url/ { print $2 }' | sed -r 's/"|,//g')
-  - echo $(unzip -d client client.zip && f=(client/*) && mv client/*/* . && rm -rf "${f[@]}")
+  # download latest utPLSQL release
+  - curl -LOk $(curl --silent https://api.github.com/repos/utPLSQL/utPLSQL/releases/latest | awk '/browser_download_url/ { print $2 }' | grep ".zip" | sed 's/"//g')
+  # download utPLSQL-cli develop
+  - curl -Lk -o utPLSQL-cli.zip https://bintray.com/viniciusam/utPLSQL-cli/download_file?file_path=utPLSQL-cli-develop-201706191645.zip
 
 install:
+  - unzip utPLSQL.zip
+  - unzip utPLSQL-cli.zip
   # Install Oracle Database
   - .travis/oracle/install.sh
   # Install utPLSQL
@@ -49,6 +51,6 @@ install:
 
 script:
   # Run tests
-  - ./ut_run ${DB_USER}/${DB_PASS} -source_path=source -test_path=test -f=ut_documentation_reporter -c -f=ut_coverage_sonar_reporter -o=coverage.xml -f=ut_sonar_test_reporter -o=test_results.xml
+  - utPLSQL-cli/bin/utplsql run ${DB_USER}/${DB_PASS} -source_path=source -test_path=test -f=ut_documentation_reporter -c -f=ut_coverage_sonar_reporter -o=coverage.xml -f=ut_sonar_test_reporter -o=test_results.xml
   # Run sonar scanner and publish to sonar
   - sonar-scanner
