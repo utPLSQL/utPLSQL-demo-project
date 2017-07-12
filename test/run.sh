@@ -2,6 +2,4 @@
 
 set -ev
 
-CURRENT_DIR="$(dirname "$(readlink -f "$0")")"
-
-sqlplus ${DB_USER}/${DB_PASS} @${CURRENT_DIR}/run.sql
+utPLSQL-cli/bin/utplsql run ${DB_USER}/${DB_PASS}@${ORACLE_SID} -source_path=source -test_path=test -f=ut_documentation_reporter -c -f=ut_coverage_sonar_reporter -o=coverage.xml -f=ut_sonar_test_reporter -o=test_results.xml
