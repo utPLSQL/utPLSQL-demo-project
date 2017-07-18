@@ -5,7 +5,7 @@ jdk:
   - oraclejdk8
 
 addons:
-  sonarqube:
+  sonarcloud:
     organization: utplsql
     token:
       secure: ${SONAR_TOKEN}
