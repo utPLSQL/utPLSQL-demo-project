@@ -1,5 +1,5 @@
 [![build](https://img.shields.io/travis/utPLSQL/utPLSQL-demo-project/develop.svg?label=develop%20branch)](https://travis-ci.org/utPLSQL/utPLSQL-demo-project)
-[![sonar](https://sonarcloud.io/api/badges/gate?key=utPLSQL%3AutPLSQL-demo-project)](https://sonarcloud.io/dashboard/index?id=utPLSQL%3AutPLSQL-demo-project)
+[![sonar](https://sonarcloud.io/api/badges/gate?key=utPLSQL%3AutPLSQL-demo-project%3Adevelop)](https://sonarcloud.io/dashboard/index?id=utPLSQL%3AutPLSQL-demo-project%3Adevelop)
 
 
 # CI/CD and Unit Testing for Oracle PLSQL
