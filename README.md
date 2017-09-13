@@ -5,7 +5,7 @@
 # CI/CD and Unit Testing for Oracle PLSQL
 Demo project using utPLSQL, Travis and SonarCloud for continuous integration of PLSQL and SQL code. 
 
-
+---------
 This is a demo project using [utPLSQL v3](https://github.com/utPLSQL/utPLSQL) for unit testing of Oracle PLSQL code.
 The project is also taking benefit of Continuous Integration with Travis CI server as well as static code analysis, code coverage and test results reporting using SoanrQube.
 
