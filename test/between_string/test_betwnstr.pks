@@ -1,6 +1,7 @@
 create or replace package test_betwnstr as
 
   -- %suite(Between string function)
+  -- %suitepath(org.utplsql.demo)
 
   -- %test(Returns substring from start position to end position)
   procedure normal_case;
