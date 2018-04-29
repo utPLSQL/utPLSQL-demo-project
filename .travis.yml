@@ -30,18 +30,33 @@ env:
     - UTPLSQL_DIR="utPLSQL"
     - ORA_SDTZ='Europe/London' #Needed as a client parameter
     - TZ='Europe/London'       #Needed as a DB Server parameter
+    ##utPLSQL-cli variables
+    - UTPLSQL_CLI_VERSION="3.1.0"
+    - CACHE_DIR=$HOME/.cache
+    - MAVEN_HOME=/usr/local/maven
+    - MAVEN_CFG=$HOME/.m2
+
+cache:
+  pip: true
+  directories:
+    - $CACHE_DIR
+    - node_modules
+    - $MAVEN_CFG
+
 before_install:
   - npm install -g phantomjs-prebuilt casperjs
   # download Oracle XE installer for Travis
   - .travis/oracle/download.sh
   # download latest utPLSQL release
   - curl -LOk $(curl --silent https://api.github.com/repos/utPLSQL/utPLSQL/releases/latest | awk '/browser_download_url/ { print $2 }' | grep ".zip" | sed 's/"//g')
-  # download utPLSQL-cli develop
-  - curl -Lk -o utPLSQL-cli.zip https://github.com/utPLSQL/utPLSQL-cli/releases/download/latest/utPLSQL-cli.zip
+  # download latest utPLSQL-cli release
+  - curl -Lk -o utPLSQL-cli.zip https://github.com/utPLSQL/utPLSQL-cli/releases/download/v${UTPLSQL_CLI_VERSION}/utPLSQL-cli.zip
 
 install:
   - unzip utPLSQL.zip
-  - unzip utPLSQL-cli.zip
+  - unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
+  # get ojdbc.jar from Oracle using maven
+  - bash .travis/maven_cfg.sh
   # Install Oracle Database
   - .travis/oracle/install.sh
   # Install utPLSQL
