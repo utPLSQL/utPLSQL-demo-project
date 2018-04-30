@@ -35,6 +35,14 @@ env:
     - CACHE_DIR=$HOME/.cache
     - MAVEN_HOME=/usr/local/maven
     - MAVEN_CFG=$HOME/.m2
+  matrix:
+    - UTPLSQL_3_VERSION='v3.0.0'
+    - UTPLSQL_3_VERSION='v3.0.1'
+    - UTPLSQL_3_VERSION='v3.0.2'
+    - UTPLSQL_3_VERSION='v3.0.3'
+    - UTPLSQL_3_VERSION='v3.0.4'
+    - UTPLSQL_3_VERSION='v3.1.1'
+    - UTPLSQL_3_VERSION='develop'
 
 cache:
   pip: true
@@ -47,8 +55,8 @@ before_install:
   - npm install -g phantomjs-prebuilt casperjs
   # download Oracle XE installer for Travis
   - .travis/oracle/download.sh
-  # download latest utPLSQL release
-  - curl -LOk $(curl --silent https://api.github.com/repos/utPLSQL/utPLSQL/releases/latest | awk '/browser_download_url/ { print $2 }' | grep  '\.zip"$' | sed 's/"//g')
+  # download latest utPLSQL develop code
+  - git clone --depth=1 --branch=${UTPLSQL_3_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
   # download latest utPLSQL-cli release
   - curl -Lk -o utPLSQL-cli.zip https://github.com/utPLSQL/utPLSQL-cli/releases/download/v${UTPLSQL_CLI_VERSION}/utPLSQL-cli.zip
 
