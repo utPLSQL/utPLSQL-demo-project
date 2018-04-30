@@ -36,13 +36,10 @@ env:
     - MAVEN_HOME=/usr/local/maven
     - MAVEN_CFG=$HOME/.m2
   matrix:
+    - UTPLSQL_3_VERSION='develop'
     - UTPLSQL_3_VERSION='v3.0.0'
-    - UTPLSQL_3_VERSION='v3.0.1'
-    - UTPLSQL_3_VERSION='v3.0.2'
-    - UTPLSQL_3_VERSION='v3.0.3'
     - UTPLSQL_3_VERSION='v3.0.4'
     - UTPLSQL_3_VERSION='v3.1.1'
-    - UTPLSQL_3_VERSION='develop'
 
 cache:
   pip: true
