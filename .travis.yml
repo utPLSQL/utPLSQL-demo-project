@@ -58,7 +58,6 @@ before_install:
   - curl -Lk -o utPLSQL-cli.zip https://github.com/utPLSQL/utPLSQL-cli/releases/download/v${UTPLSQL_CLI_VERSION}/utPLSQL-cli.zip
 
 install:
-  - unzip utPLSQL.zip
   - unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
   # get ojdbc.jar from Oracle using maven
   - bash .travis/maven_cfg.sh
