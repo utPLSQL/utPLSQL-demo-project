@@ -57,7 +57,7 @@ before_install:
   # download latest utPLSQL-cli release
   - curl -Lk -o utPLSQL-cli.zip https://github.com/utPLSQL/utPLSQL-cli/releases/download/v${UTPLSQL_CLI_VERSION}/utPLSQL-cli.zip
   # update version placeholder before install
-  - [[ -n ${VERSION_PLACEHOLDER} ]] && sed -i "s/${VERSION_PLACEHOLDER}/${UTPLSQL_3_VERSION}/g" ${UTPLSQL_DIR}/source/core/ut_utils.pks
+  - if [[ -n ${VERSION_PLACEHOLDER} ]] ; then sed -i "s/${VERSION_PLACEHOLDER}/${UTPLSQL_3_VERSION}/g" ${UTPLSQL_DIR}/source/core/ut_utils.pks; fi
 
 
 install:
