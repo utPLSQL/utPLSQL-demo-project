@@ -37,8 +37,8 @@ env:
     - MAVEN_CFG=$HOME/.m2
   matrix:
     - UTPLSQL_3_VERSION='develop'
-    - UTPLSQL_3_VERSION='v3.0.0'
-    - UTPLSQL_3_VERSION='v3.0.4'
+    - UTPLSQL_3_VERSION='v3.0.0' VERSION_PLACEHOLDER='utPLSQL - Version X.X.X.X'
+    - UTPLSQL_3_VERSION='v3.0.4' VERSION_PLACEHOLDER='X.X.X.X'
     - UTPLSQL_3_VERSION='v3.1.1'
 
 cache:
@@ -56,6 +56,8 @@ before_install:
   - git clone --depth=1 --branch=${UTPLSQL_3_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
   # download latest utPLSQL-cli release
   - curl -Lk -o utPLSQL-cli.zip https://github.com/utPLSQL/utPLSQL-cli/releases/download/v${UTPLSQL_CLI_VERSION}/utPLSQL-cli.zip
+  # update version placeholder before install
+  - [[ -n ${VERSION_PLACEHOLDER} ]] && sed -i "s/${VERSION_PLACEHOLDER}/${UTPLSQL_3_VERSION}/g" ${UTPLSQL_DIR}/source/core/ut_utils.pks
 
 install:
   - unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
