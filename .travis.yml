@@ -59,6 +59,7 @@ before_install:
   # update version placeholder before install
   - [[ -n ${VERSION_PLACEHOLDER} ]] && sed -i "s/${VERSION_PLACEHOLDER}/${UTPLSQL_3_VERSION}/g" ${UTPLSQL_DIR}/source/core/ut_utils.pks
 
+
 install:
   - unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
   # get ojdbc.jar from Oracle using maven
