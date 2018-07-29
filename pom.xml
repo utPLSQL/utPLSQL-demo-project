@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.utplsql</groupId>
+    <artifactId>utplsql-maven-plugin-demo-project</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>utplsql-maven-plugin-demo-project</name>
+    <properties>
+        <dbUrl>jdbc:oracle:thin:@127.0.0.1:1551/orclpdb1</dbUrl>
+        <dbUser>ut3_demo</dbUser>
+        <dbPass>ut3</dbPass>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.utplsql</groupId>
+                <artifactId>utplsql-maven-plugin</artifactId>
+                <version>3.1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <ignoreFailure>true</ignoreFailure>
+                    <sources>
+                        <source>
+                            <directory>source</directory>
+                        </source>
+                    </sources>
+                    <tests>
+                        <test>
+                            <directory>test</directory>
+                        </test>
+                    </tests>
+                    <reporters>
+                        <reporter>
+                            <name>UT_DOCUMENTATION_REPORTER</name>
+                            <consoleOutput>true</consoleOutput>
+                        </reporter>
+                        <reporter>
+                            <name>UT_COVERAGE_SONAR_REPORTER</name>
+                            <fileOutput>coverage-sonar-reporter.xml</fileOutput>
+                        </reporter>
+                    </reporters>
+                </configuration>
+
+            </plugin>
+        </plugins>
+    </build>
+</project>
