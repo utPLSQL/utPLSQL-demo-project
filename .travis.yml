@@ -16,15 +16,16 @@ addons:
 
 env:
   global:
-    - SQLCLI="$HOME/sqlcl/bin/sql"
-    - OJDBC_HOME="$HOME/sqlcl/lib"
-    - ORACLE_PWD="oracle"
-    #Oracle 11g XE R2 variables
+    #Oracle 11g XE R2 docker variables
     - ORACLE_VERSION=11g-r2-xe
     - CONNECTION_STR='127.0.0.1:1521/XE'
     - DOCKER_OPTIONS='--shm-size=1g'
-    #Adding SQLPlus to path
-    - PATH=$PATH:$ORACLE_HOME/bin
+    # Docker database Env
+    - SQLCLI="$HOME/sqlcl/bin/sql"
+    - OJDBC_HOME="$HOME/sqlcl/lib"
+    - ORACLE_PWD="oracle"
+    - UT3_DOCKER_REPO="utplsqlv3/oracledb"
+    - DOCKHER_HUB_REPO="${DOCKER_BASE_TAG:-$UT3_DOCKER_REPO}"
     # project variables
     - DB_USER=ut3_demo
     - DB_PASS=LHZYPbWvYdu2ctp8
