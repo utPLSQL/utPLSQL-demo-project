@@ -4,9 +4,9 @@ set -ev
 
 cd $UTPLSQL_DIR/source
 
-sqlplus -S -L / AS SYSDBA @install_headless.sql
+${SQLCLI} -S -L oracle/${ORACLE_PWD} AS SYSDBA @install_headless.sql
 
-sqlplus -L -S / AS SYSDBA <<SQL
+${SQLCLI} -L -S oracle/${ORACLE_PWD} AS SYSDBA <<SQL
 grant select any dictionary to ut3;
 exit
 SQL

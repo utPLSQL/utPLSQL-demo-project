@@ -2,7 +2,7 @@
 
 set -ev
 
-sqlplus -L -S ${DB_USER}/${DB_PASS} <<SQL
+${SQLCLI} -L -S ${DB_USER}/${DB_PASS} <<SQL
 whenever sqlerror exit failure rollback
 whenever oserror  exit failure rollback
 
