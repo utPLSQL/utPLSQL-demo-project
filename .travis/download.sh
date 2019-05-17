@@ -11,10 +11,10 @@ PRODUCT=""
 # Call the casperjs script to return the download url.
 # Then download the file using curl.
 downloadFile() {
-    CURRENT_DIR="$(dirname "$(readlink -f "$0")")"
-    downloadUrl=$(exec casperjs ${CURRENT_DIR}/download.js $ORACLE_OTN_USER $ORACLE_OTN_PASSWORD $1 $2)
+    downloadUrl=$(exec casperjs download.js $ORACLE_OTN_USER $ORACLE_OTN_PASSWORD $1 $2)
+    downloadUrl=${downloadUrl%$'\r'}
     echo "DownloadURL: $downloadUrl"
-    curl $downloadUrl -o ${CURRENT_DIR}/oracle/$3
+    curl -o $3 -L "$downloadUrl"
 }
 
 #############################
@@ -61,8 +61,8 @@ fi
 
 if [ "$PRODUCT" == "sqlcl" ]; then
     agreementUrl="http://www.oracle.com/technetwork/developer-tools/sqlcl/downloads/index.html"
-    downloadUrl="http://download.oracle.com/otn/java/sqldeveloper/sqlcl-4.2.0.17.073.1038-no-jre.zip"
-    outputFile=sqlcl-4.2.0.17.073.1038-no-jre.zip
+    downloadUrl="https://download.oracle.com/otn/java/sqldeveloper/sqlcl-18.3.0.259.2029.zip"
+    outputFile=sqlcl-18.3.0.259.2029.zip
     downloadFile $agreementUrl $downloadUrl $outputFile
     exit 0
 fi

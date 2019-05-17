@@ -1,5 +1,5 @@
 [![build](https://img.shields.io/travis/utPLSQL/utPLSQL-demo-project/develop.svg?label=develop%20branch)](https://travis-ci.org/utPLSQL/utPLSQL-demo-project)
-[![sonar](https://sonarcloud.io/api/badges/gate?key=utPLSQL%3AutPLSQL-demo-project%3Adevelop)](https://sonarcloud.io/dashboard/index?id=utPLSQL%3AutPLSQL-demo-project%3Adevelop)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=utPLSQL%3AutPLSQL-demo-project&metric=alert_status)](https://sonarcloud.io/dashboard?id=utPLSQL%3AutPLSQL-demo-project)
 
 
 # CI/CD and Unit Testing for Oracle PLSQL
@@ -13,7 +13,7 @@ With every commit made to the github repository, a build job is executed using [
 
 The build process consists of following steps:
 - Download Oracle Database 11g XE
-- Download latest release of utPLSQL
+- Download [latest release of utPLSQL](https://github.com/utPLSQL/utPLSQL/releases/latest)
 - Install Oracle Database
 - Install [utPLSQL](https://github.com/utPLSQL/utPLSQL) framework
 - Install [project sources](source/install.sh)

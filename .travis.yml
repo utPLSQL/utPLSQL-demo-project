@@ -16,13 +16,16 @@ addons:
 
 env:
   global:
-    #Oracle 11g XE R2 variables
-    - ORACLE_COOKIE=sqldev
-    - ORACLE_FILE=oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
-    - ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
-    - ORACLE_SID=XE
-    #Adding SQLPlus to path
-    - PATH=$PATH:$ORACLE_HOME/bin
+    #Oracle 11g XE R2 docker variables
+    - ORACLE_VERSION=11g-r2-xe
+    - CONNECTION_STR='127.0.0.1:1521/XE'
+    - DOCKER_OPTIONS='--shm-size=1g'
+    # Docker database Env
+    - SQLCLI="$HOME/sqlcl/bin/sql"
+    - OJDBC_HOME="$HOME/sqlcl/lib"
+    - ORACLE_PWD="oracle"
+    - UT3_DOCKER_REPO="utplsqlv3/oracledb"
+    - DOCKHER_HUB_REPO="${DOCKER_BASE_TAG:-$UT3_DOCKER_REPO}"
     # project variables
     - DB_USER=ut3_demo
     - DB_PASS=LHZYPbWvYdu2ctp8
@@ -49,9 +52,6 @@ cache:
     - $MAVEN_CFG
 
 before_install:
-  - npm install -g phantomjs-prebuilt casperjs
-  # download Oracle XE installer for Travis
-  - .travis/oracle/download.sh
   # download latest utPLSQL develop code
   - git clone --depth=1 --branch=${UTPLSQL_3_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
   # download latest utPLSQL-cli release
@@ -64,12 +64,14 @@ install:
   - unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
   # get ojdbc.jar from Oracle using maven
   - bash .travis/maven_cfg.sh
-  # Install Oracle Database
-  - .travis/oracle/install.sh
+  - bash .travis/install_sqlcl.sh
+  # download and run Oracle docker DB image
+  - bash .travis/start_db.sh
+
   # Install utPLSQL
   - .travis/install_utplsql.sh
   - .travis/setup_account.sh
-  # Instal project sources and tests
+  # Install project sources and tests
   - source/install.sh
   - test/install.sh
 
