@@ -16,23 +16,26 @@ addons:
 
 env:
   global:
-    #Oracle 11g XE R2 docker variables
+    # Docker variables
+    # You need to additionally set secret variables:
+    # DOCKER_USER, DOCKER_PASSWORD in Travis settings panel to make sure they are not visible
     - ORACLE_VERSION=11g-r2-xe
     - CONNECTION_STR='127.0.0.1:1521/XE'
     - DOCKER_OPTIONS='--shm-size=1g'
-    # Docker database Env
-    - SQLCLI="$HOME/sqlcl/bin/sql"
-    - OJDBC_HOME="$HOME/sqlcl/lib"
     - ORACLE_PWD="oracle"
     - UT3_DOCKER_REPO="utplsqlv3/oracledb"
     - DOCKHER_HUB_REPO="${DOCKER_BASE_TAG:-$UT3_DOCKER_REPO}"
-    # project variables
+    - SQLCLI="$HOME/sqlcl/bin/sql"
+    - OJDBC_HOME="$HOME/sqlcl/lib"
+
+    # Project database user variables
+    # used for creating the user in database, deploying source code and tests as well as executing the tests
     - DB_USER=ut3_demo
-    - DB_PASS=LHZYPbWvYdu2ctp8
-    ##utPLSQL variables
+    - DB_PASS=ut3_demo
+    #utPLSQL variables
     - UTPLSQL_DIR="utPLSQL"
-    - ORA_SDTZ='Europe/London' #Needed as a client parameter
-    - TZ='Europe/London'       #Needed as a DB Server parameter
+#    - ORA_SDTZ='Europe/London' #Needed as a client parameter
+#    - TZ='Europe/London'       #Needed as a DB Server parameter
     ##utPLSQL-cli variables
     - UTPLSQL_CLI_VERSION="3.1.0"
     - CACHE_DIR=$HOME/.cache
@@ -52,24 +55,33 @@ cache:
     - $MAVEN_CFG
 
 before_install:
-  # download latest utPLSQL develop code
-  - git clone --depth=1 --branch=${UTPLSQL_3_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
-  # download latest utPLSQL-cli release
-  - curl -Lk -o utPLSQL-cli.zip https://github.com/utPLSQL/utPLSQL-cli/releases/download/v${UTPLSQL_CLI_VERSION}/utPLSQL-cli.zip
-  # update version placeholder before install
-  - if [[ -n ${VERSION_PLACEHOLDER} ]] ; then sed -i "s/${VERSION_PLACEHOLDER}/${UTPLSQL_3_VERSION}/g" ${UTPLSQL_DIR}/source/core/ut_utils.pks; fi
 
 
 install:
-  - unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
-  # get ojdbc.jar from Oracle using maven
-  - bash .travis/maven_cfg.sh
+  # Download Oracle sqlcl
   - bash .travis/install_sqlcl.sh
-  # download and run Oracle docker DB image
+
+  # download latest utPLSQL-cli release
+  - curl -Lk -o utPLSQL-cli.zip https://github.com/utPLSQL/utPLSQL-cli/releases/download/v${UTPLSQL_CLI_VERSION}/utPLSQL-cli.zip
+  # and unzip it into utPLSQL-cli directory
+  - unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
+  # get ojdbc.jar from Oracle using maven --maybe we could copy it from sqlcl ?
+  # this is needed for utPSLQL-cli
+  - bash .travis/maven_cfg.sh
+  # download ORacle Database docker image from private repo and start the DB
   - bash .travis/start_db.sh
 
-  # Install utPLSQL
+  # Download specified version of utPLSQL from utPLSQL github repo
+  # Allows to set any branch name to be used
+  - git clone --depth=1 --branch=${UTPLSQL_3_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
+
+  # update version placeholder before install
+  # This is only needed when downloading utPLSQL versions older than 3.1
+  - if [[ -n ${VERSION_PLACEHOLDER} ]] ; then sed -i "s/${VERSION_PLACEHOLDER}/${UTPLSQL_3_VERSION}/g" ${UTPLSQL_DIR}/source/core/ut_utils.pks; fi
+
+  # Install utPLSQL into DB
   - .travis/install_utplsql.sh
+  # Create the demo project DB user account
   - .travis/setup_account.sh
   # Install project sources and tests
   - source/install.sh
