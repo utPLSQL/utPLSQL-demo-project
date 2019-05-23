@@ -2,7 +2,7 @@
 
 set -ev
 
-${SQLCLI} -L -S ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} <<SQL
+sql -L -S ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} <<SQL
 whenever sqlerror exit failure rollback
 whenever oserror  exit failure rollback
 
