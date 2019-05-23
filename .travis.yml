@@ -6,13 +6,11 @@ jdk:
 
 addons:
   sonarcloud:
+    # Set this to match your repo - see this doc on how to set details https://docs.travis-ci.com/user/sonarcloud/
     organization: utplsql
     token:
+      # Put sonar connection token generated and encrypted.
       secure: ${SONAR_TOKEN}
-    branches:
-      - develop
-      - master
-      - test_ut_run_script
 
 env:
   global:
