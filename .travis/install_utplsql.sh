@@ -4,4 +4,4 @@ set -ev
 
 cd ${UTPLSQL_DIR}/source
 
-sql -S -L sys/${ORACLE_SYS_PASS}@//${CONNECTION_STR} AS SYSDBA @install_headless.sql
+sql -S -L sys/${DB_SYS_PASSWORD}@//${CONNECTION_STR} AS SYSDBA @install_headless.sql
