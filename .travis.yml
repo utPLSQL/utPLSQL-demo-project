@@ -1,6 +1,8 @@
 sudo: required
 
 language: java
+jdk:
+  - oraclejdk10
 
 addons:
   sonarcloud:
@@ -9,10 +11,6 @@ addons:
     token:
       # Put sonar connection token generated and encrypted.
       secure: ${SONAR_TOKEN}
-  apt:
-    packages:
-      - oracle-java9-installer
-      - oracle-java9-set-default
 
 env:
   global:
