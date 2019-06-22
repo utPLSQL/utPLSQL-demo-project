@@ -1,8 +1,12 @@
 sudo: required
 
 language: java
+
+services:
+  - docker
+
 jdk:
-  - openjdk8
+  - oraclejdk8
 
 addons:
   sonarcloud:
@@ -11,10 +15,6 @@ addons:
     token:
       # Put sonar connection token generated and encrypted.
       secure: ${SONAR_TOKEN}
-  apt:
-    packages:
-      - oracle-java9-installer
-      - oracle-java9-set-default
 
 env:
   global:
