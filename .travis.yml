@@ -1,18 +1,20 @@
 sudo: required
 
 language: java
+
+services:
+  - docker
+
 jdk:
   - oraclejdk8
 
 addons:
   sonarcloud:
+    # Set this to match your repo - see this doc on how to set details https://docs.travis-ci.com/user/sonarcloud/
     organization: utplsql
     token:
+      # Put sonar connection token generated and encrypted.
       secure: ${SONAR_TOKEN}
-    branches:
-      - develop
-      - master
-      - test_ut_run_script
 
 env:
   global:
@@ -22,8 +24,6 @@ env:
     - CONNECTION_STR='127.0.0.1:1521/XE'
     - DOCKER_OPTIONS='--shm-size=1g'
 
-    # SYS account password for DB - could be stored in Travis secrets
-    - ORACLE_SYS_PASS="oracle"
     # Adding utPLSQL-cli to path - to be able to invoke "utplsql" from command line
     - PATH=$PATH:${TRAVIS_BUILD_DIR}/utPLSQL-cli/bin
     # Adding Oracle SQLCL to path - to be able to invoke "sql" from command line
@@ -41,6 +41,7 @@ env:
     #    DOCKER_PASSWORD
     #    ORACLE_OTN_USER
     #    ORACLE_OTN_PASSWORD
+    #    DB_SYS_PASSWORD  - SYS account password for DB
   matrix:
     - UTPLSQL_VERSION='develop'
     - UTPLSQL_VERSION='v3.0.0' VERSION_PLACEHOLDER='utPLSQL - Version X.X.X.X'
