@@ -14,21 +14,63 @@ variables:
   ORACLE_VERSION: '11g-r2-xe'
   CONNECTION_STR: '127.0.0.1:1521/XE'
   DOCKER_OPTIONS: '--shm-size=1g'
+  UTPLSQL_DIR: 'utPLSQL'
+  CACHE_DIR: '.cache'
+  DB_USER: 'ut3_demo'
+  DB_PASS: 'ut3_demo'
 
 steps:
-- script: |
-    docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD)
-    # download Oracle Database docker image from private repo and start the DB
-    time docker pull ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
-    # start the docker container (DB)
-    time docker run -d --name ${ORACLE_VERSION} ${DOCKER_OPTIONS} -p 1521:1521 ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
-    # Wait for DB startup
-    time docker logs -f ${ORACLE_VERSION} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
+  - bash: |
+      java -version
+      python -V
+    displayName: 'Check software versions'
 
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  - bash: |
+      echo "##vso[task.prependpath]$(Agent.BuildDirectory)/utPLSQL-cli/bin"
+      echo "##vso[task.prependpath]$(Agent.BuildDirectory)/sqlcl/bin"
+    displayName: 'Setup PATH'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - bash: |
+      .travis/install_sqlcl.sh -u ${ORACLE_OTN_USER} -p ${ORACLE_OTN_PASSWORD} -d ${CACHE_DIR} -o $(Agent.BuildDirectory)
+      sql -v
+    displayName: 'Install Oracle sqlcl'
+
+  - bash: |
+      curl -Lk -o utPLSQL-cli.zip "https://github.com/utPLSQL/utPLSQL-cli/releases/download/v3.1.6/utPLSQL-cli.zip"
+      unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
+      cp sqlcl/lib/ojdbc8.jar utPLSQL-cli/lib && cp sqlcl/lib/orai18n.jar utPLSQL-cli/lib
+    displayName: 'Install utPLSQL-cli'
+
+  - bash: |
+      git clone --depth=1 --branch=${UTPLSQL_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
+      unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
+      cp sqlcl/lib/ojdbc8.jar utPLSQL-cli/lib && cp sqlcl/lib/orai18n.jar utPLSQL-cli/lib
+    displayName: 'Install utPLSQL-cli'
+
+  - bash: |
+      docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD)
+      # download Oracle Database docker image from private repo and start the DB
+      time docker pull ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
+      # start the docker container (DB)
+      time docker run -d --name ${ORACLE_VERSION} ${DOCKER_OPTIONS} -p 1521:1521 ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
+      # Wait for DB startup
+      time docker logs -f ${ORACLE_VERSION} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
+    displayName: 'Start Oracle DB Docker container'
+
+  - bash: .travis/install_utplsql.sh
+    displayName: 'Install utPLSQL'
+
+  - bash: |
+      source/setup_db_account.sh
+      source/install.sh
+      test/install.sh
+    displayName: 'Install project sources'
+
+  - bash: |
+      source/setup_db_account.sh
+      source/install.sh
+      test/install.sh
+    displayName: 'Deploy'
+
+  - bash: test/run.sh
+    displayName: 'Test'
