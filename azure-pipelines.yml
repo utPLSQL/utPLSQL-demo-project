@@ -37,14 +37,14 @@ steps:
 
   - bash: |
       mkdir -p $(CACHE_DIR)
-      .travis/install_sqlcl.sh -u $(ORACLE_OTN_USER) -p $(ORACLE_OTN_PASSWORD) -d  $(CACHE_DIR) -o $(Build.BinariesDirectory)
+      .travis/install_sqlcl.sh -u $(ORACLE_OTN_USER) -p $(ORACLE_OTN_PASSWORD) -d $(CACHE_DIR) -o $(Build.BinariesDirectory)
       echo $PATH
       sql -v
     displayName: 'Install Oracle sqlcl'
 
   - bash: |
       curl -Lk -o $(UTPLSQL_CLI_DIR).zip "https://github.com/utPLSQL/utPLSQL-cli/releases/download/$(UTPLSQL_CLI_VERSION)/utPLSQL-cli.zip"
-      unzip $(UTPLSQL_CLI_DIR).zip && chmod -R u+x $(UTPLSQL_CLI_DIR)
+      unzip $(UTPLSQL_CLI_DIR).zip -d $(UTPLSQL_CLI_DIR) && chmod -R u+x $(UTPLSQL_CLI_DIR)
       cp $(SQLCL_DIR)/lib/ojdbc8.jar utPLSQL-cli/lib && cp $(SQLCL_DIR)/lib/orai18n.jar $(UTPLSQL_CLI_DIR)/lib
     displayName: 'Install utPLSQL-cli'
 
