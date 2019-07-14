@@ -10,7 +10,7 @@ pool:
   vmImage: 'ubuntu-16.04'
 
 variables:
-  DOCKHER_HUB_REPO: 'utplsql/oracledb'
+  DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
   ORACLE_VERSION: '11g-r2-xe'
   CONNECTION_STR: '127.0.0.1:1521/XE'
   DOCKER_OPTIONS: '--shm-size=1g'
