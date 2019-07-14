@@ -86,7 +86,7 @@ steps:
     displayName: 'Deploy'
 
   - bash: |
-      utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} \
+      $(UTPLSQL_CLI_DIR)/bin/utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} \
       -source_path=source -test_path=test \
       -f=ut_documentation_reporter  -c \
       -f=ut_coverage_sonar_reporter -o=coverage.xml \
