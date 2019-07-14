@@ -15,10 +15,10 @@ variables:
   ORACLE_VERSION: '11g-r2-xe'
   CONNECTION_STR: '127.0.0.1:1521/XE'
   DOCKER_OPTIONS: '--shm-size=1g'
-  UTPLSQL_DIR: $(Build.BinariesDirectory)'/utPLSQL'
-  SQLCL_DIR: $(Build.BinariesDirectory)'/sqlcl'
-  UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)'/utPLSQL-cli'
-  CACHE_DIR: $(Build.BinariesDirectory)'/.cache'
+  UTPLSQL_DIR: $(Build.BinariesDirectory)/utPLSQL
+  SQLCL_DIR: $(Build.BinariesDirectory)/sqlcl
+  UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
+  CACHE_DIR: $(Build.BinariesDirectory)/.cache
   DB_USER: 'ut3_demo'
   DB_PASS: 'ut3_demo'
 
@@ -41,8 +41,6 @@ steps:
     displayName: 'Install Oracle sqlcl'
 
   - bash: |
-      pwd
-      echo $(Build.BinariesDirectory)
       git clone --depth=1 --branch=${UTPLSQL_VERSION} https://github.com/utPLSQL/utPLSQL.git $(Build.BinariesDirectory)
       unzip $(UTPLSQL_CLI_DIR).zip && chmod -R u+x $(UTPLSQL_CLI_DIR)
       cp $(SQLCL_DIR)/lib/ojdbc8.jar utPLSQL-cli/lib && cp $(SQLCL_DIR)/lib/orai18n.jar $(UTPLSQL_CLI_DIR)/lib
