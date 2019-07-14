@@ -12,12 +12,14 @@ pool:
 
 variables:
   DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
+  # Timezone needed for working with Oracle DB
+  TZ: UTC
   ORACLE_VERSION: '11g-r2-xe'
   CONNECTION_STR: '127.0.0.1:1521/XE'
   DOCKER_OPTIONS: '--shm-size=1g'
   DB_SYS_PASSWORD: oracle
-  DB_USER: 'ut3_demo'
-  DB_PASS: 'ut3_demo'
+  DB_USER: ut3_demo
+  DB_PASS: ut3_demo
   SQLCL_DIR: $(Build.BinariesDirectory)/sqlcl
   UTPLSQL_DIR: $(Build.BinariesDirectory)/utPLSQL
   UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
