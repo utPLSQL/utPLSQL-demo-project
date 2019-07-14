@@ -15,8 +15,10 @@ variables:
   ORACLE_VERSION: '11g-r2-xe'
   CONNECTION_STR: '127.0.0.1:1521/XE'
   DOCKER_OPTIONS: '--shm-size=1g'
-  UTPLSQL_DIR: 'utPLSQL'
-  CACHE_DIR: '.cache'
+  UTPLSQL_DIR: $(Build.BinariesDirectory)+'/utPLSQL'
+  SQLCL_DIR: $(Build.BinariesDirectory)+'/sqlcl'
+  UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)+'/utPLSQL-cli'
+  CACHE_DIR: $(Build.BinariesDirectory)+'/.cache'
   DB_USER: 'ut3_demo'
   DB_PASS: 'ut3_demo'
 
@@ -27,28 +29,22 @@ steps:
     displayName: 'Check software versions'
 
   - bash: |
-      echo "##vso[task.prependpath]$(Agent.BuildDirectory)/utPLSQL-cli/bin"
-      echo "##vso[task.prependpath]$(Agent.BuildDirectory)/sqlcl/bin"
+      echo "##vso[task.prependpath]$(UTPLSQL_CLI_DIR)/bin"
+      echo "##vso[task.prependpath]$(SQLCL_DIR)/bin"
     displayName: 'Setup PATH'
 
   - bash: |
-      mkdir $(Agent.BuildDirectory)/$(CACHE_DIR)
-      .travis/install_sqlcl.sh -u $(ORACLE_OTN_USER) -p $(ORACLE_OTN_PASSWORD) -d  $(Agent.BuildDirectory)/$(CACHE_DIR) -o $(Agent.BuildDirectory)
+      mkdir -p $(CACHE_DIR)
+      .travis/install_sqlcl.sh -u $(ORACLE_OTN_USER) -p $(ORACLE_OTN_PASSWORD) -d  $(CACHE_DIR) -o $(Build.BinariesDirectory)
       sql -v
     displayName: 'Install Oracle sqlcl'
 
   - bash: |
       pwd
-      echo $(Agent.BuildDirectory)
-      curl -Lk -o utPLSQL-cli.zip "https://github.com/utPLSQL/utPLSQL-cli/releases/download/v3.1.6/utPLSQL-cli.zip"
-      unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
-      cp sqlcl/lib/ojdbc8.jar utPLSQL-cli/lib && cp sqlcl/lib/orai18n.jar utPLSQL-cli/lib
-    displayName: 'Install utPLSQL-cli'
-
-  - bash: |
-      git clone --depth=1 --branch=${UTPLSQL_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
-      unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
-      cp sqlcl/lib/ojdbc8.jar utPLSQL-cli/lib && cp sqlcl/lib/orai18n.jar utPLSQL-cli/lib
+      echo $(Build.BinariesDirectory)
+      git clone --depth=1 --branch=${UTPLSQL_VERSION} https://github.com/utPLSQL/utPLSQL.git $(Build.BinariesDirectory)
+      unzip $(UTPLSQL_CLI_DIR).zip && chmod -R u+x $(UTPLSQL_CLI_DIR)
+      cp $(SQLCL_DIR)/lib/ojdbc8.jar utPLSQL-cli/lib && cp $(SQLCL_DIR)/lib/orai18n.jar $(UTPLSQL_CLI_DIR)/lib
     displayName: 'Install utPLSQL-cli'
 
   - bash: |
