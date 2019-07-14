@@ -87,6 +87,8 @@ steps:
     displayName: 'Deploy'
 
   - bash: |
+      pwd
+      echo $(System.DefaultWorkingDirectory)
       $(UTPLSQL_CLI_DIR)/bin/utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} \
       -source_path= -test_path=test \
       -f=ut_documentation_reporter      -c \
@@ -94,6 +96,7 @@ steps:
       -f=ut_coverage_cobertura_reporter -o=cobertura.xml \
       -f=ut_sonar_test_reporter         -o=test_results.xml \
       --failure-exit-code=0
+      cat test_results.xml
     displayName: 'Test'
 
   - task: PublishTestResults@2
