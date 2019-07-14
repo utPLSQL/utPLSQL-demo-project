@@ -78,12 +78,6 @@ steps:
       source/setup_db_account.sh
       source/install.sh
       test/install.sh
-    displayName: 'Install project sources'
-
-  - bash: |
-      source/setup_db_account.sh
-      source/install.sh
-      test/install.sh
     displayName: 'Deploy'
 
   - bash: |
