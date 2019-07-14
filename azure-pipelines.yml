@@ -10,6 +10,7 @@ pool:
   vmImage: 'ubuntu-16.04'
 
 container:
+  containerRegistry: utPLSQL-docker
   image: utplsql/oracledb:11g-r2-xe
   endpoint: utPLSQL-docker
 
