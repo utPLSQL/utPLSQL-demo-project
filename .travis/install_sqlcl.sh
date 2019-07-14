@@ -13,6 +13,10 @@ OTN_USER=""
 OTN_PASS=""
 OUTPUT_DIR=""
 
+# To allow running of locally installed node modules
+# see: https://2ality.com/2016/01/locally-installed-npm-executables.html
+function npm-do { (PATH=$(npm bin):$PATH; eval $@;) }
+
 # Call the casperjs script to return the download url. Then download the file using curl.
 downloadFile() {
     user=$1
@@ -21,7 +25,7 @@ downloadFile() {
     downloadUrl=$4
     outputFile=$5
     echo "Signing-in"
-    downloadUrl=$(exec casperjs ${SCRIPT_DIR}/download.js ${user} ${pass} ${agreementUrl} ${downloadUrl})
+    downloadUrl=$(npm-do casperjs ${SCRIPT_DIR}/download.js ${user} ${pass} ${agreementUrl} ${downloadUrl})
     downloadUrl=${downloadUrl%$'\r'}
     echo "DownloadURL: $downloadUrl"
     curl -o ${outputFile} -L "$downloadUrl"
