@@ -31,7 +31,7 @@ steps:
     displayName: 'Setup PATH'
 
   - bash: |
-      .travis/install_sqlcl.sh -u $(ORACLE_OTN_USER) -p $(ORACLE_OTN_PASSWORD) -d $(CACHE_DIR) -o $(Agent.BuildDirectory)
+      .travis/install_sqlcl.sh -u $(ORACLE_OTN_USER) -p $(ORACLE_OTN_PASSWORD) -d  $(Agent.BuildDirectory)/$(CACHE_DIR) -o $(Agent.BuildDirectory)
       sql -v
     displayName: 'Install Oracle sqlcl'
 
