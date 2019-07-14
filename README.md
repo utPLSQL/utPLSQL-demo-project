@@ -1,6 +1,6 @@
 [![build](https://img.shields.io/travis/utPLSQL/utPLSQL-demo-project/develop.svg?label=develop%20branch)](https://travis-ci.org/utPLSQL/utPLSQL-demo-project)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=utPLSQL%3AutPLSQL-demo-project&metric=alert_status)](https://sonarcloud.io/dashboard?id=utPLSQL%3AutPLSQL-demo-project)
-
+[![Build Status](https://dev.azure.com/utplsql/utplsql/_apis/build/status/utPLSQL.utPLSQL-demo-project?branchName=develop)](https://dev.azure.com/utplsql/utplsql/_build/latest?definitionId=1&branchName=develop)
 
 # CI/CD and Unit Testing for Oracle PLSQL
 Demo project using utPLSQL, Travis and SonarCloud for continuous integration of PLSQL and SQL code. 
