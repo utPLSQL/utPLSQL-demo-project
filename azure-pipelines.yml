@@ -23,7 +23,7 @@ variables:
   SQLCL_DIR: $(Build.BinariesDirectory)/sqlcl
   UTPLSQL_DIR: $(Build.BinariesDirectory)/utPLSQL
   UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
-  UTPLSQL_CLI_VERSION: 'v3.1.7'
+  UTPLSQL_CLI_VERSION: 'v3.1.6'
   UTPLSQL_VERSION: 'v3.1.7'
   CACHE_DIR: $(Pipeline.Workspace)/.cache
 
@@ -95,10 +95,6 @@ steps:
       -f=ut_coverage_cobertura_reporter -o=cobertura.xml \
       -f=ut_junit_reporter              -o=junit_test_results.xml \
       --failure-exit-code=0
-      cat test_results.xml
-      cat coverage.xml
-      cat cobertura.xml
-      cat coverage.html
     displayName: 'Test'
 
   - task: PublishTestResults@2
