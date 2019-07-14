@@ -25,18 +25,19 @@ variables:
   UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
   UTPLSQL_CLI_VERSION: 'v3.1.7'
   UTPLSQL_VERSION: 'v3.1.7'
-  CACHE_DIR: $(Build.BinariesDirectory)/.cache
+  CACHE_DIR: $(Pipeline.Workspace)/.cache
 
 steps:
-  - bash: |
-      java -version
-      python -V
-    displayName: 'Check software versions'
+  - task: Cache@0
+    inputs:
+      path: $(CACHE_DIR)
+      key: '*'
+    displayName: 'Restore cache'
 
   - bash: |
       echo "##vso[task.prependpath]$(UTPLSQL_CLI_DIR)/bin"
       echo "##vso[task.prependpath]$(SQLCL_DIR)/bin"
-    displayName: 'Setup PATH'
+    displayName: 'Setup PATH variable'
 
   - bash: |
       mkdir -p $(CACHE_DIR)
@@ -80,5 +81,11 @@ steps:
       test/install.sh
     displayName: 'Deploy'
 
-  - bash: test/run.sh
+  - bash: |
+      utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} \
+      -source_path=source -test_path=test \
+      -f=ut_documentation_reporter  -c \
+      -f=ut_coverage_sonar_reporter -o=coverage.xml \
+      -f=ut_sonar_test_reporter     -o=test_results.xml \
+      --failure-exit-code=0
     displayName: 'Test'
