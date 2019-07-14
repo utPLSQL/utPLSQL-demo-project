@@ -104,6 +104,8 @@ steps:
         -f=ut_junit_reporter              -o=junit_test_results.xml \
         --debug \
         --failure-exit-code=0
+      cat test_results.xml
+      cat coverage.xml
     displayName: 'Test'
 
   - task: PublishTestResults@2
