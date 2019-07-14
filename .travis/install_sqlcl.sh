@@ -55,7 +55,7 @@ if [[ "$OUTPUT_DIR" == "" ]]; then
 fi
 
 if [[ ! -f "${ZIP_TARGET_DIR}/${SQLCL_FILE}" ]]; then
-    npm install -g phantomjs-prebuilt casperjs
+    sudo npm install -g phantomjs-prebuilt casperjs
     echo "Downloading sqlcl from Oracle"
     downloadFile ${OTN_USER} ${OTN_PASS} ${AGREEMENT_URL} ${DOWNLOAD_URL} "${ZIP_TARGET_DIR}/${SQLCL_FILE}"
 else
