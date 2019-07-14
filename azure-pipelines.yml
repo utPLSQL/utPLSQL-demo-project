@@ -81,9 +81,13 @@ steps:
     displayName: 'Deploy'
 
   - bash: |
+      pwd
+      echo $(System.DefaultWorkingDirectory)
+      ls -l source
+      ls -l test
       $(UTPLSQL_CLI_DIR)/bin/utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} \
-      -source_path=$(System.DefaultWorkingDirectory)/source \
-      -test_path=$(System.DefaultWorkingDirectory)/test \
+      -source_path=source \
+      -test_path=test \
       -owner=${DB_USER} \
       -f=ut_documentation_reporter      -c \
       -f=ut_coverage_html_reporter      -o=coverage.html \
@@ -92,6 +96,10 @@ steps:
       -f=ut_coverage_cobertura_reporter -o=cobertura.xml \
       -f=ut_junit_reporter              -o=junit_test_results.xml \
       --failure-exit-code=0
+      cat test_results.xml
+      cat coverage.xml
+      cat cobertura.xml
+      cat coverage.html
     displayName: 'Test'
 
   - task: PublishTestResults@2
