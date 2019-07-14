@@ -38,6 +38,8 @@ steps:
     displayName: 'Install Oracle sqlcl'
 
   - bash: |
+      pwd
+      echo $(Agent.BuildDirectory)
       curl -Lk -o utPLSQL-cli.zip "https://github.com/utPLSQL/utPLSQL-cli/releases/download/v3.1.6/utPLSQL-cli.zip"
       unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
       cp sqlcl/lib/ojdbc8.jar utPLSQL-cli/lib && cp sqlcl/lib/orai18n.jar utPLSQL-cli/lib
