@@ -21,7 +21,7 @@ steps:
     # download Oracle Database docker image from private repo and start the DB
     time docker pull ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
     # start the docker container (DB)
-    docker run -d --name ${ORACLE_VERSION} ${DOCKER_OPTIONS} -p 1521:1521 ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
+    time docker run -d --name ${ORACLE_VERSION} ${DOCKER_OPTIONS} -p 1521:1521 ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
     # Wait for DB startup
     time docker logs -f ${ORACLE_VERSION} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
 
