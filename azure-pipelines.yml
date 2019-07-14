@@ -31,14 +31,14 @@ strategy:
   matrix:
     develop:
       UTPLSQL_VERSION: 'develop'
-    v_3_0_0:
-      UTPLSQL_VERSION: 'v3.0.0'
-      VERSION_PLACEHOLDER: 'utPLSQL - Version X.X.X.X'
-    v_3_0_4:
-      UTPLSQL_VERSION: 'v3.0.4'
-      VERSION_PLACEHOLDER: 'utPLSQL - Version X.X.X.X'
-    v_3_1_4:
+    v3.1.1:
+      UTPLSQL_VERSION: 'v3.1.1'
+    v3.1.2:
+      UTPLSQL_VERSION: 'v3.1.2'
+    v3.1.4:
       UTPLSQL_VERSION: 'v3.1.4'
+    v3.1.7:
+      UTPLSQL_VERSION: 'v3.1.7'
 
 steps:
 # Possible cache options:
@@ -73,10 +73,6 @@ steps:
   - bash: |
       git clone --depth=1 --branch=${UTPLSQL_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
       # Needed for older versions of utPLSQL.
-      if [[ -n ${VERSION_PLACEHOLDER} ]]
-      then
-        sed -i "s/${VERSION_PLACEHOLDER}/${UTPLSQL_VERSION}/g" ${UTPLSQL_DIR}/source/core/ut_utils.pks
-      fi
     displayName: 'Download utPLSQL'
 
   - bash: |
