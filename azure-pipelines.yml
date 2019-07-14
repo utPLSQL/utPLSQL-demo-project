@@ -9,15 +9,28 @@ trigger:
 pool:
   vmImage: 'ubuntu-16.04'
 
-container:
-  containerRegistry: utPLSQL-docker
-  image: utplsql/oracledb:11g-r2-xe
-  endpoint: utPLSQL-docker
+variables:
+  DOCKHER_HUB_REPO: 'utplsql/oracledb'
+  ORACLE_VERSION: '11g-r2-xe'
+  CONNECTION_STR: '127.0.0.1:1521/XE'
+  DOCKER_OPTIONS: '--shm-size=1g'
 
 steps:
 - task: JavaToolInstaller@0
   inputs:
     versionSpec: "8"
+- task: Docker@2
+  displayName: 'Login to dockerhub'
+  inputs:
+    command: login
+    containerRegistry: utPLSQL-docker
+- script: |
+    # download Oracle Database docker image from private repo and start the DB
+    time docker pull ${DOCKHER_HUB_REPO}:{ORACLE_VERSION}
+    # start the docker container (DB)
+    docker run -d --name ${ORACLE_VERSION} ${DOCKER_OPTIONS} -p 1521:1521 ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
+    # Wait for DB startup
+    time docker logs -f ${ORACLE_VERSION} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
 
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
