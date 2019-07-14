@@ -28,11 +28,15 @@ variables:
   CACHE_DIR: $(Pipeline.Workspace)/.cache
 
 steps:
-  - task: Cache@0
-    inputs:
-      path: $(CACHE_DIR)
-      key: '*'
-    displayName: 'Restore cache'
+# Possible cache options:
+# https://marketplace.visualstudio.com/items?itemName=1ESLighthouseEng.PipelineArtifactCaching
+# https://github.com/Microsoft/azure-pipelines-yaml/pull/113
+
+#  - task: Cache@0
+#    inputs:
+#      path: $(CACHE_DIR)
+#      key: '*'
+#    displayName: 'Restore cache'
 
   - bash: |
       echo "##vso[task.prependpath]$(UTPLSQL_CLI_DIR)/bin"
