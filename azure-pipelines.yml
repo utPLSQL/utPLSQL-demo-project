@@ -24,7 +24,7 @@ variables:
   UTPLSQL_DIR: $(Build.BinariesDirectory)/utPLSQL
   UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
   UTPLSQL_CLI_VERSION: 'v3.1.7'
-  UTPLSQL_VERSION: 'v3.1.7'
+  UTPLSQL_VERSION: 'v3.1.4'
   CACHE_DIR: $(Pipeline.Workspace)/.cache
 
 steps:
@@ -86,9 +86,8 @@ steps:
       ls -l source
       ls -l test
       $(UTPLSQL_CLI_DIR)/bin/utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} \
-      -source_path=source \
-      -test_path=test \
-      -owner=${DB_USER} \
+      -source_path=source -owner=${DB_USER} \
+      -test_path=test -owner=${DB_USER} \
       -f=ut_documentation_reporter      -c \
       -f=ut_coverage_html_reporter      -o=coverage.html \
       -f=ut_coverage_sonar_reporter     -o=coverage.xml \
