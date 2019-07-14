@@ -27,17 +27,18 @@ variables:
   UTPLSQL_VERSION: 'v3.1.7'
   CACHE_DIR: $(Pipeline.Workspace)/.cache
 
-matrix:
-  develop:
-    UTPLSQL_VERSION: 'develop'
-  v_3_0_0:
-    UTPLSQL_VERSION: 'v3.0.0'
-    VERSION_PLACEHOLDER: 'utPLSQL - Version X.X.X.X'
-  v_3_0_4:
-    UTPLSQL_VERSION: 'v3.0.4'
-    VERSION_PLACEHOLDER: 'utPLSQL - Version X.X.X.X'
-  v_3_1_4:
-    UTPLSQL_VERSION: 'v3.1.4'
+strategy:
+  matrix:
+    develop:
+      UTPLSQL_VERSION: 'develop'
+    v_3_0_0:
+      UTPLSQL_VERSION: 'v3.0.0'
+      VERSION_PLACEHOLDER: 'utPLSQL - Version X.X.X.X'
+    v_3_0_4:
+      UTPLSQL_VERSION: 'v3.0.4'
+      VERSION_PLACEHOLDER: 'utPLSQL - Version X.X.X.X'
+    v_3_1_4:
+      UTPLSQL_VERSION: 'v3.1.4'
 
 steps:
 # Possible cache options:
