@@ -4,12 +4,20 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+  - develop
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-16.04'
+
+container:
+  image: utplsql/oracledb:11g-r2-xe
+  endpoint: utPLSQL-docker
 
 steps:
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: "8"
+
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
