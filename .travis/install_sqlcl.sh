@@ -66,5 +66,5 @@ else
     echo "Installing sqlcl from cache..."
 fi;
 
-echo "Unzipping sqlcl into: ${ZIP_TARGET_DIR}"
+echo "Unzipping sqlcl zip file: ${ZIP_TARGET_DIR}/${SQLCL_FILE} into: ${OUTPUT_DIR} directory"
 unzip -q "${ZIP_TARGET_DIR}/${SQLCL_FILE}" -d ${OUTPUT_DIR}

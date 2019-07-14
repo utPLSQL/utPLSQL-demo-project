@@ -36,6 +36,7 @@ steps:
   - bash: |
       mkdir -p $(CACHE_DIR)
       .travis/install_sqlcl.sh -u $(ORACLE_OTN_USER) -p $(ORACLE_OTN_PASSWORD) -d  $(CACHE_DIR) -o $(Build.BinariesDirectory)
+      echo $PATH
       sql -v
     displayName: 'Install Oracle sqlcl'
 
