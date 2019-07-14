@@ -87,22 +87,20 @@ steps:
     displayName: 'Deploy'
 
   - bash: |
-      pwd
-      echo $(System.DefaultWorkingDirectory)
       $(UTPLSQL_CLI_DIR)/bin/utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} \
       -source_path= -test_path=test \
       -f=ut_documentation_reporter      -c \
       -f=ut_coverage_sonar_reporter     -o=coverage.xml \
-      -f=ut_coverage_cobertura_reporter -o=cobertura.xml \
       -f=ut_sonar_test_reporter         -o=test_results.xml \
+      -f=ut_coverage_cobertura_reporter -o=cobertura.xml \
+      -f=ut_junit_reporter              -o=junit_test_results.xml \
       --failure-exit-code=0
-      cat test_results.xml
     displayName: 'Test'
 
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'JUnit'
-      testResultsFiles: '**/test_results.xml'
+      testResultsFiles: '**/junit_test_results.xml'
       testRunTitle: 'Publish test results'
     displayName: 'Publish test results'
 
