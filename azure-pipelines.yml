@@ -27,6 +27,18 @@ variables:
   UTPLSQL_VERSION: 'v3.1.7'
   CACHE_DIR: $(Pipeline.Workspace)/.cache
 
+matrix:
+  develop:
+    UTPLSQL_VERSION: 'develop'
+  v_3_0_0:
+    UTPLSQL_VERSION: 'v3.0.0'
+    VERSION_PLACEHOLDER: 'utPLSQL - Version X.X.X.X'
+  v_3_0_4:
+    UTPLSQL_VERSION: 'v3.0.4'
+    VERSION_PLACEHOLDER: 'utPLSQL - Version X.X.X.X'
+  v_3_1_4:
+    UTPLSQL_VERSION: 'v3.1.4'
+
 steps:
 # Possible cache options:
 # https://marketplace.visualstudio.com/items?itemName=1ESLighthouseEng.PipelineArtifactCaching
@@ -59,6 +71,11 @@ steps:
 
   - bash: |
       git clone --depth=1 --branch=${UTPLSQL_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
+      # Needed for older versions of utPLSQL.
+      if [[ -n ${VERSION_PLACEHOLDER} ]]
+      then
+        sed -i "s/${VERSION_PLACEHOLDER}/${UTPLSQL_VERSION}/g" ${UTPLSQL_DIR}/source/core/ut_utils.pks
+      fi
     displayName: 'Download utPLSQL'
 
   - bash: |
@@ -82,16 +99,17 @@ steps:
 
   - bash: |
       $(UTPLSQL_CLI_DIR)/bin/utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} \
-      --debug \
-      -source_path=source -owner=${DB_USER} \
-      -test_path=test -owner=${DB_USER} \
-      -f=ut_documentation_reporter      -c \
-      -f=ut_coverage_html_reporter      -o=coverage.html \
-      -f=ut_coverage_sonar_reporter     -o=coverage.xml \
-      -f=ut_sonar_test_reporter         -o=test_results.xml \
-      -f=ut_coverage_cobertura_reporter -o=cobertura.xml \
-      -f=ut_junit_reporter              -o=junit_test_results.xml \
-      --failure-exit-code=0
+        --debug \
+        -source_path=source -owner=${DB_USER} \
+        -test_path=test -owner=${DB_USER} \
+        -f=ut_documentation_reporter      -c \
+        -f=ut_coverage_sonar_reporter     -o=coverage.xml \
+        -f=ut_sonar_test_reporter         -o=test_results.xml \
+        -f=ut_coverage_cobertura_reporter -o=cobertura.xml \
+        -f=ut_junit_reporter              -o=junit_test_results.xml \
+        --failure-exit-code=0
+      cat coverage.xml
+      cat test_results.xml
     displayName: 'Test'
 
   - task: PublishTestResults@2
