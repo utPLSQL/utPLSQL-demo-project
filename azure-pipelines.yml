@@ -15,6 +15,7 @@ variables:
   ORACLE_VERSION: '11g-r2-xe'
   CONNECTION_STR: '127.0.0.1:1521/XE'
   DOCKER_OPTIONS: '--shm-size=1g'
+  DB_SYS_PASSWORD: $(DB_SYS_PASSWORD)
   DB_USER: 'ut3_demo'
   DB_PASS: 'ut3_demo'
   SQLCL_DIR: $(Build.BinariesDirectory)/sqlcl
