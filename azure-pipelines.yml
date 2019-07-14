@@ -24,7 +24,7 @@ variables:
   UTPLSQL_DIR: $(Build.BinariesDirectory)/utPLSQL
   UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
   UTPLSQL_CLI_VERSION: 'v3.1.6'
-  UTPLSQL_VERSION: 'v3.1.4'
+  UTPLSQL_VERSION: 'v3.1.7'
   CACHE_DIR: $(Pipeline.Workspace)/.cache
 
 steps:
@@ -111,7 +111,6 @@ steps:
   - task: PublishCodeCoverageResults@1
     inputs:
       codeCoverageTool: 'Cobertura'
-      summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/cobertura.xml'
-      reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
+      summaryFileLocation: 'cobertura.xml'
       pathToSources: 'source'
     displayName: 'Publish coverage'
