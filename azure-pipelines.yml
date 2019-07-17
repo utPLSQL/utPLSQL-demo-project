@@ -44,6 +44,10 @@ steps:
 # https://marketplace.visualstudio.com/items?itemName=1ESLighthouseEng.PipelineArtifactCaching
 # https://github.com/Microsoft/azure-pipelines-yaml/pull/113
 
+- task: CacheBeta@0
+  inputs:
+    key: '*'
+    path: '$(CACHE_DIR)'
 #  - task: Cache@0
 #    inputs:
 #      path: $(CACHE_DIR)
