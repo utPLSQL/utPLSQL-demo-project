@@ -83,10 +83,12 @@ steps:
       if [[ -f "$(CACHE_DIR)/${ORACLE_VERSION}.tar" ]]; then
         time docker load -i $(CACHE_DIR)/${ORACLE_VERSION}.tar
       else
+        ls -ltr $(CACHE_DIR)
         docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD)
         # download Oracle Database docker image from private repo and start the DB
         time docker pull ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
-        time docker -o $(CACHE_DIR)/${ORACLE_VERSION}.tar save ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
+        time docker save -o $(CACHE_DIR)/${ORACLE_VERSION}.tar ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
+        ls -ltr $(CACHE_DIR)
       fi
       # start the docker container (DB)
       time docker run -d --name ${ORACLE_VERSION} ${DOCKER_OPTIONS} -p 1521:1521 ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
