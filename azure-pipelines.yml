@@ -47,7 +47,7 @@ steps:
   - task: CacheBeta@0
     inputs:
       path: '$(CACHE_DIR)'
-      key: '*'
+      key: './*'
 
 #  - task: Cache@0
 #    inputs:
