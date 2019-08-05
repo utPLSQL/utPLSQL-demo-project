@@ -80,18 +80,9 @@ steps:
     displayName: 'Download utPLSQL'
 
   - bash: |
-      ls -ltr $(CACHE_DIR) 
-      if [[ -f "$(CACHE_DIR)/${ORACLE_VERSION}.tar.gz" ]]; then
-        # load docker image from cache
-        time docker load -i $(CACHE_DIR)/${ORACLE_VERSION}.tar.gz
-      else
-        docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD)
-        # download Oracle Database docker image from private repo and start the DB
-        time docker pull ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
-        # save pulled image into cache
-        time docker save ${DOCKHER_HUB_REPO}:${ORACLE_VERSION} | | gzip -c > $(CACHE_DIR)/${ORACLE_VERSION}.tar.gz
-        ls -ltr $(CACHE_DIR)
-      fi
+      docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD)
+      # download Oracle Database docker image from private repo and start the DB
+      time docker pull ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
       # start the docker container (DB)
       time docker run -d --name ${ORACLE_VERSION} ${DOCKER_OPTIONS} -p 1521:1521 ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
       # Wait for DB startup
