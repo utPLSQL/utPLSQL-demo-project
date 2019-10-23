@@ -6,7 +6,7 @@ services:
   - docker
 
 jdk:
-  - oraclejdk8
+  - openjdk9
 
 addons:
   sonarcloud:
@@ -61,10 +61,8 @@ before_install:
   - sql -v
 
   # download and unzip utPLSQL-cli release
-  - curl -Lk -o utPLSQL-cli.zip "https://github.com/utPLSQL/utPLSQL-cli/releases/download/v3.1.6/utPLSQL-cli.zip"
+  - curl -Lk -o utPLSQL-cli.zip "https://github.com/utPLSQL/utPLSQL-cli/releases/download/v3.1.8/utPLSQL-cli.zip"
   - unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
-  # copy ojdbc.jar from sqlcl to utPSLQL-cli so it can be visible to utPSLQL-cli
-  - cp sqlcl/lib/ojdbc8.jar utPLSQL-cli/lib && cp sqlcl/lib/orai18n.jar utPLSQL-cli/lib
 
   # Download specified version of utPLSQL from utPLSQL github repo
   # Allows any utPLSQL branch/tag name to be used
