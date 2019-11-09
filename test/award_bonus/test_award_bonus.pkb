@@ -10,7 +10,7 @@ create or replace package body test_award_bonus as
     not_affected sys_refcursor;
     c_sales_amount constant number := 1000;
   begin
-    --arrange
+    --Arrange
     open expected for
       select (salary + c_sales_amount * gc_commision_pct) as new_salary
         from employees_test where employee_id = gc_test_employee;
@@ -18,29 +18,28 @@ create or replace package body test_award_bonus as
     open not_affected for
       select * from employees_test where employee_id <> gc_test_employee;
 
-    --act
+    --Act
     award_bonus(emp_id => gc_test_employee, sales_amt => c_sales_amount);
 
-    --assert
-    open results  for
+    --Assert
+    open results for
       select salary as new_salary
         from employees_test where employee_id = gc_test_employee;
 
-    ut.expect( results ).to_( equal( expected ) );
+    ut.expect( results ).to_equal( expected );
 
     open results for
       select * from employees_test where employee_id != gc_test_employee;
 
-    ut.expect( results ).to_( equal( not_affected ) );
+    ut.expect( results ).to_equal( not_affected );
   end;
 
   procedure fail_on_null_bonus is
   begin
+    --Arrange done in --%beforetest
+    --Act
     award_bonus(emp_id => gc_test_employee, sales_amt => null);
-    ut.expect( sqlcode ).not_to( equal( 0 ) );
-  exception
-    when others then
-      ut.expect( sqlcode ).not_to( equal( 0 ) );
+    --Assert done through --%throws annotation
   end;
 
   procedure add_employee( emp_id number, comm_pct number, sal number ) is
