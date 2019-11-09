@@ -12,9 +12,7 @@ addons:
   sonarcloud:
     # Set this to match your repo - see this doc on how to set details https://docs.travis-ci.com/user/sonarcloud/
     organization: utplsql
-    token:
-      # Put sonar connection token generated and encrypted.
-      secure: ${SONAR_TOKEN}
+    token: ${SONAR_TOKEN}
 
 env:
   global:
