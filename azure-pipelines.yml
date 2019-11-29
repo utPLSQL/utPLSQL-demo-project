@@ -4,16 +4,125 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+  - develop
+  - feature/azure_pipeline
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-16.04'
+
+variables:
+  DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
+  # Timezone needed for working with Oracle DB
+  TZ: UTC
+  ORACLE_VERSION: '11g-r2-xe'
+  CONNECTION_STR: '127.0.0.1:1521/XE'
+  DOCKER_OPTIONS: '--shm-size=1g'
+  DB_SYS_PASSWORD: oracle
+  DB_USER: ut3_demo
+  DB_PASS: ut3_demo
+  SQLCL_DIR: $(Build.BinariesDirectory)/sqlcl
+  UTPLSQL_DIR: $(Build.BinariesDirectory)/utPLSQL
+  UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
+  UTPLSQL_CLI_VERSION: 'v3.1.7'
+  CACHE_DIR: $(Pipeline.Workspace)/.cache
+
+strategy:
+  matrix:
+    develop:
+      UTPLSQL_VERSION: 'develop'
+    v3.1.1:
+      UTPLSQL_VERSION: 'v3.1.1'
+    v3.1.2:
+      UTPLSQL_VERSION: 'v3.1.2'
+    v3.1.4:
+      UTPLSQL_VERSION: 'v3.1.4'
+    v3.1.7:
+      UTPLSQL_VERSION: 'v3.1.7'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+# Possible cache options:
+# https://marketplace.visualstudio.com/items?itemName=1ESLighthouseEng.PipelineArtifactCaching
+# https://github.com/Microsoft/azure-pipelines-yaml/pull/113
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - task: CacheBeta@0
+    inputs:
+      path: '$(CACHE_DIR)'
+      key: './*'
+
+#  - task: Cache@0
+#    inputs:
+#      path: $(CACHE_DIR)
+#      key: '*'
+#    displayName: 'Restore cache'
+
+  - bash: |
+      echo "##vso[task.prependpath]$(UTPLSQL_CLI_DIR)/bin"
+      echo "##vso[task.prependpath]$(SQLCL_DIR)/bin"
+    displayName: 'Setup PATH variable'
+
+  - bash: |
+      mkdir -p $(CACHE_DIR)
+      .travis/install_sqlcl.sh -u $(ORACLE_OTN_USER) -p $(ORACLE_OTN_PASSWORD) -d $(CACHE_DIR) -o $(Build.BinariesDirectory)
+      echo $PATH
+      sql -v
+    displayName: 'Install Oracle sqlcl'
+
+  - bash: |
+      curl -Lk -o $(UTPLSQL_CLI_DIR).zip "https://github.com/utPLSQL/utPLSQL-cli/releases/download/$(UTPLSQL_CLI_VERSION)/utPLSQL-cli.zip"
+      cd $(Build.BinariesDirectory)
+      unzip $(UTPLSQL_CLI_DIR).zip && chmod -R u+x $(UTPLSQL_CLI_DIR)
+      cp $(SQLCL_DIR)/lib/ojdbc8.jar $(UTPLSQL_CLI_DIR)/lib && cp $(SQLCL_DIR)/lib/orai18n.jar $(UTPLSQL_CLI_DIR)/lib
+    displayName: 'Install utPLSQL-cli'
+
+  - bash: |
+      git clone --depth=1 --branch=${UTPLSQL_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
+      # Needed for older versions of utPLSQL.
+    displayName: 'Download utPLSQL'
+
+  - bash: |
+      docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD)
+      # download Oracle Database docker image from private repo and start the DB
+      time docker pull ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
+      # start the docker container (DB)
+      time docker run -d --name ${ORACLE_VERSION} ${DOCKER_OPTIONS} -p 1521:1521 ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
+      # Wait for DB startup
+      time docker logs -f ${ORACLE_VERSION} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
+    displayName: 'Start Oracle DB Docker container'
+
+  - bash: .travis/install_utplsql.sh
+    displayName: 'Install utPLSQL'
+
+  - bash: |
+      source/setup_db_account.sh
+      source/install.sh
+      test/install.sh
+    displayName: 'Deploy'
+
+  - bash: |
+      $(UTPLSQL_CLI_DIR)/bin/utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} \
+        -source_path=source \
+        -test_path=test \
+        -f=ut_documentation_reporter      -c \
+        -f=ut_coverage_sonar_reporter     -o=coverage.xml \
+        -f=ut_sonar_test_reporter         -o=test_results.xml \
+        -f=ut_coverage_cobertura_reporter -o=cobertura.xml \
+        -f=ut_junit_reporter              -o=junit_test_results.xml \
+        --debug \
+        --failure-exit-code=0
+      cat test_results.xml
+      cat coverage.xml
+    displayName: 'Test'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/junit_test_results.xml'
+      testRunTitle: 'Publish test results'
+    displayName: 'Publish test results'
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: 'cobertura.xml'
+      pathToSources: 'source'
+    displayName: 'Publish coverage'

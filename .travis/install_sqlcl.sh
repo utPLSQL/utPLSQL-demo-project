@@ -13,6 +13,10 @@ OTN_USER=""
 OTN_PASS=""
 OUTPUT_DIR=""
 
+# To allow running of locally installed node modules
+# see: https://2ality.com/2016/01/locally-installed-npm-executables.html
+function npm-do { (PATH=$(npm bin):$PATH; eval $@;) }
+
 # Call the casperjs script to return the download url. Then download the file using curl.
 downloadFile() {
     user=$1
@@ -21,7 +25,7 @@ downloadFile() {
     downloadUrl=$4
     outputFile=$5
     echo "Signing-in"
-    downloadUrl=$(exec casperjs ${SCRIPT_DIR}/download.js ${user} ${pass} ${agreementUrl} ${downloadUrl})
+    downloadUrl=$(npm-do casperjs ${SCRIPT_DIR}/download.js ${user} ${pass} ${agreementUrl} ${downloadUrl})
     downloadUrl=${downloadUrl%$'\r'}
     echo "DownloadURL: $downloadUrl"
     curl -o ${outputFile} -L "$downloadUrl"
@@ -55,12 +59,12 @@ if [[ "$OUTPUT_DIR" == "" ]]; then
 fi
 
 if [[ ! -f "${ZIP_TARGET_DIR}/${SQLCL_FILE}" ]]; then
-    npm install -g phantomjs-prebuilt casperjs
+    npm install phantomjs-prebuilt casperjs
     echo "Downloading sqlcl from Oracle"
     downloadFile ${OTN_USER} ${OTN_PASS} ${AGREEMENT_URL} ${DOWNLOAD_URL} "${ZIP_TARGET_DIR}/${SQLCL_FILE}"
 else
     echo "Installing sqlcl from cache..."
 fi;
 
-echo "Unzipping sqlcl into: ${ZIP_TARGET_DIR}"
+echo "Unzipping sqlcl zip file: ${ZIP_TARGET_DIR}/${SQLCL_FILE} into: ${OUTPUT_DIR} directory"
 unzip -q "${ZIP_TARGET_DIR}/${SQLCL_FILE}" -d ${OUTPUT_DIR}
