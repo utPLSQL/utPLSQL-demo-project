@@ -6,7 +6,7 @@ services:
   - docker
 
 jdk:
-  - openjdk9
+  - openjdk-9-jre-headless
 
 addons:
   sonarcloud:
