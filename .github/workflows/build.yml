@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        utplsql-version: [develop, v3.0.0, v3.1.6, v3.1.11]
+        utplsql-version: [develop, v3.1.0, v3.1.6, v3.1.11]
 
     services:
       oracle:
@@ -50,6 +50,6 @@ jobs:
       - name: Install unit tests
         run: sh ${{ github.workspace }}/scripts/3_install_tests.sh
 
-      - name: Install run tests
+      - name: Run unit tests
         run: sh ${{ github.workspace }}/scripts/4_run_tests.sh
 
