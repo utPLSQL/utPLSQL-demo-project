@@ -1,8 +1,5 @@
 name: Build and deploy snapshot
 
-env:
-  DB_IMAGE: gvenzl/oracle-xe:11-full
-
 on:
   push:
     branches: [ develop ]
@@ -24,8 +21,9 @@ jobs:
 
     services:
       oracle:
-        image: ${{env.DB_IMAGE}}
+        image: gvenzl/oracle-xe:11-full
         env:
+          DB_IMAGE: gvenzl/oracle-xe:11-full
           ORACLE_PASSWORD: oracle
         ports:
           - 1521:1521
