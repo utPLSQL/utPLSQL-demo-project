@@ -21,11 +21,10 @@ jobs:
     strategy:
       matrix:
         utplsql-version: [develop, v3.0.0, v3.1.6, v3.1.11]
-        db_image: ${{env.DB_IMAGE}}
 
     services:
       oracle:
-        image: ${{env.db_image}}
+        image: ${{env.DB_IMAGE}}
         env:
           ORACLE_PASSWORD: oracle
         ports:
