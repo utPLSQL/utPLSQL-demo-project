@@ -1,5 +1,8 @@
 name: Build and deploy snapshot
 
+env:
+  DB_IMAGE: gvenzl/oracle-xe:11-full
+
 on:
   push:
     branches: [ develop ]
@@ -13,17 +16,16 @@ jobs:
 
     env:
       UTPLSQL_VERSION: ${{matrix.utplsql-version}}
-      DB_IMAGE: ${{matrix.db_image}}
 
     runs-on: ubuntu-latest
     strategy:
       matrix:
         utplsql-version: [develop, v3.0.0, v3.1.6, v3.1.11]
-        db_image: gvenzl/oracle-xe:11-full
+        db_image: ${{env.DB_IMAGE}}
 
     services:
       oracle:
-        image: ${{matrix.db_image}}
+        image: ${{env.db_image}}
         env:
           ORACLE_PASSWORD: oracle
         ports:
