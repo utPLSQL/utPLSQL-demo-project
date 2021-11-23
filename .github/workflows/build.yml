@@ -16,7 +16,7 @@ jobs:
       DB_IMAGE: ${{matrix.db_image}}
 
     runs-on: ubuntu-latest
-    startegy:
+    strategy:
       matrix:
         utplsql-version: [develop, v3.0.0, v3.1.6, v3.1.11]
         db_image: gvenzl/oracle-xe:11-full
