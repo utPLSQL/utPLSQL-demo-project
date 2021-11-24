@@ -53,3 +53,8 @@ jobs:
       - name: Run unit tests
         run: sh ${{ github.workspace }}/scripts/4_run_tests.sh
 
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
