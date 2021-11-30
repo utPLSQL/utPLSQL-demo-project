@@ -9,11 +9,16 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  CACHE_DIR: $(Pipeline.Workspace)/.cache
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+steps:
+  - bash: |
+      mkdir -p $(CACHE_DIR)
+      curl -sS -o $(CACHE_DIR)sqlcl-latest.zip \
+           https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
+      echo Unzipping to $(CACHE_DIR)/sqlcl
+      unzip   -qq -d $(CACHE_DIR) $(CACHE_DIR)/sqlcl-latest.zip
+      export PATH=$PATH:$STAGE_DIR/sqlcl/bin
+      sql -v
+    displayName: 'Install Oracle sqlcl'
