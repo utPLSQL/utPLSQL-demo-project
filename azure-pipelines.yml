@@ -14,8 +14,14 @@ variables:
   SQLCL_DIR: $(Build.BinariesDirectory)/sqlcl
   UTPLSQL_DIR: $(Build.BinariesDirectory)/utPLSQL
   UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
-  
+  UTPLSQL_CLI_VERSION: 'v3.1.8'
+  UTPLSQL_VERSION: 'v3.1.11' 
+
 steps:
+  - task: CacheBeta@0
+    inputs:
+      path: '$(CACHE_DIR)'
+      key: './*'
   - bash: |
       echo "##vso[task.prependpath]$(UTPLSQL_CLI_DIR)/bin"
       echo "##vso[task.prependpath]$(SQLCL_DIR)/bin"
@@ -28,5 +34,19 @@ steps:
       echo Unzipping to $(Build.BinariesDirectory)/sqlcl
       unzip   -qq -d $(Build.BinariesDirectory) $(Build.BinariesDirectory)/sqlcl-latest.zip
       rm -rf $(Build.BinariesDirectory)/sqlcl-latest.zip
+      # Relates to : https://community.oracle.com/tech/developers/discussion/4490418/sqlcl-production-build-21-3-0-278-1045-throwing-warning-terminal-cannot-be-created-paused
+      export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
       sql -v
     displayName: 'Install Oracle sqlcl'
+
+  - bash: |
+      curl -Lk -o $(UTPLSQL_CLI_DIR).zip "https://github.com/utPLSQL/utPLSQL-cli/releases/download/$(UTPLSQL_CLI_VERSION)/utPLSQL-cli.zip"
+      cd $(Build.BinariesDirectory)
+      unzip $(UTPLSQL_CLI_DIR).zip && chmod -R u+x $(UTPLSQL_CLI_DIR)
+      cp $(SQLCL_DIR)/lib/ojdbc8.jar $(UTPLSQL_CLI_DIR)/lib && cp $(SQLCL_DIR)/lib/orai18n.jar $(UTPLSQL_CLI_DIR)/lib
+    displayName: 'Install utPLSQL-cli'
+
+  - bash: |
+      git clone --depth=1 --branch=${UTPLSQL_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
+      # Needed for older versions of utPLSQL.
+    displayName: 'Download utPLSQL'
