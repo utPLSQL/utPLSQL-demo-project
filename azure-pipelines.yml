@@ -56,6 +56,7 @@ steps:
   - bash: |
       git clone --depth=1 --branch=${UTPLSQL_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
       # Needed for older versions of utPLSQL.
+      chmod -R go+w ${UTPLSQL_DIR}
     displayName: 'Download utPLSQL'
 
   - task: Docker@2
@@ -73,5 +74,12 @@ steps:
       # Wait for DB startup
       time docker logs -f ${ORACLE_VERSION} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
     displayName: 'Start Oracle DB Docker container'
-  - bash: .travis/install_utplsql.sh
+
+  - bash: |
+      cd ${UTPLSQL_DIR}
+      sql sys/oracle@//127.0.0.1:1521/XE as sysdba @install_headless.sql UT3 UT3 users
+      
+      cd $(Build.SourcesDirectory)
+      sql sys/oracle@//127.0.0.1:1521/XE as sysdba @source/create_user.sql
+      sql sys/oracle@//127.0.0.1:1521/XE as sysdba @source/install.sql
     displayName: 'Install utPLSQL'
