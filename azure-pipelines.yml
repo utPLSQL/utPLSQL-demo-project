@@ -19,7 +19,7 @@ variables:
   DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
   # Timezone needed for working with Oracle DB
   TZ: UTC
-  ORACLE_VERSION: '19.3'
+  ORACLE_VERSION: '19c-se2-small'
   DOCKER_OPTIONS: '--shm-size=1g'
   DB_SYS_PASSWORD: oracle
   DB_USER: ut3_demo
