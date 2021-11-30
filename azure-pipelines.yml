@@ -11,15 +11,22 @@ pool:
 
 variables:
   CACHE_DIR: $(Pipeline.Workspace)/.cache
-
+  SQLCL_DIR: $(Build.BinariesDirectory)/sqlcl
+  UTPLSQL_DIR: $(Build.BinariesDirectory)/utPLSQL
+  UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
+  
 steps:
   - bash: |
+      echo "##vso[task.prependpath]$(UTPLSQL_CLI_DIR)/bin"
+      echo "##vso[task.prependpath]$(SQLCL_DIR)/bin"
       mkdir -p $(CACHE_DIR)
-      curl -sS -o $(CACHE_DIR)/sqlcl-latest.zip \
+    displayName: 'Pre jobs task'
+
+  - bash: |    
+      curl -sS -o $(Build.BinariesDirectory)/sqlcl-latest.zip \
            https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
-      echo Unzipping to $(CACHE_DIR)/sqlcl
-      unzip   -qq -d $(CACHE_DIR) $(CACHE_DIR)/sqlcl-latest.zip
-      rm -rf $(CACHE_DIR)/sqlcl-latest.zip
-      export PATH=$PATH:$(CACHE_DIR)/sqlcl/bin
+      echo Unzipping to $(Build.BinariesDirectory)/sqlcl
+      unzip   -qq -d $(Build.BinariesDirectory) $(Build.BinariesDirectory)/sqlcl-latest.zip
+      rm -rf $(Build.BinariesDirectory)/sqlcl-latest.zip
       sql -v
     displayName: 'Install Oracle sqlcl'
