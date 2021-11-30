@@ -16,7 +16,14 @@ variables:
   UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
   UTPLSQL_CLI_VERSION: 'v3.1.8'
   UTPLSQL_VERSION: 'v3.1.11' 
-
+  DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
+  # Timezone needed for working with Oracle DB
+  TZ: UTC
+  ORACLE_VERSION: '19.3'
+  DOCKER_OPTIONS: '--shm-size=1g'
+  DB_SYS_PASSWORD: oracle
+  DB_USER: ut3_demo
+  DB_PASS: ut3_demo  
 steps:
   - task: CacheBeta@0
     inputs:
@@ -50,3 +57,15 @@ steps:
       git clone --depth=1 --branch=${UTPLSQL_VERSION} https://github.com/utPLSQL/utPLSQL.git ${UTPLSQL_DIR}
       # Needed for older versions of utPLSQL.
     displayName: 'Download utPLSQL'
+
+  - bash: |
+      docker login
+      # download Oracle Database docker image from private repo and start the DB
+      time docker pull ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
+      # start the docker container (DB)
+      time docker run -d --name ${ORACLE_VERSION} ${DOCKER_OPTIONS} -p 1521:1521 ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
+      # Wait for DB startup
+      time docker logs -f ${ORACLE_VERSION} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
+    displayName: 'Start Oracle DB Docker container'
+  - bash: .travis/install_utplsql.sh
+    displayName: 'Install utPLSQL'
