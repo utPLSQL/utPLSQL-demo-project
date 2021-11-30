@@ -58,8 +58,15 @@ steps:
       # Needed for older versions of utPLSQL.
     displayName: 'Download utPLSQL'
 
+  - 
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'utPLSQL-docker'
+      command: 'login'
+      addPipelineData: false
+      addBaseImageData: false
+
   - bash: |
-      docker login
       # download Oracle Database docker image from private repo and start the DB
       time docker pull ${DOCKHER_HUB_REPO}:${ORACLE_VERSION}
       # start the docker container (DB)
