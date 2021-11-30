@@ -19,7 +19,7 @@ steps:
            https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
       echo Unzipping to $(CACHE_DIR)/sqlcl
       unzip   -qq -d $(CACHE_DIR) $(CACHE_DIR)/sqlcl-latest.zip
-      ls -ltr $(CACHE_DIR)
-      export PATH=$PATH:$STAGE_DIR/sqlcl/bin
-      #sql -v
+      rm -rf $(CACHE_DIR)/sqlcl-latest.zip
+      export PATH=$PATH:$(STAGE_DIR)/sqlcl/bin
+      sql -v
     displayName: 'Install Oracle sqlcl'
