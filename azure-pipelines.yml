@@ -58,7 +58,6 @@ steps:
       # Needed for older versions of utPLSQL.
     displayName: 'Download utPLSQL'
 
-  - 
   - task: Docker@2
     inputs:
       containerRegistry: 'utPLSQL-docker'
