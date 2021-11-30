@@ -15,7 +15,7 @@ variables:
 steps:
   - bash: |
       mkdir -p $(CACHE_DIR)
-      curl -sS -o $(CACHE_DIR)sqlcl-latest.zip \
+      curl -sS -o $(CACHE_DIR)/sqlcl-latest.zip \
            https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip
       echo Unzipping to $(CACHE_DIR)/sqlcl
       unzip   -qq -d $(CACHE_DIR) $(CACHE_DIR)/sqlcl-latest.zip
