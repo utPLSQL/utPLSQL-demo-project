@@ -18,7 +18,7 @@ variables:
   UTPLSQL_VERSION: 'v3.1.11' 
   DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
   # Timezone needed for working with Oracle DB
-  CONNECTION_STR='127.0.0.1:1521/ORCLCDB'
+  CONNECTION_STR: '127.0.0.1:1521/ORCLCDB'
   TZ: UTC
   ORACLE_VERSION: '19c-se2-small'
   DOCKER_OPTIONS: '--shm-size=1g'
