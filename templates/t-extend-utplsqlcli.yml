@@ -26,6 +26,4 @@ steps:
         -f=ut_coverage_cobertura_reporter -o=cobertura.xml \
         -f=ut_junit_reporter              -o=junit_test_results.xml \
         ${{ parameters.options }}
-      cat test_results.xml
-      cat coverage.xml
   displayName: 'Run Tests'

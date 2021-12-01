@@ -1,4 +1,5 @@
-trigger: none
+trigger: 
+  branches: develop
 
 pool:
   vmImage: ubuntu-latest
