@@ -20,8 +20,7 @@ extends:
       - name: sqlcl
         download_location: $(Build.BinariesDirectory)/sqlcl-latest.zip
         url: "https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip"
-
-    packages:
+        
       - name: utlplsqlcli
         download_location: $(Build.BinariesDirectory)/utPLSQL-cli.zip
         url: ""https://github.com/utPLSQL/utPLSQL-cli/releases/download/$(UTPLSQL_CLI_VERSION)/utPLSQL-cli.zip""  
