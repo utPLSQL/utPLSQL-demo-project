@@ -13,10 +13,10 @@ parameters:
       - name: connectionString
         default: ""    
 stages:
-  stage: BuildDatabase
-  displayName: Build Database
-  jobs:
-    - template: jobs/t-extend-build-job.yml
-      parameters:
-        createDatabase: ${{ parameters.createDatabase }}
+  - stage: BuildDatabase
+    displayName: Build Database
+    jobs:
+      - template: jobs/t-extend-build-job.yml
+        parameters:
+          createDatabase: ${{ parameters.createDatabase }}
     
