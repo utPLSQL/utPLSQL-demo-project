@@ -87,6 +87,18 @@ steps:
     displayName: 'Install utPLSQL'
 
   - bash: |
+      export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
+      cd $(Build.SourcesDirectory)
+      sql sys/oracle@//${CONNECTION_STR}?oracle.net.disableOob=true as sysdba @source/create_user.sql
+    displayName: 'Create Test User'
+
+  - bash: |
+      export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
+      cd ${UTPLSQL_DIR}/source
+      sql ${DB_USER}/${DB_PASS}@//${CONNECTION_STR}?oracle.net.disableOob=true @source/install.sql
+    displayName: 'Install Tests'    
+
+  - bash: |
         $(UTPLSQL_CLI_DIR)/bin/utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR}?oracle.net.disableOob=true \
           -source_path=source \
           -test_path=test \
