@@ -16,13 +16,14 @@ variables:
   DB_PASS: ut3_demo  
 
 jobs:
-- job: Build utPLSQL-demo-project
+- job: utPLSQL_demo_project
+  displayName: Build utPLSQL-demo-project
   strategy:
     matrix:
       Oracle19_2:
         ORACLE_VERSION: "19c-se2-small"
     maxParallel: 2
-    
+
   steps:
   - template: templates/t-extend-download-binaries.yml
     parameters:
