@@ -71,9 +71,9 @@ stages:
               - ${{ each script in trg_db.scripts }}:
                 - template: templates/t-extend-sqlcl.yml
                     parameters:
-                      work_dir: ${{ script.work_dir}}
-                      user: ${{ script.user}}
-                      password: ${{ script.password}}
-                      connectionString: ${{ trg_db.connectionString}}
-                      script: ${{ script.script}}
-                      displayName: ${{ script.displayName}}
+                      - work_dir: ${{ script.work_dir}}
+                        user: ${{ script.user}}
+                        password: ${{ script.password}}
+                        connectionString: ${{ trg_db.connectionString}}
+                        script: ${{ script.script}}
+                        displayName: ${{ script.displayName}}
