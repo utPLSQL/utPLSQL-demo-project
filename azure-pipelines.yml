@@ -92,8 +92,14 @@ steps:
       export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
       cd $(Build.SourcesDirectory)
       sql ${DB_USER}/${DB_PASS}@//${CONNECTION_STR}?oracle.net.disableOob=true @source/install.sql
-    displayName: 'Install Tests'    
+    displayName: 'Install Source'
 
+  - bash: |
+      export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
+      cd $(Build.SourcesDirectory)
+      sql ${DB_USER}/${DB_PASS}@//${CONNECTION_STR}?oracle.net.disableOob=true @test/install.sql
+    displayName: 'Install Tests'
+    
   - bash: |
         cd $(Build.SourcesDirectory)
         $(UTPLSQL_CLI_DIR)/bin/utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR}?oracle.net.disableOob=true \
