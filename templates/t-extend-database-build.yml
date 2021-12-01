@@ -6,7 +6,11 @@ parameters:
   - name: utplsqlVersion
     default: ""
   - name: utplsqlDir
-    default: ""      
+    default: ""
+  - name: test_user
+    default: ""
+  - name: test_pwd
+    default: ""
   - name: targetDatabases
     type: object
     default:
@@ -68,3 +72,27 @@ steps:
         connectionString: ${{ trg_db.connectionString}}
         script: ${{ script.script}}
         displayName: ${{ script.displayName}}
+
+  - template: t-extend-utplsqlcli.yml
+    parameters:
+      work_dir: $(Build.SourcesDirectory)
+      connectionString: ${{ trg_db.connectionString}}
+      test_user: ${{ parameters.test_user }}
+      test_pwd: ${{ parameters.test_pwd }}
+      source_path: "source"
+      test_path: "test"
+      options: "--debug --failure-exit-code=0"
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/junit_test_results.xml'
+      testRunTitle: 'Publish test results'
+    displayName: 'Publish test results'
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: 'cobertura.xml'
+      pathToSources: 'source'
+    displayName: 'Publish coverage'
