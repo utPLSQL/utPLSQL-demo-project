@@ -9,7 +9,12 @@ parameters:
   - name: utplsqlVersion
     default: ""
   - name: utplsqlDir
-    default: ""         
+    default: ""
+  - name: addToPaths
+    type: object
+    default:
+      - name: path
+        default: ""        
   - name: targetDatabases
     type: object
     default:
@@ -44,6 +49,15 @@ stages:
       pool:
         vmImage: ubuntu-latest
       jobs:
+        - job: AddToPath
+          displayName: Add binaries to Path
+          steps:
+            - checkout: none
+            - ${{ each addpath in parameters.addToPaths }}:
+                - bash: |    
+                    echo "##vso[task.prependpath]${{addpath.path}}"
+                  displayName: 'Add To path ${{addpath.path}}'
+
         - job: CreateDatabase
           displayName: Create Database
           steps:
