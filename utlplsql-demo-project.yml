@@ -22,9 +22,11 @@ extends:
         unpack_location: "$(Build.BinariesDirectory)"
         url: "https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip"
         archive: "zip"
+        addtoPath: "$(SQLCL_DIR)/bin"
 
       - name: utlplsqlcli
         download_location: "$(Build.BinariesDirectory)/utPLSQL-cli.zip"
         unpack_location: "$(Build.BinariesDirectory)"
         url: "https://github.com/utPLSQL/utPLSQL-cli/releases/download/$(UTPLSQL_CLI_VERSION)/utPLSQL-cli.zip"
         archive: "zip"
+        addToPath: "$(UTPLSQL_CLI_DIR)/bin"

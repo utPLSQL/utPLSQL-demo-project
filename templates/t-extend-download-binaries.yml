@@ -13,11 +13,13 @@ parameters:
         default: "$(Build.BinariesDirectory)"    
       - name: url
         default: ""
+      - name: archive
+        default: "zip"
+      - name: addToPath
+        default: ""     
       - name: clean
         type: boolean
         default: true
-      - name: archive
-        default: "zip"
 
 stages:
   - ${{ if parameters.enableDownload }}:
@@ -42,7 +44,12 @@ stages:
                     chmod -R u+x ${{package.unpack_location}}
                   displayName: 'Unzip ${{package.name}}'
 
-              - ${{ if package.clean }}:
+              - ${{ if package.addToPath }}:
+                - bash: |    
+                    echo "##vso[task.prependpath]${{package.addToPath}}"
+                  displayName: 'Add To path ${{package.name}}'
+
+              - ${{ if coalesce(package.clean,true) }}:
                 - bash: |    
                     rm -rf ${{package.download_location}}
                   displayName: 'Clean ${{package.name}}'             
