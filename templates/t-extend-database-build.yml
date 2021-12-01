@@ -52,7 +52,7 @@ stages:
               displayName: 'Download utPLSQL'
             - task: Docker@2
               inputs:
-                containerRegistry: £ {{ parameters.containerRegistry }}
+                containerRegistry: ${{ parameters.containerRegistry }}
                 command: 'login'
                 addPipelineData: false
                 addBaseImageData: false
