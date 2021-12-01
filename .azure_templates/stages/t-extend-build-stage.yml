@@ -16,7 +16,7 @@ stages:
   - stage: BuildDatabase
     displayName: Build Database
     jobs:
-      - template: ./jobs/t-extend-build-job.yml
+      - template: ../jobs/t-extend-build-job.yml
         parameters:
           createDatabase: ${{ parameters.createDatabase }}
     
