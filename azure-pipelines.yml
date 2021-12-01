@@ -77,9 +77,10 @@ steps:
     displayName: 'Start Oracle DB Docker container'
 
   - bash: |
+      export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
       cd ${UTPLSQL_DIR}
       sql sys/oracle@//${CONNECTION_STR} as sysdba @install_headless.sql UT3 UT3 users
-      
+     
       cd $(Build.SourcesDirectory)
       sql sys/oracle@/${CONNECTION_STR} as sysdba @source/create_user.sql
       sql sys/oracle@//${CONNECTION_STR} as sysdba @source/install.sql
