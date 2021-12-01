@@ -1,24 +1,23 @@
 parameters:
-    name: testDatabase
-    type: object
-    default:
-        name: connection_string
-        default: ""
-        name: install_utplsql
-        type: boolean
-        default: true
-        name: install_tests
-        type: boolean
-        default: true    
-        name: execute_tests
-        type: object
-        default:
-            name: test_user
-            value: "UT3_TEST"
-            name: test_pwd
-            value: "UT3_TEST"
-            
-            
-            
+  name: containerRegistry
+  default: ""
+  name: dockerOptions
+  default: "--shm-size=1g"
+  name: db_user
+  default: ""
+  name: db_pass
+  default: ""
+  name: sys_password
+  default: "oracle"
+
+  name: testDatabases
+  type: object
+  default:
+    name: oracledockerversion
+    default: ""
+    name: connectionsstring
+    default: ""
+
 steps:
-    - ${{each database in parameters.testDatabase}}:
+  - jobs:
+
