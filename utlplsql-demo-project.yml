@@ -25,7 +25,7 @@ jobs:
     maxParallel: 2
 
   steps:
-  - template: templates/t-extend-download-binaries.yml
+  - template: .azure_templates/t-extend-download-binaries.yml
     parameters:
       packages:
         - name: sqlcl
@@ -42,7 +42,7 @@ jobs:
           archive: "zip"
           addToPath: "$(UTPLSQL_CLI_DIR)/bin"
       
-  - template: templates/t-extend-database-build.yml
+  - template: .azure_templates/t-extend-database-build.yml
     parameters:
       utplsqlVersion: ${UTPLSQL_VERSION}
       utplsqlDir: ${UTPLSQL_DIR}
