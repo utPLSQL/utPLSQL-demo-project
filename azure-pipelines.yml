@@ -94,7 +94,7 @@ steps:
 
   - bash: |
       export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
-      cd ${UTPLSQL_DIR}/source
+      cd $(Build.SourcesDirectory)
       sql ${DB_USER}/${DB_PASS}@//${CONNECTION_STR}?oracle.net.disableOob=true @source/install.sql
     displayName: 'Install Tests'    
 
