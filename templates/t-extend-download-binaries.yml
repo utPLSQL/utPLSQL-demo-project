@@ -1,21 +1,21 @@
 parameters:
-  name: enableDownload
-  type: boolean
-  default: true
-  name: packages
-  type: object
-  default:
-    name: name
-    default: ""  
-    name: download_location
-    default: ""
-    name: unzip_location
-    default: "$(Build.BinariesDirectory)"    
-    name: url
-    default: ""
-    name: clean
+  - name: enableDownload
     type: boolean
     default: true
+  - name: packages
+    type: object
+    default:
+      - name: name
+        default: ""  
+      - name: download_location
+        default: ""
+      - name: unzip_location
+        default: "$(Build.BinariesDirectory)"    
+      - name: url
+        default: ""
+      - name: clean
+        type: boolean
+        default: true
 
 stages:
   - ${{ if parameters.enableDownload }}:
