@@ -57,6 +57,8 @@ stages:
                 - bash: |    
                     echo "Setting variable ${{addpath.path}}"
                     echo "##vso[task.prependpath]${{addpath.path}}"
+                    ls -ltr ${{addpath.path}}
+                    echo $PATH
                   displayName: 'Add To path ${{addpath.path}}'
 
             - bash: |
