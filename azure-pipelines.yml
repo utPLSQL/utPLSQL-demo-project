@@ -80,10 +80,6 @@ steps:
       export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
       cd ${UTPLSQL_DIR}/source
       sql sys/oracle@//${CONNECTION_STR}?oracle.net.disableOob=true as sysdba @install_headless.sql UT3 UT3 users
-     
-      cd $(Build.SourcesDirectory)
-      sql sys/oracle@//${CONNECTION_STR}?oracle.net.disableOob=true as sysdba @source/create_user.sql
-      sql sys/oracle@//${CONNECTION_STR}?oracle.net.disableOob=true as sysdba @source/install.sql
     displayName: 'Install utPLSQL'
 
   - bash: |
@@ -99,6 +95,7 @@ steps:
     displayName: 'Install Tests'    
 
   - bash: |
+        cd $(Build.SourcesDirectory)
         $(UTPLSQL_CLI_DIR)/bin/utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR}?oracle.net.disableOob=true \
           -source_path=source \
           -test_path=test \
