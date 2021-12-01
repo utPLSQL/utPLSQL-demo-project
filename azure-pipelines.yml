@@ -78,7 +78,7 @@ steps:
 
   - bash: |
       export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
-      cd ${UTPLSQL_DIR}
+      cd ${UTPLSQL_DIR}/source
       sql sys/oracle@//${CONNECTION_STR}?oracle.net.disableOob=true as sysdba @install_headless.sql UT3 UT3 users
      
       cd $(Build.SourcesDirectory)
