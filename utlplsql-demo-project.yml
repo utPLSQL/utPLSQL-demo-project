@@ -37,6 +37,8 @@ stages:
       targetDatabases:
         - oracleVersion: "19c-se2-small"
           connectionString: "127.0.0.1:1521/ORCLCDB"
+          dockerPortMap: "1521"
+          dockerOptions: "--shm-size=1g"
           scripts:
             - displayName: "Install utPLSQL"
               user: "sys"
