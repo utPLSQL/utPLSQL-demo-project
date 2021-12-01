@@ -12,7 +12,7 @@ variables:
   UTPLSQL_VERSION: 'v3.1.11' 
   DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
 
-extends:
+stages:
   - template: templates/t-extend-download-binaries.yml
     parameters:
       packages:
