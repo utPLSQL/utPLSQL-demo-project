@@ -34,7 +34,7 @@ stages:
                   unzip   -qq -d ${{package.unzip_location}} ${{package.download_location}}
                   chmod -R u+x ${{package.unzip_location}}
                 displayName: 'Download ${{package.name}}'
-              - $ {{ if package.clean }}:
+              - ${{ if package.clean }}:
                 - bash: |    
                     rm -rf ${{package.download_location}}
                   displayName: 'Clean zip ${{package.name}}'             
