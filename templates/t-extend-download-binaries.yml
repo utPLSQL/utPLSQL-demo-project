@@ -33,12 +33,14 @@ stages:
                   curl -Lk -o ${{package.download_location}} \
                         ${{package.url}}
                 displayName: 'Download ${{package.name}}'
+
               - ${{ if eq(package.archive,'zip') }}:
                 - bash: |    
-                  echo Unzipping to ${{package.unpack_location}}
-                  unzip   -qq -d ${{package.unpack_location}} ${{package.download_location}}
-                  chmod -R u+x ${{package.unpack_location}}
-                  displayName: 'Unzip ${{package.name}}'               
+                    echo Unzipping to ${{package.unpack_location}}
+                    unzip   -qq -d ${{package.unpack_location}} ${{package.download_location}}
+                    chmod -R u+x ${{package.unpack_location}}
+                  displayName: 'Unzip ${{package.name}}'
+
               - ${{ if package.clean }}:
                 - bash: |    
                     rm -rf ${{package.download_location}}
