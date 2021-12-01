@@ -12,23 +12,8 @@ variables:
   UTPLSQL_VERSION: 'v3.1.11' 
   DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
 
-stages:
-  - template: templates/t-extend-download-binaries.yml
-    parameters:
-      packages:
-        - name: sqlcl
-          download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"
-          unpack_location: "$(Build.BinariesDirectory)"
-          url: "https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip"
-          archive: "zip"
-  
-        - name: utlplsqlcli
-          download_location: "$(Build.BinariesDirectory)/utPLSQL-cli.zip"
-          unpack_location: "$(Build.BinariesDirectory)"
-          url: "https://github.com/utPLSQL/utPLSQL-cli/releases/download/$(UTPLSQL_CLI_VERSION)/utPLSQL-cli.zip"
-          archive: "zip"
-    
-  - template: templates/t-extend-database-build.yml
+extends:
+  template: templates/t-extend-database-build.yml
     parameters:
       utplsqlVersion: ${UTPLSQL_VERSION}
       utplsqlDir: ${UTPLSQL_DIR}
