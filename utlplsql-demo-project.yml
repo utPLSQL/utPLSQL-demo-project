@@ -1,5 +1,5 @@
 trigger: 
-  branches: develop
+  - develop
 
 pool:
   vmImage: ubuntu-latest
