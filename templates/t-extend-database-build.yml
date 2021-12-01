@@ -55,7 +55,8 @@ stages:
             - checkout: none
             - ${{ each addpath in parameters.addToPaths }}:
                 - bash: |    
-                    echo "##vso[task.prependpath]${{addpath.path}}"
+                    echo "Setting variable ${{addpath.path}}"
+                    echo "##vso[task.setvariable variable=PATH]${PATH}:${{addpath.path}}"
                   displayName: 'Add To path ${{addpath.path}}'
 
         - job: CreateDatabase
