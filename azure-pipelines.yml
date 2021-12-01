@@ -18,6 +18,7 @@ variables:
   UTPLSQL_VERSION: 'v3.1.11' 
   DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
   # Timezone needed for working with Oracle DB
+  CONNECTION_STR='127.0.0.1:1521/ORCLCDB'
   TZ: UTC
   ORACLE_VERSION: '19c-se2-small'
   DOCKER_OPTIONS: '--shm-size=1g'
@@ -77,9 +78,9 @@ steps:
 
   - bash: |
       cd ${UTPLSQL_DIR}
-      sql sys/oracle@//127.0.0.1:1521/XE as sysdba @install_headless.sql UT3 UT3 users
+      sql sys/oracle@//${CONNECTION_STR} as sysdba @install_headless.sql UT3 UT3 users
       
       cd $(Build.SourcesDirectory)
-      sql sys/oracle@//127.0.0.1:1521/XE as sysdba @source/create_user.sql
-      sql sys/oracle@//127.0.0.1:1521/XE as sysdba @source/install.sql
+      sql sys/oracle@/${CONNECTION_STR} as sysdba @source/create_user.sql
+      sql sys/oracle@//${CONNECTION_STR} as sysdba @source/install.sql
     displayName: 'Install utPLSQL'
