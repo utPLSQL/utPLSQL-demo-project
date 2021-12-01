@@ -28,7 +28,7 @@ stages:
           steps:
             - ${{ each package in parameters.packages }}:
               - bash: |    
-                  curl -sS -o ${{package.download_location}} \
+                  curl -Lk -o ${{package.download_location}} \
                         ${{package.url}}
                   echo Unzipping to ${{package.unzip_location}}
                   unzip   -qq -d ${{package.unzip_location}} ${{package.download_location}}
