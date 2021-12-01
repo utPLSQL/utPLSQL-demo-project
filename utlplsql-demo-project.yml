@@ -30,3 +30,18 @@ extends:
         url: "https://github.com/utPLSQL/utPLSQL-cli/releases/download/$(UTPLSQL_CLI_VERSION)/utPLSQL-cli.zip"
         archive: "zip"
         addToPath: "$(UTPLSQL_CLI_DIR)/bin"
+    
+  template: templates/t-extend-database-build.yml
+  parameters:
+    utplsqlVersion: ${UTPLSQL_VERSION}
+    utplsqlDir: ${UTPLSQL_DIR}
+    targetDatabases:
+      - oracleVersion: "19c-se2-small"
+        connectionString: "127.0.0.1:1521/ORCLCDB"
+        scripts:
+          - displayName: "Install utPLSQL"
+            user: "sys"
+            password: "oracle"           
+            script: "install_headless.sql UT3 UT3 users"
+            work_dir: "${UTPLSQL_DIR}/source"
+
