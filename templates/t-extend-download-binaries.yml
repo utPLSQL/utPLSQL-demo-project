@@ -9,13 +9,15 @@ parameters:
         default: ""  
       - name: download_location
         default: ""
-      - name: unzip_location
+      - name: unpack_location
         default: "$(Build.BinariesDirectory)"    
       - name: url
         default: ""
       - name: clean
         type: boolean
         default: true
+      - name: archive
+        default: "zip"
 
 stages:
   - ${{ if parameters.enableDownload }}:
@@ -30,11 +32,14 @@ stages:
               - bash: |    
                   curl -Lk -o ${{package.download_location}} \
                         ${{package.url}}
-                  echo Unzipping to ${{package.unzip_location}}
-                  unzip   -qq -d ${{package.unzip_location}} ${{package.download_location}}
-                  chmod -R u+x ${{package.unzip_location}}
                 displayName: 'Download ${{package.name}}'
+              - ${{ if eq(package.archive,'zip') }}:
+                - bash: |    
+                  echo Unzipping to ${{package.unpack_location}}
+                  unzip   -qq -d ${{package.unpack_location}} ${{package.download_location}}
+                  chmod -R u+x ${{package.unpack_location}}
+                  displayName: 'Unzip ${{package.name}}'               
               - ${{ if package.clean }}:
                 - bash: |    
                     rm -rf ${{package.download_location}}
-                  displayName: 'Clean zip ${{package.name}}'             
+                  displayName: 'Clean ${{package.name}}'             
