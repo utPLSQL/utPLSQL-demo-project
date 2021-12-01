@@ -28,6 +28,7 @@ stages:
         - job: DownloadBinaries
           displayName: Download Build Binaries
           steps:
+            - checkout: none
             - ${{ each package in parameters.packages }}:
               - bash: |    
                   curl -Lk -o ${{package.download_location}} \
