@@ -36,7 +36,7 @@ jobs:
               unzip   -qq -d ${{package.unpack_location}} ${{package.download_location}}
               chmod -R u+x ${{package.unpack_location}}
 
-              ls -ltr ${{package.download_location}}
+              ls -ltr ${{package.unpack_location}}
 
             displayName: 'Unzip ${{package.name}}'
 
