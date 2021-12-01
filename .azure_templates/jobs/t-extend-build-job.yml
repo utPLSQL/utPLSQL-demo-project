@@ -18,9 +18,9 @@ jobs:
     displayName: Build Database
     variables:
     # Using this variable, the template references the correct variable template file (vars-dev.yaml, vars-qa.yaml or vars-prd.yaml) from the vars folder.
-    - template: vars/vars-global.yaml    
+    - template: ../vars/vars-global.yaml    
     steps:
-      - template: tasks/t-create-docker-database.yml
+      - template: ../tasks/t-create-docker-database.yml
         parameters:
           containerRegistry: ${{ variables.containerRegistry }}
           dockerRepo: ${{ variables.dockerRepo }}
