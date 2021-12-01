@@ -59,6 +59,8 @@ stages:
                     echo "##vso[task.prependpath]${{addpath.path}}"
                     ls -ltr ${{addpath.path}}
                     echo $PATH
+
+                    ls -ltr $(Build.BinariesDirectory)
                   displayName: 'Add To path ${{addpath.path}}'
 
             - bash: |
