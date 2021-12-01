@@ -82,6 +82,35 @@ steps:
       sql sys/oracle@//${CONNECTION_STR}?oracle.net.disableOob=true as sysdba @install_headless.sql UT3 UT3 users
      
       cd $(Build.SourcesDirectory)
-      sql sys/oracle@/${CONNECTION_STR}?oracle.net.disableOob=true as sysdba @source/create_user.sql
+      sql sys/oracle@//${CONNECTION_STR}?oracle.net.disableOob=true as sysdba @source/create_user.sql
       sql sys/oracle@//${CONNECTION_STR}?oracle.net.disableOob=true as sysdba @source/install.sql
     displayName: 'Install utPLSQL'
+
+  - bash: |
+        $(UTPLSQL_CLI_DIR)/bin/utplsql run ${DB_USER}/${DB_PASS}@//${CONNECTION_STR} \
+          -source_path=source \
+          -test_path=test \
+          -f=ut_documentation_reporter      -c \
+          -f=ut_coverage_sonar_reporter     -o=coverage.xml \
+          -f=ut_sonar_test_reporter         -o=test_results.xml \
+          -f=ut_coverage_cobertura_reporter -o=cobertura.xml \
+          -f=ut_junit_reporter              -o=junit_test_results.xml \
+          --debug \
+          --failure-exit-code=0
+        cat test_results.xml
+        cat coverage.xml
+    displayName: 'Test'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/junit_test_results.xml'
+      testRunTitle: 'Publish test results'
+    displayName: 'Publish test results'
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: 'cobertura.xml'
+      pathToSources: 'source'
+    displayName: 'Publish coverage'
