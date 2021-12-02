@@ -47,9 +47,10 @@ jobs:
     steps:
       - template: t-task-extend-create-docker-database.yml
         parameters:
-          containerRegistry: ${{ variables.containerRegistry }}
-          dockerRepo: ${{ variables.dockerRepo }}
-          createDatabase: ${{ parameters.createDatabase }}
+          - containerRegistry: ${{ variables.containerRegistry }}
+            dockerRepo: ${{ variables.dockerRepo }}
+            createDatabase: ${{ parameters.createDatabase }}
+
       - ${{ each binaries in parameters.downloadBinaries }}:    
         - template: t-task-extend-download-binaries.yml
           parameters:
