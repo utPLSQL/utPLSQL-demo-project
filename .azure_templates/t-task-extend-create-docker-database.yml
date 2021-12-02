@@ -30,5 +30,5 @@ steps:
         # start the docker container (DB)
         time docker run -d --name ${{ builddatabases.dbname }} ${{ builddatabases.dockerOptions }} -p 1521:${{ builddatabases.dockerPortMap }} ${{ parameters.dockerRepo }}:${{ builddatabases.oracleVersion }}
         # Wait for DB startup
-        time docker logs -f ${{ builddatabases.oracleVersion }} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
+        time docker logs -f ${{ builddatabases.dbname }} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
       displayName: 'Start Oracle DB Docker container: ${{ builddatabases.dbname }}:${{ builddatabases.oracleVersion }}'      

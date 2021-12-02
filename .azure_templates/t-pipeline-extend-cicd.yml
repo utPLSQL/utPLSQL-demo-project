@@ -18,6 +18,6 @@ parameters:
 
 stages:
   - ${{ each builddatabases in parameters.buildDatabase }}:
-    - template: stages/t-extend-build-stage.yml
+    - template: t-stage-extend-build.yml
       parameters:
         createDatabase: ${{ builddatabases.createDatabase }}
