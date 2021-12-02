@@ -25,3 +25,19 @@ jobs:
           containerRegistry: ${{ variables.containerRegistry }}
           dockerRepo: ${{ variables.dockerRepo }}
           createDatabase: ${{ parameters.createDatabase }}
+      - template: t-task-extend-download-binaries.yml
+        parameters:
+          packages:
+            - name: sqlcl
+              download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"
+              unpack_location: "$(Build.BinariesDirectory)"
+              url:  ${{ variables.sqlclUrl }}
+              archive: "zip"
+              addtoPath: "$(SQLCL_DIR)/bin"
+
+            - name: utlplsqlcli
+              download_location: "$(Build.BinariesDirectory)/utPLSQL-cli.zip"
+              unpack_location: "$(Build.BinariesDirectory)"
+              url:  ${{ variables.utplsqlUrl }}
+              archive: "zip"
+              addToPath: "$(UTPLSQL_CLI_DIR)/bin"           
