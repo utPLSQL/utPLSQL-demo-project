@@ -47,19 +47,19 @@ jobs:
     steps:
       - template: t-task-extend-create-docker-database.yml
         parameters:
-          - containerRegistry: ${{ variables.containerRegistry }}
-            dockerRepo: ${{ variables.dockerRepo }}
-            createDatabase: ${{ parameters.createDatabase }}
+          containerRegistry: ${{ variables.containerRegistry }}
+          dockerRepo: ${{ variables.dockerRepo }}
+          createDatabase: ${{ parameters.createDatabase }}
 
       - ${{ each binaries in parameters.downloadBinaries }}:    
         - template: t-task-extend-download-binaries.yml
           parameters:
-            - name: ${{ binaries.name }}
-              download_location: ${{ binaries.download_location }}
-              unpack_location: ${{ binaries.unpack_location }}
-              url:  ${{ binaries.url }}
-              archive: ${{ binaries.archive }}
-              addtoPath: ${{ binaries.addtoPath }} 
+            name: ${{ binaries.name }}
+            download_location: ${{ binaries.download_location }}
+            unpack_location: ${{ binaries.unpack_location }}
+            url:  ${{ binaries.url }}
+            archive: ${{ binaries.archive }}
+            addtoPath: ${{ binaries.addtoPath }} 
       - ${{ each builddatabases in parameters.createDatabase }}:
         - ${{ each script in builddatabases.scripts }}:  
           - template : t-task-extend-sqlcl.yml
