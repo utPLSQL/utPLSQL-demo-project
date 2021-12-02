@@ -23,7 +23,8 @@ steps:
         echo "Will execute : lb update ${{ source.masterchangelogfile }} false from  ${{ source.work_dir }}"
         pwd
         sql ${{ source.user }}/${{ source.password }}@//${{ source.connectionString }}?oracle.net.disableOob=true<<EOF
-        lb update utplsql_changelog.xml false
+        lb version
+        lb update -changelog utplsql_changelog.xml false
         exit;
         EOF
     displayName: RunLiquibaseUpdate      
