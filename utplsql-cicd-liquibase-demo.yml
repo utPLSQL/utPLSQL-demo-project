@@ -7,7 +7,15 @@ pool:
 variables:
 # Using this variable, the template references the correct variable template file (vars-dev.yaml, vars-qa.yaml or vars-prd.yaml) from the vars folder.
   - template: .azure_templates/vars/vars-global.yml  
-
+  SQLCL_DIR: $(Build.BinariesDirectory)/sqlcl
+  UTPLSQL_DIR: $(Build.BinariesDirectory)/utPLSQL
+  UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
+  UTPLSQL_CLI_VERSION: 'v3.1.8'
+  UTPLSQL_VERSION: 'v3.1.11' 
+  DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
+  DB_USER: ut3_demo
+  DB_PASS: ut3_demo
+  
 extends:
   template: .azure_templates/t-pipeline-extend-cicd.yml
   parameters:
