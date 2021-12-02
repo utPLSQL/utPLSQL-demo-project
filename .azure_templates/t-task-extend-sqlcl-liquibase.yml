@@ -24,4 +24,4 @@ steps:
         lb update ${{ source.masterchangelogfile }} false
         exit;
         EOF
-    displayName: ${{ parameters.displayName }}      
+    displayName: RunLiquibaseUpdate      

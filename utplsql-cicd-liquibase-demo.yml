@@ -47,6 +47,19 @@ extends:
             connectionString: "127.0.0.1:1521/ORCLCDB"
             dockerPortMap: "1521"
             dockerOptions: "--shm-size=1g"
+        scripts:
+          - displayName: "Install utPLSQL"
+            user: "sys"
+            password: "oracle"   
+            connectionString: "127.0.0.1:1521/ORCLCDB"        
+            script: "install_headless.sql UT3 UT3 users"
+            work_dir: "${UTPLSQL_DIR}/source"
+          - displayName: "Create Test User"
+            user: "sys"
+            password: "oracle"  
+            connectionString: "127.0.0.1:1521/ORCLCDB"         
+            script: "source/create_user.sql"
+            work_dir: "$(Build.SourcesDirectory)" 
         installsource:
           - work_dir:
             user: $(DB_USER)

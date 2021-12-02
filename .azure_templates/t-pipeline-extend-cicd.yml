@@ -33,7 +33,20 @@ parameters:
           - name: dockerPortMap
             default: "1521"
           - name: connectionString
-            default: ""   
+            default: ""
+      - name: scripts
+        type: object
+        default:
+          - name: work_dir
+            default: ""
+          - name: user
+            default: ""
+          - name: password
+            default: ""
+          - name: script
+            default: ""
+          - name: displayName
+            default: ""               
       - name: installsource
         type: object
         default:
@@ -56,3 +69,4 @@ stages:
         containerRegistry: ${{ builddatabases.containerRegistry }}
         dockerRepo: ${{ builddatabases.dockerRepo }}
         installsource: ${{ builddatabases.installsource }}
+        scripts: ${{ builddatabases.scripts }}

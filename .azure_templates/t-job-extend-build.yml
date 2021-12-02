@@ -30,7 +30,20 @@ parameters:
       - name: dockerPortMap
         default: "1521"
       - name: connectionString
-        default: ""   
+        default: ""
+  - name: scripts
+    type: object
+    default:
+      - name: work_dir
+        default: ""
+      - name: user
+        default: ""
+      - name: password
+        default: ""
+      - name: script
+        default: ""
+      - name: displayName
+        default: ""            
   - name: installsource
     type: object
     default:
@@ -57,6 +70,15 @@ jobs:
           containerRegistry: ${{ parameters.containerRegistry }}
           dockerRepo: ${{ parameters.dockerRepo }}
           createDatabase: ${{ parameters.createDatabase }}
+      - ${{ each script in parameters.scripts }}:
+        - template: t-extend-sqlcl.yml
+          parameters:
+            work_dir: ${{ script.work_dir}}
+            user: ${{ script.user}}
+            password: ${{ script.password}}
+            connectionString: ${{ trg_db.connectionString}}
+            script: ${{ script.script}}
+          displayName: ${{ script.displayName}}          
       - template: t-task-extend-sqlcl-liquibase.yml
         parameters:
           installsource: ${{ parameters.installsource }}  
