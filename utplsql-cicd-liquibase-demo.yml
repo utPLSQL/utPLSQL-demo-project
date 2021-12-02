@@ -66,6 +66,11 @@ extends:
             password: $(DB_PASS)
             connectionString: "127.0.0.1:1521/ORCLCDB"
             masterchangelogfile: "utplsql_changelog.xml"
+        gitCheckoutDetails:
+          - gitRepo: ${{ variables.gitRepo }}
+            branch: $(UTPLSQL_VERSION)
+            checkoutDir: $(UTPLSQL_DIR)
+     
 
     #DeployDatabase:
     

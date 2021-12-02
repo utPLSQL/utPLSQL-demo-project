@@ -31,6 +31,15 @@ parameters:
         default: "1521"
       - name: connectionString
         default: ""
+  - name: gitCheckoutDetails
+    type: object
+    default:
+      - name: gitRepo
+        default: ""
+      - name: branch
+        default: ""
+      - name: checkoutDir
+        default: ""         
   - name: scripts
     type: object
     default:
@@ -70,6 +79,9 @@ jobs:
           containerRegistry: ${{ parameters.containerRegistry }}
           dockerRepo: ${{ parameters.dockerRepo }}
           createDatabase: ${{ parameters.createDatabase }}
+      - template: t-task-extend-git-clone.yml
+        parameters:
+          gitCheckoutDetails: ${{ parameters.gitCheckoutDetails }}         
       - ${{ each script in parameters.scripts }}:
         - template: t-task-extend-sqlcl.yml
           parameters:

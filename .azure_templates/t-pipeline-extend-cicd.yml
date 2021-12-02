@@ -34,6 +34,15 @@ parameters:
             default: "1521"
           - name: connectionString
             default: ""
+      - name: gitCheckoutDetails
+        type: object
+        default:
+          - name: gitRepo
+            default: ""
+          - name: branch
+            default: ""
+          - name: checkoutDir
+            default: ""             
       - name: scripts
         type: object
         default:
@@ -70,3 +79,4 @@ stages:
         dockerRepo: ${{ builddatabases.dockerRepo }}
         installsource: ${{ builddatabases.installsource }}
         scripts: ${{ builddatabases.scripts }}
+        gitCheckoutDetails: ${{ builddatabases.gitCheckoutDetails }} 

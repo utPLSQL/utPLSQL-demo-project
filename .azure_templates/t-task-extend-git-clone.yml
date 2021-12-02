@@ -1,0 +1,17 @@
+parameters:
+  - name: gitCheckoutDetails
+    type: object
+    default:
+      - name: gitRepo
+        default: ""
+      - name: branch
+        default: ""
+      - name: checkoutDir 
+        default: ""
+
+steps:
+- ${{ each repo in parameters.gitCheckoutDetails }}:
+  - bash: |
+      git clone --depth=1 --branch=${{ repo.branch }} ${{ repo.gitRepo }} ${{ repo.checkoutDir}}
+      chmod -R go+w ${{ repo.checkoutDir}}
+    displayName: 'Clone : ${{ repo.gitRepo }}'
