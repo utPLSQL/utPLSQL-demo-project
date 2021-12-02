@@ -76,9 +76,9 @@ jobs:
             work_dir: ${{ script.work_dir}}
             user: ${{ script.user}}
             password: ${{ script.password}}
-            connectionString: ${{ trg_db.connectionString}}
+            connectionString: ${{ script.connectionString}}
             script: ${{ script.script}}
-          displayName: ${{ script.displayName}}          
+            displayName: ${{ script.displayName}}          
       - template: t-task-extend-sqlcl-liquibase.yml
         parameters:
           installsource: ${{ parameters.installsource }}  
