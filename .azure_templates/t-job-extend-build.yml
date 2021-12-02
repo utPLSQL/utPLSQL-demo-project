@@ -1,4 +1,19 @@
 parameters:
+  - name: downloadBinaries
+    type: object
+    default:
+    - name: name
+      default: ""  
+    - name: download_location
+      default: ""
+    - name: unpack_location
+      default: "$(Build.BinariesDirectory)"    
+    - name: url
+      default: ""
+    - name: archive
+      default: "zip"
+    - name: addToPath
+      default: ""
   - name: createDatabase
     type: object
     default:
@@ -12,32 +27,56 @@ parameters:
         default: "1521"
       - name: connectionString
         default: ""   
-
+      - name: scripts
+        type: object
+        default:
+          - name: work_dir
+            default: ""
+          - name: user
+            default: ""
+          - name: password
+            default: ""
+          - name: script
+            default: ""
+          - name: displayName
+            default: ""
+            
 jobs:
   - job: BuildDatabase
-    displayName: Build Database
-    variables:
-    # Using this variable, the template references the correct variable template file (vars-dev.yaml, vars-qa.yaml or vars-prd.yaml) from the vars folder.
-    - template: vars/vars-global.yml    
+    displayName: Build Database 
     steps:
       - template: t-task-extend-create-docker-database.yml
         parameters:
           containerRegistry: ${{ variables.containerRegistry }}
           dockerRepo: ${{ variables.dockerRepo }}
           createDatabase: ${{ parameters.createDatabase }}
-      - template: t-task-extend-download-binaries.yml
+      - ${{ each binaries in parameters.downloadBinaries }}:    
+        - template: t-task-extend-download-binaries.yml
+          parameters:
+            packages:
+              - name: ${{ binaries.name }}
+                download_location: ${{ binaries.download_location }}
+                unpack_location: ${{ binaries.unpack_location }}
+                url:  ${{ binaries.url }}
+                archive: ${{ binaries.archive }}
+                addtoPath: ${{ binaries.addtoPath }} 
+      - ${{ each builddatabases in parameters.createDatabase }}:
+        - ${{ each script in builddatabases.scripts }}:  
+          - template : t-task-extend-sqlcl.yml
+            parameters:
+              work_dir: ${{ script.work_dir}}
+              user: ${{ script.user}}
+              password: ${{ script.password}}
+              connectionString: ${{ builddatabases.connectionString}}
+              script: ${{ script.script}}
+              displayName: ${{ script.displayName}}
+      - template: t-task-extend-sqlcl liquibase.yml
         parameters:
-          packages:
-            - name: sqlcl
-              download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"
-              unpack_location: "$(Build.BinariesDirectory)"
-              url:  ${{ variables.sqlclUrl }}
-              archive: "zip"
-              addtoPath: "$(SQLCL_DIR)/bin"
+          - displayName: "Install Tests"
+            user: "${DB_USER}"
+            password: "${DB_PASS}"           
+            changelogfile: "test/install.sql"
+            work_dir: "$(Build.SourcesDirectory)/liquibasesource"
+            connectionString: ${{ builddatabases.connectionString }}
 
-            - name: utlplsqlcli
-              download_location: "$(Build.BinariesDirectory)/utPLSQL-cli.zip"
-              unpack_location: "$(Build.BinariesDirectory)"
-              url:  ${{ variables.utplsqlUrl }}
-              archive: "zip"
-              addToPath: "$(UTPLSQL_CLI_DIR)/bin"           
+              
