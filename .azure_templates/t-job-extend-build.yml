@@ -2,7 +2,22 @@ parameters:
   - name: containerRegistry
     default: ""
   - name: dockerRepo
-    default: ""  
+    default: ""
+  - name: packages
+    type: object
+    default:
+      - name: name
+        default: ""  
+      - name: download_location
+        default: ""
+      - name: unpack_location
+        default: "$(Build.BinariesDirectory)"    
+      - name: url
+        default: ""
+      - name: archive
+        default: "zip"
+      - name: addToPath
+        default: ""      
   - name: createDatabase
     type: object
     default:
@@ -26,3 +41,6 @@ jobs:
           containerRegistry: ${{ parameters.containerRegistry }}
           dockerRepo: ${{ parameters.dockerRepo }}
           createDatabase: ${{ parameters.createDatabase }}
+      - template: t-task-extend-download-binaries.yml:
+        parameters:
+          packages: ${{ parameters.packages }}  

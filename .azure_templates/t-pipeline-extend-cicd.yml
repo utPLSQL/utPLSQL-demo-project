@@ -5,7 +5,22 @@ parameters:
       - name: containerRegistry
         default: ""
       - name: dockerRepo
-        default: ""   
+        default: ""  
+      - name: packages
+        type: object
+        default:
+          - name: name
+            default: ""  
+          - name: download_location
+            default: ""
+          - name: unpack_location
+            default: "$(Build.BinariesDirectory)"    
+          - name: url
+            default: ""
+          - name: archive
+            default: "zip"
+          - name: addToPath
+            default: ""             
       - name: createDatabase           
         type: object
         default:
@@ -25,5 +40,6 @@ stages:
     - template: t-stage-extend-build.yml
       parameters:
         createDatabase: ${{ builddatabases.createDatabase }}
+        packages: ${{ builddatabases.packages }}
         containerRegistry: ${{ builddatabases.containerRegistry }}
         dockerRepo: ${{ builddatabases.dockerRepo }}

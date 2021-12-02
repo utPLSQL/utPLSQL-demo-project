@@ -1,7 +1,4 @@
 parameters:
-  - name: enableDownload
-    type: boolean
-    default: true
   - name: packages
     type: object
     default:

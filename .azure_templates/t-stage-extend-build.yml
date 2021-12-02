@@ -3,6 +3,21 @@ parameters:
     default: ""
   - name: dockerRepo
     default: ""  
+  - name: packages
+    type: object
+    default:
+      - name: name
+        default: ""  
+      - name: download_location
+        default: ""
+      - name: unpack_location
+        default: "$(Build.BinariesDirectory)"    
+      - name: url
+        default: ""
+      - name: archive
+        default: "zip"
+      - name: addToPath
+        default: ""        
   - name: createDatabase
     type: object
     default:
@@ -23,6 +38,7 @@ stages:
       - template: t-job-extend-build.yml
         parameters:
           createDatabase: ${{ parameters.createDatabase }}
+          packages: ${{ parameters.packages }}
           containerRegistry: ${{ parameters.containerRegistry }}
           dockerRepo: ${{ parameters.dockerRepo }}          
     
