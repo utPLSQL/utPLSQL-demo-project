@@ -23,21 +23,13 @@ steps:
   - bash: |    
       curl -Lk -o ${{package.download_location}} \
             ${{package.url}}
-    displayName: 'Download ${{package.name}}'
 
-  - ${{ if eq(package.archive,'zip') }}:
-    - bash: |    
-        echo Unzipping to ${{package.unpack_location}}
-        unzip   -qq -d ${{package.unpack_location}} ${{package.download_location}}
-        chmod -R u+x ${{package.unpack_location}}
-      displayName: 'Unzip ${{package.name}}'
-
-  - ${{ if package.addToPath }}:
-    - bash: |    
+      echo Unzipping to ${{package.unpack_location}}
+      unzip   -qq -d ${{package.unpack_location}} ${{package.download_location}}
+      chmod -R u+x ${{package.unpack_location}}
+      rm -rf ${{package.download_location}}
+      if [[ ! -z ${{package.addToPath}} ]]; then
+        echo "Add package to path"
         echo "##vso[task.prependpath]${{package.addToPath}}"
-      displayName: 'Add To path ${{package.name}}'
-
-  - ${{ if coalesce(package.clean,true) }}:
-    - bash: |    
-        rm -rf ${{package.download_location}}
-      displayName: 'Clean ${{package.name}}'             
+      fi
+    displayName: 'Unzip ${{package.name}}'
