@@ -24,6 +24,7 @@ steps:
         pwd
         sql ${{ source.user }}/${{ source.password }}@//${{ source.connectionString }}?oracle.net.disableOob=true<<EOF
         lb version
+        lb help update
         lb update -changelog utplsql_changelog.xml false
         exit;
         EOF
