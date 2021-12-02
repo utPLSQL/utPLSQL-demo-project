@@ -5,7 +5,8 @@ parameters:
       - name: containerRegistry
         default: ""
       - name: dockerRepo
-        default: ""      
+        default: ""   
+      - name: createDatabase           
         type: object
         default:
           - name: dbname
