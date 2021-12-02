@@ -30,7 +30,21 @@ parameters:
       - name: dockerPortMap
         default: "1521"
       - name: connectionString
+        default: ""
+  - name: installsource
+    type: object
+    default:
+      - name: work_dir
+        default: ""
+      - name: user
+        default: "sys"
+      - name: password
+        default: "oracle"
+      - name: connectionString
+        default: ""
+      - name: masterchangelogfile
         default: ""    
+
 stages:
   - stage: BuildDatabase
     displayName: Build Database
@@ -40,5 +54,6 @@ stages:
           createDatabase: ${{ parameters.createDatabase }}
           packages: ${{ parameters.packages }}
           containerRegistry: ${{ parameters.containerRegistry }}
-          dockerRepo: ${{ parameters.dockerRepo }}          
+          dockerRepo: ${{ parameters.dockerRepo }}
+          installsource: ${{ parameters.installsource }}        
     

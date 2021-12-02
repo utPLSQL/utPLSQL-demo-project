@@ -47,6 +47,12 @@ extends:
             connectionString: "127.0.0.1:1521/ORCLCDB"
             dockerPortMap: "1521"
             dockerOptions: "--shm-size=1g"
+        installsource:
+          - work_dir:
+            user: $(DB_USER)
+            password: $(DB_PASS)
+            connectionString: "127.0.0.1:1521/ORCLCDB"
+            masterchangelogfile: "utplsql_changelog.xml"
 
     #DeployDatabase:
     

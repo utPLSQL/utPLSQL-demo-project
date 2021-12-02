@@ -31,6 +31,19 @@ parameters:
         default: "1521"
       - name: connectionString
         default: ""   
+  - name: installsource
+    type: object
+    default:
+      - name: work_dir
+        default: ""
+      - name: user
+        default: "sys"
+      - name: password
+        default: "oracle"
+      - name: connectionString
+        default: ""
+      - name: masterchangelogfile
+        default: ""
 
 jobs:
   - job: BuildDatabase
@@ -44,3 +57,6 @@ jobs:
           containerRegistry: ${{ parameters.containerRegistry }}
           dockerRepo: ${{ parameters.dockerRepo }}
           createDatabase: ${{ parameters.createDatabase }}
+      - template: t-task-extend-sqlcl-liquibase.yml
+        parameters:
+          installsource: ${{ parameters.installsource }}  

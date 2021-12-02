@@ -34,7 +34,19 @@ parameters:
             default: "1521"
           - name: connectionString
             default: ""   
-
+      - name: installsource
+        type: object
+        default:
+          - name: work_dir
+            default: ""
+          - name: user
+            default: "sys"
+          - name: password
+            default: "oracle"
+          - name: connectionString
+            default: ""
+          - name: masterchangelogfile
+            default: ""
 stages:
   - ${{ each builddatabases in parameters.buildDatabase }}:
     - template: t-stage-extend-build.yml
@@ -43,3 +55,4 @@ stages:
         packages: ${{ builddatabases.packages }}
         containerRegistry: ${{ builddatabases.containerRegistry }}
         dockerRepo: ${{ builddatabases.dockerRepo }}
+        installsource: ${{ builddatabases.installsource }}
