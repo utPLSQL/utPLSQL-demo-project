@@ -15,10 +15,7 @@ parameters:
 
 jobs:
   - job: BuildDatabase
-    displayName: Build Database
-    variables:
-    # Using this variable, the template references the correct variable template file (vars-dev.yaml, vars-qa.yaml or vars-prd.yaml) from the vars folder.
-    - template: vars/vars-global.yml    
+    displayName: Build Database  
     steps:
       - template: t-task-extend-create-docker-database.yml
         parameters:
