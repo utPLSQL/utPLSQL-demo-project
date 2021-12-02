@@ -45,11 +45,16 @@ jobs:
   - job: BuildDatabase
     displayName: Build Database 
     steps:
-      - template: t-task-extend-create-docker-database.yml
-        parameters:
-          containerRegistry: ${{ variables.containerRegistry }}
-          dockerRepo: ${{ variables.dockerRepo }}
-          createDatabase: ${{ parameters.createDatabase }}
+      - ${{ each dockers in parameters.createDatabase }}:  
+        - template: t-task-extend-create-docker-database.yml
+          parameters:
+            containerRegistry: ${{ variables.containerRegistry }}
+            dockerRepo: ${{ variables.dockerRepo }}
+            dbname: ${{ dockers.dbname }}
+            oracleVersion: ${{ dockers.oracleVersion }}
+            dockerOptions: ${{ dockers.dockerOptions }}
+            dockerPortMap: ${{ dockers.dockerPortMap }}
+            connectionString: ${{ dockers.connectionString }}
 
       - ${{ each binaries in parameters.downloadBinaries }}:    
         - template: t-task-extend-download-binaries.yml
