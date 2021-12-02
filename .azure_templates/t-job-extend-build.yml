@@ -36,11 +36,11 @@ jobs:
   - job: BuildDatabase
     displayName: Build Database  
     steps:
+      - template: t-task-extend-download-binaries.yml
+        parameters:
+          packages: ${{ parameters.packages }}    
       - template: t-task-extend-create-docker-database.yml
         parameters:
           containerRegistry: ${{ parameters.containerRegistry }}
           dockerRepo: ${{ parameters.dockerRepo }}
           createDatabase: ${{ parameters.createDatabase }}
-      - template: t-task-extend-download-binaries.yml
-        parameters:
-          packages: ${{ parameters.packages }}  
