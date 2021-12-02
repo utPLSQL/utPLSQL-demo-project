@@ -53,13 +53,12 @@ jobs:
       - ${{ each binaries in parameters.downloadBinaries }}:    
         - template: t-task-extend-download-binaries.yml
           parameters:
-            packages:
-              - name: ${{ binaries.name }}
-                download_location: ${{ binaries.download_location }}
-                unpack_location: ${{ binaries.unpack_location }}
-                url:  ${{ binaries.url }}
-                archive: ${{ binaries.archive }}
-                addtoPath: ${{ binaries.addtoPath }} 
+            - name: ${{ binaries.name }}
+              download_location: ${{ binaries.download_location }}
+              unpack_location: ${{ binaries.unpack_location }}
+              url:  ${{ binaries.url }}
+              archive: ${{ binaries.archive }}
+              addtoPath: ${{ binaries.addtoPath }} 
       - ${{ each builddatabases in parameters.createDatabase }}:
         - ${{ each script in builddatabases.scripts }}:  
           - template : t-task-extend-sqlcl.yml
