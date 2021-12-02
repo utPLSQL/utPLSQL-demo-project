@@ -70,13 +70,5 @@ jobs:
               connectionString: ${{ builddatabases.connectionString}}
               script: ${{ script.script}}
               displayName: ${{ script.displayName}}
-      - template: t-task-extend-sqlcl liquibase.yml
-        parameters:
-          - displayName: "Install Tests"
-            user: "${DB_USER}"
-            password: "${DB_PASS}"           
-            changelogfile: "test/install.sql"
-            work_dir: "$(Build.SourcesDirectory)/liquibasesource"
-            connectionString: ${{ builddatabases.connectionString }}
 
               
