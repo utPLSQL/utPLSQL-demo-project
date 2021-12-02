@@ -6,7 +6,7 @@ pool:
 
 variables:
 # Using this variable, the template references the correct variable template file (vars-dev.yaml, vars-qa.yaml or vars-prd.yaml) from the vars folder.
-  - template: vars/vars-global.yml  
+  - template: .azure_templates/vars/vars-global.yml  
 
 extends:
   template: .azure_templates/t-pipeline-extend-cicd.yml
