@@ -2,7 +2,10 @@ parameters:
   - name: buildDatabase
     type: object
     default:
-      - name: createDatabase
+      - name: containerRegistry
+        default: ""
+      - name: dockerRepo
+        default: ""      
         type: object
         default:
           - name: dbname
@@ -21,3 +24,5 @@ stages:
     - template: t-stage-extend-build.yml
       parameters:
         createDatabase: ${{ builddatabases.createDatabase }}
+        containerRegistry: ${{ builddatabases.containerRegistry }}
+        dockerRepo: ${{ builddatabases.dockerRepo }}

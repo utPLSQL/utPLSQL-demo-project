@@ -1,4 +1,8 @@
 parameters:
+  - name: containerRegistry
+    default: ""
+  - name: dockerRepo
+    default: ""  
   - name: createDatabase
     type: object
     default:
@@ -19,6 +23,6 @@ jobs:
     steps:
       - template: t-task-extend-create-docker-database.yml
         parameters:
-          containerRegistry: ${{ variables.containerRegistry }}
-          dockerRepo: ${{ variables.dockerRepo }}
+          containerRegistry: ${{ parameters.containerRegistry }}
+          dockerRepo: ${{ parameters.dockerRepo }}
           createDatabase: ${{ parameters.createDatabase }}

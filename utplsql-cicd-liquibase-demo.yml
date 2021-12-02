@@ -12,7 +12,9 @@ extends:
   template: .azure_templates/t-pipeline-extend-cicd.yml
   parameters:
     buildDatabase:
-      - createDatabase:
+      - containerRegistry: ${{ variables.containerRegistry }}
+        dockerRepo: ${{ variables.dockerRepo }}
+        createDatabase:
           - dbname: UTBUILD
             oracleVersion: "19c-se2-small"
             connectionString: "127.0.0.1:1521/ORCLCDB"

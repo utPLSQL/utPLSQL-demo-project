@@ -1,4 +1,8 @@
 parameters:
+  - name: containerRegistry
+    default: ""
+  - name: dockerRepo
+    default: ""  
   - name: createDatabase
     type: object
     default:
@@ -19,4 +23,6 @@ stages:
       - template: t-job-extend-build.yml
         parameters:
           createDatabase: ${{ parameters.createDatabase }}
+          containerRegistry: ${{ parameters.containerRegistry }}
+          dockerRepo: ${{ parameters.dockerRepo }}          
     
