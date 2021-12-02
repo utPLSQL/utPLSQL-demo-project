@@ -1,19 +1,4 @@
 parameters:
-  - name: downloadBinaries
-    type: object
-    default:
-    - name: name
-      default: ""  
-    - name: download_location
-      default: ""
-    - name: unpack_location
-      default: "$(Build.BinariesDirectory)"    
-    - name: url
-      default: ""
-    - name: archive
-      default: "zip"
-    - name: addToPath
-      default: ""
   - name: createDatabase
     type: object
     default:
@@ -26,26 +11,12 @@ parameters:
       - name: dockerPortMap
         default: "1521"
       - name: connectionString
-        default: ""  
-      - name: scripts
-        type: object
-        default:
-          - name: work_dir
-            default: ""
-          - name: user
-            default: ""
-          - name: password
-            default: ""
-          - name: script
-            default: ""
-          - name: displayName
-            default: ""          
+        default: ""    
 stages:
   - stage: BuildDatabase
     displayName: Build Database
     jobs:
       - template: t-job-extend-build.yml
         parameters:
-          downloadBinaries: ${{ parameters.downloadBinaries }}
           createDatabase: ${{ parameters.createDatabase }}
     

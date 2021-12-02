@@ -1,19 +1,4 @@
 parameters:
-  - name: downloadBinaries
-    type: object
-    default:
-    - name: name
-      default: ""  
-    - name: download_location
-      default: ""
-    - name: unpack_location
-      default: "$(Build.BinariesDirectory)"    
-    - name: url
-      default: ""
-    - name: archive
-      default: "zip"
-    - name: addToPath
-      default: ""
   - name: createDatabase
     type: object
     default:
@@ -27,31 +12,16 @@ parameters:
         default: "1521"
       - name: connectionString
         default: ""   
-      - name: scripts
-        type: object
-        default:
-          - name: work_dir
-            default: ""
-          - name: user
-            default: ""
-          - name: password
-            default: ""
-          - name: script
-            default: ""
-          - name: displayName
-            default: ""
-            
+
 jobs:
   - job: BuildDatabase
-    displayName: Build Database 
+    displayName: Build Database
+    variables:
+    # Using this variable, the template references the correct variable template file (vars-dev.yaml, vars-qa.yaml or vars-prd.yaml) from the vars folder.
+    - template: vars/vars-global.yml    
     steps:
-      - ${{ each dockers in parameters.createDatabase }}:  
-        - template: t-task-extend-create-docker-database.yml
-          parameters:
-            containerRegistry: ${{ variables.containerRegistry }}
-            dockerRepo: ${{ variables.dockerRepo }}
-            dbname: ${{ dockers.dbname }}
-            oracleVersion: ${{ dockers.oracleVersion }}
-            dockerOptions: ${{ dockers.dockerOptions }}
-            dockerPortMap: ${{ dockers.dockerPortMap }}
-            connectionString: ${{ dockers.connectionString }}
+      - template: t-task-extend-create-docker-database.yml
+        parameters:
+          containerRegistry: ${{ variables.containerRegistry }}
+          dockerRepo: ${{ variables.dockerRepo }}
+          createDatabase: ${{ parameters.createDatabase }}
