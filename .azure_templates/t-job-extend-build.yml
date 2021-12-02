@@ -71,7 +71,7 @@ jobs:
           dockerRepo: ${{ parameters.dockerRepo }}
           createDatabase: ${{ parameters.createDatabase }}
       - ${{ each script in parameters.scripts }}:
-        - template: t-extend-sqlcl.yml
+        - template: t-task-extend-sqlcl.yml
           parameters:
             work_dir: ${{ script.work_dir}}
             user: ${{ script.user}}
