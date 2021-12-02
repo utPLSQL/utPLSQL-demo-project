@@ -61,7 +61,7 @@ extends:
             script: "source/create_user.sql"
             work_dir: "$(Build.SourcesDirectory)" 
         installsource:
-          - work_dir: ""$(Build.SourcesDirectory)/liquibasesource"
+          - work_dir: "$(Build.SourcesDirectory)/liquibasesource"
             user: $(DB_USER)
             password: $(DB_PASS)
             connectionString: "127.0.0.1:1521/ORCLCDB"
