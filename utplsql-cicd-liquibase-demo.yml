@@ -28,6 +28,8 @@ extends:
     buildDatabase:
       - containerRegistry: ${{ variables.containerRegistry }}
         dockerRepo: ${{ variables.dockerRepo }}
+        connectionString: "127.0.0.1:1521/ORCLCDB"
+        environment: "build"
         packages:
           - name: sqlcl
             download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"

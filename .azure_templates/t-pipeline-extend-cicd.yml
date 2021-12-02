@@ -6,6 +6,10 @@ parameters:
         default: ""
       - name: dockerRepo
         default: ""  
+      - name : connectionString
+        default : ""
+      - name: environment
+        default: ""    
       - name: packages
         type: object
         default:
