@@ -41,6 +41,6 @@ jobs:
           containerRegistry: ${{ parameters.containerRegistry }}
           dockerRepo: ${{ parameters.dockerRepo }}
           createDatabase: ${{ parameters.createDatabase }}
-      - template: t-task-extend-download-binaries.yml:
+      - template: t-task-extend-download-binaries.yml
         parameters:
           packages: ${{ parameters.packages }}  
