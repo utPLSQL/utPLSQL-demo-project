@@ -24,7 +24,7 @@ steps:
         pwd
         sql ${{ source.user }}/${{ source.password }}@//${{ source.connectionString }}?oracle.net.disableOob=true<<EOF
         lb version
-        lb update -changelog ${{ source.work_dir }}/changelogs/master_changelog.xml false
+        lb update 
         exit;
         EOF
     displayName: RunLiquibaseUpdate      
