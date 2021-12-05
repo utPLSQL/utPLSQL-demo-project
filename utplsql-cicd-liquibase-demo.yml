@@ -77,7 +77,7 @@ extends:
             connectionString: "127.0.0.1:1521/ORCLCDB"
             test_user: $(DB_USER)
             test_pwd: $(DB_PASS)
-            source_path: "source/latest"
+            source_path: "liquibasesource/latest"
             test_path: "test"
             options: "--debug --failure-exit-code=0"
 
