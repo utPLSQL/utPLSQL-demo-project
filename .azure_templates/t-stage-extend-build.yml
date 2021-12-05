@@ -98,5 +98,5 @@ stages:
           installsource: ${{ parameters.installsource }}
           scripts: ${{ parameters.scripts }}
           gitCheckoutDetails: ${{ parameters.gitCheckoutDetails }}
-          execute_tests: ${{ builddatabases.execute_tests }}   
+          execute_tests: ${{ parameters.execute_tests }}   
     
