@@ -8,7 +8,7 @@
     <changeSet author="utplsql" id="award_bonus" runOnChange="true">
       <sqlFile dbms="oracle"
                endDelimiter=";"
-               path="award_bonus.prc"
+               path="award_bonus/award_bonus.prc"
                relativeToChangelogFile="true"
                splitStatements="false"
                stripComments="false"/>
@@ -16,7 +16,7 @@
     <changeSet author="utplsql" id="betwnstr" runOnChange="true">
       <sqlFile dbms="oracle"
                endDelimiter=";"
-               path="betwnstr.fnc"
+               path="between_string/betwnstr.fnc"
                relativeToChangelogFile="true"
                splitStatements="false"
                stripComments="false"/>
@@ -24,7 +24,7 @@
     <changeSet author="utplsql" id="remove_rooms_by_name" runOnChange="true">
       <sqlFile dbms="oracle"
                endDelimiter=";"
-               path="remove_rooms_by_name.prc"
+               path="remove_rooms_by_name/remove_rooms_by_name.prc"
                relativeToChangelogFile="true"
                splitStatements="false"
                stripComments="false"/>

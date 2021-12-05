@@ -1,5 +1,3 @@
---liquibase formatted sql
---changeset utplsql:award_bonus runOnChange:true
 create or replace procedure award_bonus (emp_id number, sales_amt number) as
 --https://docs.oracle.com/database/sql-developer-4.2/RPTUG/sql-developer-unit-testing.htm#RPTUG45065
   commission    real;

@@ -1,5 +1,3 @@
---liquibase formatted sql
---changeset utplsql:remove_rooms_by_name runOnChange:true
 create or replace procedure remove_rooms_by_name( l_name rooms.name%type ) is
 begin
   if l_name is null then
