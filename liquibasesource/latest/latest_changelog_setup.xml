@@ -16,7 +16,7 @@
     <changeSet author="utplsql" id="betwnstr" runOnChange="true">
       <sqlFile dbms="oracle"
                endDelimiter=";"
-               path="../scripts/tab1.sql"
+               path="betwnstr.fnc"
                relativeToChangelogFile="true"
                splitStatements="false"
                stripComments="false"/>
