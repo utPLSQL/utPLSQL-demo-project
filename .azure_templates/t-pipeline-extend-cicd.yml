@@ -73,6 +73,25 @@ parameters:
             default: ""
           - name: masterchangelogfile
             default: ""
+      - name: execute_tests
+        type: object
+        default:
+          - name : work_dir
+            default: $(Build.SourcesDirectory)
+          - name: connectionString
+            default: ""
+          - name: test_user
+            default: ""  
+          - name: test_pwd
+            default: ""
+          - name: source_path
+            default: ""
+          - name: test_path
+            default: ""
+          - name: options
+            default: ""
+
+
 stages:
   - ${{ each builddatabases in parameters.buildDatabase }}:
     - template: t-stage-extend-build.yml
@@ -83,4 +102,5 @@ stages:
         dockerRepo: ${{ builddatabases.dockerRepo }}
         installsource: ${{ builddatabases.installsource }}
         scripts: ${{ builddatabases.scripts }}
-        gitCheckoutDetails: ${{ builddatabases.gitCheckoutDetails }} 
+        gitCheckoutDetails: ${{ builddatabases.gitCheckoutDetails }}
+        execute_tests: ${{ builddatabases.execute_tests }}

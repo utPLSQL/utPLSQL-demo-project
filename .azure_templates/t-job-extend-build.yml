@@ -66,6 +66,24 @@ parameters:
         default: ""
       - name: masterchangelogfile
         default: ""
+  - name: execute_tests
+    type: object
+    default:           
+      - name : work_dir
+        default: $(Build.SourcesDirectory)
+      - name: connectionString
+        default: ""
+      - name: test_user
+        default: ""  
+      - name: test_pwd
+        default: ""
+      - name: source_path
+        default: ""
+      - name: test_path
+        default: ""
+      - name: options
+        default: ""
+
 
 jobs:
   - job: BuildDatabase
@@ -93,4 +111,7 @@ jobs:
             displayName: ${{ script.displayName}}          
       - template: t-task-extend-sqlcl-liquibase.yml
         parameters:
-          installsource: ${{ parameters.installsource }}  
+          installsource: ${{ parameters.installsource }}
+      - template: t-task-extend-utplsqlcli.yml
+        parameters:
+          execute_tests: ${{ parameters.execute_tests }}      

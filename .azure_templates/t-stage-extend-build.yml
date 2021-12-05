@@ -65,7 +65,25 @@ parameters:
       - name: connectionString
         default: ""
       - name: masterchangelogfile
-        default: ""    
+        default: "" 
+  - name: execute_tests
+    type: object
+    default:           
+      - name : work_dir
+        default: $(Build.SourcesDirectory)
+      - name: connectionString
+        default: ""
+      - name: test_user
+        default: ""  
+      - name: test_pwd
+        default: ""
+      - name: source_path
+        default: ""
+      - name: test_path
+        default: ""
+      - name: options
+        default: ""
+
 
 stages:
   - stage: BuildDatabase
@@ -79,5 +97,6 @@ stages:
           dockerRepo: ${{ parameters.dockerRepo }}
           installsource: ${{ parameters.installsource }}
           scripts: ${{ parameters.scripts }}
-          gitCheckoutDetails: ${{ parameters.gitCheckoutDetails }}      
+          gitCheckoutDetails: ${{ parameters.gitCheckoutDetails }}
+          execute_tests: ${{ builddatabases.execute_tests }}   
     

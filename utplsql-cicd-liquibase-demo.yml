@@ -72,7 +72,14 @@ extends:
           - gitRepo: ${{ variables.gitRepo }}
             branch: $(UTPLSQL_VERSION)
             checkoutDir: $(UTPLSQL_DIR)
-     
+        execute_tests:
+          - work_dir: $(Build.SourcesDirectory)
+            connectionString: "127.0.0.1:1521/ORCLCDB"
+            test_user: $(DB_USER)
+            test_pwd: $(DB_PASS)
+            source_path: "source/latest"
+            test_path: "test"
+            options: "--debug --failure-exit-code=0"
 
     #DeployDatabase:
     
