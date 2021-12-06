@@ -1,28 +1,24 @@
 parameters:
-  - name: installsource
-    type: object
-    default:
-      - name: work_dir
-        default: ""
-      - name: user
-        default: "sys"
-      - name: password
-        default: "oracle"
-      - name: connectionString
-        default: ""
-      - name: masterchangelogfile
-        default: ""
+  - name: connectionString
+    default: ""
+  - name: work_dir
+    default: ""
+  - name: user
+    default: "sys"
+  - name: password
+    default: "oracle"
+  - name: masterchangelogfile
+    default: ""
 
 steps:
-- ${{ each source in parameters.installsource }}:
-  - bash: |
+- bash: |
         # Relates to : https://community.oracle.com/tech/developers/discussion/4490418/sqlcl-production-build-21-3-0-278-1045-throwing-warning-terminal-cannot-be-created-paused
         export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
-        cd ${{ source.work_dir }}
+        cd ${{ parameters.work_dir }}
         #Issue with 19.3 docker images. fixed in 21
-        sql ${{ source.user }}/${{ source.password }}@//${{ source.connectionString }}?oracle.net.disableOob=true<<EOF
+        sql ${{ parameters.user }}/${{ parameters.password }}@//${{ parameters.connectionString }}?oracle.net.disableOob=true<<EOF
         lb version
-        lb update -debug -changelog ${{ source.masterchangelogfile }} 
+        lb update -debug -changelog ${{ parameters.masterchangelogfile }} 
         exit;
         EOF
-    displayName: RunLiquibaseUpdate      
+  displayName: RunLiquibaseUpdate      
