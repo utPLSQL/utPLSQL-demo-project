@@ -125,8 +125,7 @@ parameters:
 stages:
   - ${{ if parameters.enableBuild }}:
     - ${{ each builddatabases in parameters.buildDatabase }}:
-      - stage: BuildDatabase
-        name: ${{ builddatabases.name }}
+      - stage: ${{ builddatabases.name }}
         displayName: Build Database
         jobs:
           - job: BuildDatabase
@@ -208,4 +207,13 @@ stages:
               runOnce:
                 deploy:
                   steps:
-                    -
+                  # Create Docker databases 
+                  - ${{ each dockerdb in stage.createDatabase }}:
+                    - template: t-task-extend-create-docker-database.yml
+                      parameters:
+                        containerRegistry: ${{ stage.containerRegistry }}
+                        dockerRepo: ${{ stage.dockerRepo }}
+                        dbname: ${{ dockerdb.dbname }}
+                        oracleVersion: ${{ dockerdb.oracleVersion }}
+                        dockerOptions: ${{ dockerdb.dockerOptions }}
+                        dockerPortMap: ${{ dockerdb.dockerPortMap }}
