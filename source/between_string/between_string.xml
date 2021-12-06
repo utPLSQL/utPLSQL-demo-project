@@ -4,7 +4,13 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    <include file="./award_bonus.xml" relativeToChangelogFile="true"/>
-    <include file="./remove_rooms_by_name.xml" relativeToChangelogFile="true"/>
-    <include file="./between_string.xml" relativeToChangelogFile="true"/>
+
+    <changeSet author="utplsql" id="05_between_string" runOnChange="true">
+      <sqlFile dbms="oracle"
+               endDelimiter=";"
+               path="betwnstr.fnc"
+               relativeToChangelogFile="true"
+               splitStatements="false"
+               stripComments="false"/>
+    </changeSet>
 </databaseChangeLog>

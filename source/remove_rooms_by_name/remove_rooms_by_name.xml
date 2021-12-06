@@ -5,18 +5,18 @@
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet author="utplsql" id="01_award_bonus">
+    <changeSet author="utplsql" id="03_remove_rooms_by_names">
       <sqlFile dbms="oracle"
                endDelimiter=";"
-               path="../source/award_bonus/employees_test.sql"
+               path="rooms.sql"
                relativeToChangelogFile="true"
                splitStatements="true"
                stripComments="false"/>
     </changeSet>
-    <changeSet author="utplsql" id="02_award_bonus_prc" runOnChange="true">
+    <changeSet author="utplsql" id="04_remove_rooms_by_name_prc" runOnChange="true">
       <sqlFile dbms="oracle"
                endDelimiter=";"
-               path="../source/award_bonus/award_bonus.prc"
+               path="remove_rooms_by_name.prc"
                relativeToChangelogFile="true"
                splitStatements="false"
                stripComments="false"/>
