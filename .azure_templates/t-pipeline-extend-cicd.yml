@@ -179,6 +179,25 @@ stages:
                     source_path: ${{ runutplsql.source_path}}
                     test_path: ${{ runutplsql.test_path}}
                     options: ${{ runutplsql.options}}
+              #Publish Artifact
+              - task: CopyFiles@2
+                inputs:
+                  SourceFolder: $(Build.SourcesDirectory)/source
+                  Contents: '**'
+                  TargetFolder: $(Build.ArtifactStagingDirectory)/source
+                  Overwrite: true
+              - task: CopyFiles@2
+                inputs:
+                  SourceFolder: $(Build.SourcesDirectory)
+                  Contents: '**'
+                  TargetFolder: $(Build.ArtifactStagingDirectory)/test
+                  Overwrite: true                                     
+              - task: CopyFiles@2
+                inputs:
+                  SourceFolder: $(Build.SourcesDirectory)
+                  Contents: 'utplsql_changelog.xml'
+                  TargetFolder: $(Build.ArtifactStagingDirectory)
+                  Overwrite: true                                     
               #Publish test results      
               - task: PublishTestResults@2
                 inputs:
