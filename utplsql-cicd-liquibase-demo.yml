@@ -63,7 +63,7 @@ extends:
             script: "source/create_user.sql"
             work_dir: "$(Build.SourcesDirectory)" 
         installsource:
-          - work_dir: "$(Build.SourcesDirectory)/liquibasesource"
+          - work_dir: "$(Build.SourcesDirectory)/liquibasechangelogs"
             user: $(DB_USER)
             password: $(DB_PASS)
             connectionString: "127.0.0.1:1521/ORCLCDB"
@@ -77,7 +77,7 @@ extends:
             connectionString: "127.0.0.1:1521/ORCLCDB"
             test_user: $(DB_USER)
             test_pwd: $(DB_PASS)
-            source_path: "liquibasesource/source"
+            source_path: "source"
             test_path: "test"
             options: "--debug --failure-exit-code=0"
 
