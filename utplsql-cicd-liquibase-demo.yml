@@ -61,7 +61,13 @@ extends:
             password: "oracle"  
             connectionString: "127.0.0.1:1521/ORCLCDB"         
             script: "source/create_user.sql"
-            work_dir: "$(Build.SourcesDirectory)" 
+            work_dir: "$(Build.SourcesDirectory)"
+          - displayName: "Install Tests"
+            user: "$(DB_USER)"
+            password: "$(DB_PASS)"  
+            connectionString: "127.0.0.1:1521/ORCLCDB"         
+            script: "test/install.sql"
+            work_dir: "$(Build.SourcesDirectory)"             
         installsource:
           - work_dir: "$(Build.SourcesDirectory)"
             user: $(DB_USER)
