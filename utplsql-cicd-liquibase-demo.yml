@@ -25,6 +25,7 @@ variables:
 extends:
   template: .azure_templates/t-pipeline-extend-cicd.yml
   parameters:
+    enableBuild: true
     buildDatabase:
       - containerRegistry: ${{ variables.containerRegistry }}
         dockerRepo: ${{ variables.dockerRepo }}

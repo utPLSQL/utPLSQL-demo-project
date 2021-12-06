@@ -1,4 +1,10 @@
 parameters:
+  - name: enableBuild
+    type: boolean
+    default: true
+  - name: enableDeployment
+    type: boolean
+    default: true
   - name: buildDatabase
     type: object
     default:
@@ -87,58 +93,72 @@ parameters:
 
 
 stages:
-  - ${{ each builddatabases in parameters.buildDatabase }}:
-    - stage: BuildDatabase
-      displayName: Build Database
-      jobs:
-        - job: BuildDatabase
-          displayName: Build Database  
-          steps:
-            # Download binaries
-            - template: t-task-extend-download-binaries.yml
-              parameters:
-                packages: ${{ builddatabases.packages }}
-            # Create Docker databases 
-            - ${{ each dockerdb in builddatabases.createDatabase }}:
-              - template: t-task-extend-create-docker-database.yml
+  - ${{ if parameters.enableBuild }}:
+    - ${{ each builddatabases in parameters.buildDatabase }}:
+      - stage: BuildDatabase
+        displayName: Build Database
+        jobs:
+          - job: BuildDatabase
+            displayName: Build Database  
+            steps:
+              # Download binaries
+              - template: t-task-extend-download-binaries.yml
                 parameters:
-                  containerRegistry: ${{ builddatabases.containerRegistry }}
-                  dockerRepo: ${{ builddatabases.dockerRepo }}
-                  dbname: ${{ dockerdb.dbname }}
-                  oracleVersion: ${{ dockerdb.oracleVersion }}
-                  dockerOptions: ${{ dockerdb.dockerOptions }}
-                  dockerPortMap: ${{ dockerdb.dockerPortMap }}
-            # Checkout utplsql
-            - template: t-task-extend-git-clone.yml
-              parameters:
-                gitCheckoutDetails: ${{ builddatabases.gitCheckoutDetails }}
-            # Execute SQL scripts           
-            - ${{ each script in builddatabases.scripts }}:
-              - template: t-task-extend-sqlcl.yml
+                  packages: ${{ builddatabases.packages }}
+              # Create Docker databases 
+              - ${{ each dockerdb in builddatabases.createDatabase }}:
+                - template: t-task-extend-create-docker-database.yml
+                  parameters:
+                    containerRegistry: ${{ builddatabases.containerRegistry }}
+                    dockerRepo: ${{ builddatabases.dockerRepo }}
+                    dbname: ${{ dockerdb.dbname }}
+                    oracleVersion: ${{ dockerdb.oracleVersion }}
+                    dockerOptions: ${{ dockerdb.dockerOptions }}
+                    dockerPortMap: ${{ dockerdb.dockerPortMap }}
+              # Checkout utplsql
+              - template: t-task-extend-git-clone.yml
                 parameters:
-                  work_dir: ${{ script.work_dir}}
-                  user: ${{ script.user}}
-                  password: ${{ script.password}}
-                  connectionString: ${{ builddatabases.connectionString}}
-                  script: ${{ script.script}}
-                  displayName: ${{ script.displayName}}   
-            # Execute Liquibase
-            - ${{ each liquibase in builddatabases.installsource }}:             
-              - template: t-task-extend-sqlcl-liquibase.yml
-                parameters:
-                  connectionString: ${{ builddatabases.connectionString}}
-                  work_dir: ${{ liquibase.work_dir }}
-                  user: ${{ liquibase.user }}
-                  password: ${{ liquibase.password }}
-                  masterchangelogfile: ${{ liquibase.masterchangelogfile }}
-            # Execute utplsql tests      
-            - ${{ each runutplsql in builddatabases.execute_tests }}:      
-              - template: t-task-extend-utplsqlcli.yml
-                parameters:
-                  connectionString: ${{ builddatabases.connectionString}}
-                  work_dir: ${{ runutplsql.work_dir}}
-                  test_user: ${{ runutplsql.test_user}}
-                  test_pwd: ${{ runutplsql.test_pwd}}
-                  source_path: ${{ runutplsql.source_path}}
-                  test_path: ${{ runutplsql.test_path}}
-                  options: ${{ runutplsql.options}}
+                  gitCheckoutDetails: ${{ builddatabases.gitCheckoutDetails }}
+              # Execute SQL scripts           
+              - ${{ each script in builddatabases.scripts }}:
+                - template: t-task-extend-sqlcl.yml
+                  parameters:
+                    work_dir: ${{ script.work_dir}}
+                    user: ${{ script.user}}
+                    password: ${{ script.password}}
+                    connectionString: ${{ builddatabases.connectionString}}
+                    script: ${{ script.script}}
+                    displayName: ${{ script.displayName}}   
+              # Execute Liquibase
+              - ${{ each liquibase in builddatabases.installsource }}:             
+                - template: t-task-extend-sqlcl-liquibase.yml
+                  parameters:
+                    connectionString: ${{ builddatabases.connectionString}}
+                    work_dir: ${{ liquibase.work_dir }}
+                    user: ${{ liquibase.user }}
+                    password: ${{ liquibase.password }}
+                    masterchangelogfile: ${{ liquibase.masterchangelogfile }}
+              # Execute utplsql tests      
+              - ${{ each runutplsql in builddatabases.execute_tests }}:      
+                - template: t-task-extend-utplsqlcli.yml
+                  parameters:
+                    connectionString: ${{ builddatabases.connectionString}}
+                    work_dir: ${{ runutplsql.work_dir}}
+                    test_user: ${{ runutplsql.test_user}}
+                    test_pwd: ${{ runutplsql.test_pwd}}
+                    source_path: ${{ runutplsql.source_path}}
+                    test_path: ${{ runutplsql.test_path}}
+                    options: ${{ runutplsql.options}}
+              #Publish test results      
+              - task: PublishTestResults@2
+                inputs:
+                  testResultsFormat: 'JUnit'
+                  testResultsFiles: '**/junit_test_results.xml'
+                  testRunTitle: 'Publish test results'
+                displayName: 'Publish test results'
+              - task: PublishCodeCoverageResults@1
+                inputs:
+                  codeCoverageTool: 'Cobertura'
+                  summaryFileLocation: 'cobertura.xml'
+                  pathToSources: 'source'
+                displayName: 'Publish coverage'                    
