@@ -26,8 +26,10 @@ extends:
   template: .azure_templates/t-pipeline-extend-cicd.yml
   parameters:
     enableBuild: true
+    enableDeployment: true
     buildDatabase:
-      - containerRegistry: ${{ variables.containerRegistry }}
+      - name: BuildDatabase
+        containerRegistry: ${{ variables.containerRegistry }}
         dockerRepo: ${{ variables.dockerRepo }}
         connectionString: "127.0.0.1:1521/ORCLCDB"
         environment: "build"
@@ -47,33 +49,28 @@ extends:
         createDatabase:
           - dbname: UTBUILD
             oracleVersion: "19c-se2-small"
-            connectionString: "127.0.0.1:1521/ORCLCDB"
             dockerPortMap: "1521"
             dockerOptions: "--shm-size=1g"
         scripts:
           - displayName: "Install utPLSQL"
             user: "sys"
-            password: "oracle"   
-            connectionString: "127.0.0.1:1521/ORCLCDB"        
+            password: "oracle"        
             script: "install_headless.sql UT3 UT3 users"
             work_dir: "${UTPLSQL_DIR}/source"
           - displayName: "Create Test User"
             user: "sys"
-            password: "oracle"  
-            connectionString: "127.0.0.1:1521/ORCLCDB"         
+            password: "oracle"         
             script: "source/create_user.sql"
             work_dir: "$(Build.SourcesDirectory)"
           - displayName: "Install Tests"
             user: "$(DB_USER)"
-            password: "$(DB_PASS)"  
-            connectionString: "127.0.0.1:1521/ORCLCDB"         
+            password: "$(DB_PASS)"          
             script: "test/install.sql"
             work_dir: "$(Build.SourcesDirectory)"             
         installsource:
           - work_dir: "$(Build.SourcesDirectory)"
             user: $(DB_USER)
             password: $(DB_PASS)
-            connectionString: "127.0.0.1:1521/ORCLCDB"
             masterchangelogfile: "utplsql_changelog.xml"
         gitCheckoutDetails:
           - gitRepo: ${{ variables.gitRepo }}
@@ -81,12 +78,22 @@ extends:
             checkoutDir: $(UTPLSQL_DIR)
         execute_tests:
           - work_dir: $(Build.SourcesDirectory)
-            connectionString: "127.0.0.1:1521/ORCLCDB"
             test_user: $(DB_USER)
             test_pwd: $(DB_PASS)
             source_path: "source"
             test_path: "test"
             options: "--debug --failure-exit-code=0"
 
-    #DeployDatabase:
+    deployStages:
+      - name: ReleaseCode
+        display_name: Deploy code to Test Env
+        dependsOn: BuildDatabase
+        target_environment: TEST
+        connectionString: "127.0.0.1:1521/ORCLCDB"
+        createDatabase:
+          - dbname: UTTEST
+            oracleVersion: "19c-se2-small"
+            dockerPortMap: "1521"
+            dockerOptions: "--shm-size=1g"        
+
     

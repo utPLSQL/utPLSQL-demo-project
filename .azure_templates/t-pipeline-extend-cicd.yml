@@ -8,6 +8,8 @@ parameters:
   - name: buildDatabase
     type: object
     default:
+      - name: name
+        default: ""
       - name: containerRegistry
         default: ""
       - name: dockerRepo
@@ -91,11 +93,40 @@ parameters:
           - name: options
             default: ""
 
+  - name: deployStages
+    type: object
+    default:
+      - name: name
+        default: ""
+      - name: dependsOn
+        default: ""
+      - name: display_name
+        default: ""
+      - name: target_env
+        default: ""
+      - name: containerRegistry
+        default: ""
+      - name: dockerRepo
+        default: ""  
+      - name : connectionString
+        default : ""        
+      - name: createDatabase           
+        type: object
+        default:
+          - name: dbname
+            default: ""
+          - name: oracleVersion
+            default: ""  
+          - name: dockerOptions
+            default: "--shm-size=1g"
+          - name: dockerPortMap
+            default: "1521"
 
 stages:
   - ${{ if parameters.enableBuild }}:
     - ${{ each builddatabases in parameters.buildDatabase }}:
       - stage: BuildDatabase
+        name: ${{ builddatabases.name }}
         displayName: Build Database
         jobs:
           - job: BuildDatabase
@@ -162,3 +193,19 @@ stages:
                   summaryFileLocation: 'cobertura.xml'
                   pathToSources: 'source'
                 displayName: 'Publish coverage'                    
+  
+  - ${{ if parameters.enableDeployment }}:
+    - ${{ each stage in parameters.deployStages }}:
+      - stage: ${{ stage.name }}
+        displayName: ${{ stage.display_name }}
+        ${{ if stage.dependsOn }}:
+          dependsOn: ${{ stage.dependsOn }}
+        jobs:
+          - deployment:
+            displayName: Deploy Code to Database
+            environment: ${{ stage.target_environment }}
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    -
