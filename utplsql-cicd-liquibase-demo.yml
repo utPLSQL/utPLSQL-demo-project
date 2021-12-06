@@ -97,5 +97,17 @@ extends:
             oracleVersion: "19c-se2-small"
             dockerPortMap: "1521"
             dockerOptions: "--shm-size=1g"        
-
+        packages:
+          - name: sqlcl
+            download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"
+            unpack_location: "$(Build.BinariesDirectory)"
+            url: ${{ variables.sqlclUrl }}
+            archive: "zip"
+            addtoPath: "$(SQLCL_DIR)/bin"
+          - name: utlplsqlcli
+            download_location: "$(Build.BinariesDirectory)/utPLSQL-cli.zip"
+            unpack_location: "$(Build.BinariesDirectory)"
+            url: ${{ variables.utplsqlcliUrl }}
+            archive: "zip"
+            addToPath: "$(UTPLSQL_CLI_DIR)/bin"
     

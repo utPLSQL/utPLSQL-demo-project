@@ -121,7 +121,22 @@ parameters:
             default: "--shm-size=1g"
           - name: dockerPortMap
             default: "1521"
-
+      - name: packages
+        type: object
+        default:
+          - name: name
+            default: ""  
+          - name: download_location
+            default: ""
+          - name: unpack_location
+            default: "$(Build.BinariesDirectory)"    
+          - name: url
+            default: ""
+          - name: archive
+            default: "zip"
+          - name: addToPath
+            default: "" 
+            
 stages:
   - ${{ if parameters.enableBuild }}:
     - ${{ each builddatabases in parameters.buildDatabase }}:
@@ -228,6 +243,10 @@ stages:
               runOnce:
                 deploy:
                   steps:
+                  # Download binaries
+                  - template: t-task-extend-download-binaries.yml
+                    parameters:
+                      packages: ${{ builddatabases.packages }}                  
                   # Create Docker databases 
                   - ${{ each dockerdb in stage.createDatabase }}:
                     - template: t-task-extend-create-docker-database.yml
