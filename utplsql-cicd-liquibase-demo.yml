@@ -90,6 +90,8 @@ extends:
         dependsOn: BuildDatabase
         target_environment: TEST
         connectionString: "127.0.0.1:1521/ORCLCDB"
+        containerRegistry: ${{ variables.containerRegistry }}
+        dockerRepo: ${{ variables.dockerRepo }}     
         createDatabase:
           - dbname: UTTEST
             oracleVersion: "19c-se2-small"
