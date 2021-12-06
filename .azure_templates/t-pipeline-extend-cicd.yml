@@ -197,7 +197,9 @@ stages:
                   SourceFolder: $(Build.SourcesDirectory)
                   Contents: 'utplsql_changelog.xml'
                   TargetFolder: $(Build.ArtifactStagingDirectory)
-                  Overwrite: true                                     
+                  Overwrite: true  
+              - publish: $(Build.ArtifactStagingDirectory)
+                artifact: ReleaseArtifact                                     
               #Publish test results      
               - task: PublishTestResults@2
                 inputs:
