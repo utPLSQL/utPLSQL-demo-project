@@ -21,6 +21,8 @@ variables:
     value:  ut3_demo
   - name : DB_PASS
     value:  ut3_demo
+  - name: artifactName
+    value: ReleaseArtifact
   
 extends:
   template: .azure_templates/t-pipeline-extend-cicd.yml
@@ -33,6 +35,7 @@ extends:
         dockerRepo: ${{ variables.dockerRepo }}
         connectionString: "127.0.0.1:1521/ORCLCDB"
         environment: "build"
+        artifactName: ${{ variables.artifactName }}
         packages:
           - name: sqlcl
             download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"
@@ -110,4 +113,15 @@ extends:
             url: ${{ variables.utplsqlcliUrl }}
             archive: "zip"
             addToPath: "$(UTPLSQL_CLI_DIR)/bin"
+        scripts:            
+          - displayName: "Create Test User"
+            user: "sys"
+            password: "oracle"         
+            script: "source/create_user.sql"
+            work_dir: "$(Pipeline.Workspace)/${{ variables.artifactName }}"            
+        installsource:
+          - work_dir: "$(Pipeline.Workspace)/${{ variables.artifactName }}"
+            user: $(DB_USER)
+            password: $(DB_PASS)
+            masterchangelogfile: "utplsql_changelog.xml"            
     

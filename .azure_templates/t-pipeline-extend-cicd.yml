@@ -17,7 +17,9 @@ parameters:
       - name : connectionString
         default : ""
       - name: environment
-        default: ""    
+        default: ""
+      - name: artifactName
+        default: "" 
       - name: packages
         type: object
         default:
@@ -135,7 +137,31 @@ parameters:
           - name: archive
             default: "zip"
           - name: addToPath
-            default: "" 
+            default: ""
+      - name: scripts
+        type: object
+        default:
+          - name: work_dir
+            default: ""
+          - name: user
+            default: ""
+          - name: password
+            default: ""
+          - name: script
+            default: ""
+          - name: displayName
+            default: ""              
+      - name: installsource
+        type: object
+        default:
+          - name: work_dir
+            default: ""
+          - name: user
+            default: "sys"
+          - name: password
+            default: "oracle"
+          - name: masterchangelogfile
+            default: ""            
 
 stages:
   - ${{ if parameters.enableBuild }}:
@@ -214,7 +240,7 @@ stages:
                   TargetFolder: $(Build.ArtifactStagingDirectory)
                   Overwrite: true  
               - publish: $(Build.ArtifactStagingDirectory)
-                artifact: ReleaseArtifact                                     
+                artifact: ${{ builddatabases.artifactName}}                                     
               #Publish test results      
               - task: PublishTestResults@2
                 inputs:
@@ -257,3 +283,22 @@ stages:
                         oracleVersion: ${{ dockerdb.oracleVersion }}
                         dockerOptions: ${{ dockerdb.dockerOptions }}
                         dockerPortMap: ${{ dockerdb.dockerPortMap }}
+                  # Execute SQL scripts           
+                  - ${{ each script in stage.scripts }}:
+                    - template: t-task-extend-sqlcl.yml
+                      parameters:
+                        work_dir: ${{ script.work_dir}}
+                        user: ${{ script.user}}
+                        password: ${{ script.password}}
+                        connectionString: ${{ stage.connectionString}}
+                        script: ${{ script.script}}
+                        displayName: ${{ script.displayName}}                         
+                    # Execute Liquibase
+                    - ${{ each liquibase in stage.installsource }}:             
+                      - template: t-task-extend-sqlcl-liquibase.yml
+                        parameters:
+                          connectionString: ${{ stage.connectionString}}
+                          work_dir: ${{ liquibase.work_dir }}
+                          user: ${{ liquibase.user }}
+                          password: ${{ liquibase.password }}
+                          masterchangelogfile: ${{ liquibase.masterchangelogfile }}                        
