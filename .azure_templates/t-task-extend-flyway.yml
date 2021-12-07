@@ -25,7 +25,7 @@ steps:
   - bash: |
         ls -ltr ${{ parameters.config_dir }}
         cat ${{ parameters.config_dir }}/${{ parameters.config_file }}
-        
+
         # start the docker container (DB)
         time docker run --rm  \
             -v ${{ parameters.migrations_dir }}:/flyway/sql \
@@ -33,7 +33,7 @@ steps:
             -v /absolute/path/to/my/driverdir:/flyway/drivers \
             flyway/flyway migrate \
               -url=jdbc:oracle:thin:@//${{ parameters.connectionString }} \
-              -configFiles="${{ parameters.config_file }}" \
+              -configFiles="/flyway/conf/${{ parameters.config_file }}" \
               -user="${{ parameters.user }}" \
               -password="${{ parameters.password }}"
 
