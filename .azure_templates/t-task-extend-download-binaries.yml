@@ -21,7 +21,7 @@ parameters:
 steps:
 - ${{ each package in parameters.packages }}:
   - bash: |    
-      curl -Lk -o --create-dirs ${{package.download_location}} \
+      curl -Lk -o ${{package.download_location}} \
             ${{package.url}}
 
       if [[ ! -z ${{package.unpack_location}} ]]; then

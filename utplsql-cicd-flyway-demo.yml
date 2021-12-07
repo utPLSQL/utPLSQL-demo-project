@@ -51,7 +51,7 @@ extends:
             archive: "zip"
             addToPath: "$(UTPLSQL_CLI_DIR)/bin"
           - name: DownloadOjdbc8
-            download_location: "$(Build.BinariesDirectory)/drivers/ojdbc8.jar "
+            download_location: "$(Build.BinariesDirectory)/ojdbc8.jar "
             url: ${{ variables.ojdbcurl }}        
         createDatabase:
           - dbname: UTBUILD
@@ -78,7 +78,7 @@ extends:
           - config_dir: "$(Build.SourcesDirectory)"
             config_file: "utplsql_flyway.conf"
             migrations_dir:  "$(Build.SourcesDirectory)/source"
-            driver_dir: "$(Build.BinariesDirectory)/drivers"
+            driver_dir: "$(Build.BinariesDirectory)"
             user: $(DB_USER)
             password: $(DB_PASS)
         gitCheckoutDetails:
