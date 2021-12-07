@@ -19,6 +19,8 @@ parameters:
         default: ""  
       - name : connectionString
         default : ""
+      - name: jdbcConnectionString
+        default : ""  
       - name: environment
         default: ""
       - name: artifactName
@@ -245,7 +247,7 @@ stages:
                 - template: t-task-extend-flyway.yml
                   parameters:
                     containerRegistry: ${{ builddatabases.containerRegistry }}
-                    connectionString: ${{ builddatabases.connectionString}}
+                    jdbcConnectionString: ${{ builddatabases.jdbcConnectionString}}
                     config_dir: ${{ flyway.config_dir }}
                     config_file: ${{ flyway.config_file }}
                     migrations_dir:  ${{ flyway.migrations_dir }}

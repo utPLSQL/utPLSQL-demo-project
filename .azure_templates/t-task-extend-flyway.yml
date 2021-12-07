@@ -1,7 +1,7 @@
 parameters:
   - name : containerRegistry
     default: ""   
-  - name: connectionString
+  - name: jdbcConnectionString
     default: ""
   - name: config_dir
     default: ""    
@@ -34,7 +34,7 @@ steps:
             -v ${{ parameters.config_dir }}:/flyway/conf \
             -v ${{ parameters.driver_dir }}:/flyway/drivers \
             flyway/flyway migrate \
-              -url=jdbc:oracle:thin:@//${{ parameters.connectionString }} \
+              -url=jdbc:oracle:thin:@//${{ parameters.jdbcConnectionString }} \
               -configFiles="/flyway/conf/${{ parameters.config_file }}" \
               -user="${{ parameters.user }}" \
               -password="${{ parameters.password }}"
