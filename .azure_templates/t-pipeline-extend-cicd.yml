@@ -31,7 +31,7 @@ parameters:
           - name: download_location
             default: ""
           - name: unpack_location
-            default: "$(Build.BinariesDirectory)"    
+            default: ""    
           - name: url
             default: ""
           - name: archive

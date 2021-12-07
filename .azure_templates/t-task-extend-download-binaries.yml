@@ -26,7 +26,7 @@ steps:
 
       if [[ ! -z ${{package.unpack_location}} ]]; then
         echo Unzipping to ${{package.unpack_location}}
-        unzip   -qq -d ${{package.unpack_location}} ${{package.download_location}}
+        unzip -qq -d ${{package.unpack_location}} ${{package.download_location}}
         chmod -R u+x ${{package.unpack_location}}
         rm -rf ${{package.download_location}}
       else
