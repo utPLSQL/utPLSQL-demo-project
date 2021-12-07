@@ -10,7 +10,7 @@ parameters:
   - name: configFile
     default : "sonar-project.properties"
 
- steps:                 
+steps:                 
   - task: SonarCloudPrepare@1
     inputs:
       SonarCloud: ${{ parameters.serviceConnection }}
