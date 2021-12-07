@@ -73,8 +73,8 @@ extends:
             work_dir: "$(Build.SourcesDirectory)"             
         runflyway:
           - config_dir: "$(Build.SourcesDirectory)"
-            config_file: ${{ flyway.config_file }}
-            migrations_dir:  ${{ flyway.migrations_dir }}
+            config_file: "utplsql_flyway.conf"
+            migrations_dir:  "$(Build.SourcesDirectory)/source"
             user: $(DB_USER)
             password: $(DB_PASS)
         gitCheckoutDetails:
