@@ -8,7 +8,7 @@
 
 
 This is a demo project using [utPLSQL v3](https://github.com/utPLSQL/utPLSQL) for unit testing of Oracle PLSQL code.
-The project is also taking benefit of Continuous Integration with Travis CI server as well as static code analysis, code coverage and test results reporting using SonarQube.
+The project is also taking benefit of Continuous Integration with Travis CI server as well as static code analysis, code coverage and test results reporting using SonarCloud.
 
 With every commit made to the github repository, a build job is executed using [Travis](https://travis-ci.org/utPLSQL/utPLSQL-demo-project) CI.
 
@@ -26,7 +26,7 @@ The build process consists of following steps:
 ## Demo project using utPLSQL, Azure Devops and SQLCL Liquibase for continuous integration of PLSQL and SQL code. 
 
 This is a demo project using [utPLSQL v3](https://github.com/utPLSQL/utPLSQL) for unit testing of Oracle PLSQL code.
-The project is also taking benefit of Continuous Integration with Azure Devops server as well as static code analysis, code coverage and test results reporting using SonarQube.
+The project is also taking benefit of Continuous Integration with Azure Devops server as well as static code analysis, code coverage and test results reporting using SonarCloud.
 
 With every commit made to the github repository, a pipeline is executed using [AzureDevops](https://dev.azure.com/utplsql/utplsql/_build) CI.
 The pipeline is setup into stages.
@@ -39,6 +39,7 @@ The pipeline is setup into stages.
     - Execute Liquibase update to deploy code
     - Execute tests
     - Publish test results
+    - Execute sonar analysis
     - Copy source code and publish to artefact staging for publish
 
 
@@ -48,3 +49,6 @@ The pipeline is setup into stages.
     - Provision a database from docker *( this step most likely you will not run as these databases will exists already)*
     - Create user to deploy code to *( this step most likely you will not run as the user will exists already)*
     - Execute Liquibase update to deploy code
+
+
+## Demo project using utPLSQL, Azure Devops and Flyway for continuous integration of PLSQL and SQL code. 

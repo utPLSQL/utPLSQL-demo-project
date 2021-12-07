@@ -71,7 +71,7 @@ parameters:
             default: ""
           - name: displayName
             default: ""               
-      - name: installsource
+      - name: runliquibase
         type: object
         default:
           - name: work_dir
@@ -82,6 +82,21 @@ parameters:
             default: "oracle"
           - name: masterchangelogfile
             default: ""
+      - name: runflyway
+        type: object
+        default:
+          - name: config_dir
+            default: ""    
+          - name: config_file
+            default: ""
+          - name: migrations_dir
+            default: ""    
+          - name: user
+            default: "sys"
+          - name: password
+            default: "oracle"
+          - name: configfile
+            default: ""         
       - name: execute_tests
         type: object
         default:
@@ -153,8 +168,8 @@ parameters:
           - name: script
             default: ""
           - name: displayName
-            default: ""              
-      - name: installsource
+            default: "" 
+      - name: runliquibase
         type: object
         default:
           - name: work_dir
@@ -164,7 +179,18 @@ parameters:
           - name: password
             default: "oracle"
           - name: masterchangelogfile
-            default: ""            
+            default: ""                                     
+      - name: runflyway
+        type: object
+        default:
+          - name: work_dir
+            default: ""
+          - name: user
+            default: "sys"
+          - name: password
+            default: "oracle"
+          - name: configfile
+            default: ""             
 
 stages:
   - ${{ if parameters.enableBuild }}:
@@ -204,7 +230,7 @@ stages:
                     script: ${{ script.script}}
                     displayName: ${{ script.displayName}}   
               # Execute Liquibase
-              - ${{ each liquibase in builddatabases.installsource }}:             
+              - ${{ each liquibase in builddatabases.runliquibase }}:             
                 - template: t-task-extend-sqlcl-liquibase.yml
                   parameters:
                     connectionString: ${{ builddatabases.connectionString}}
@@ -212,6 +238,16 @@ stages:
                     user: ${{ liquibase.user }}
                     password: ${{ liquibase.password }}
                     masterchangelogfile: ${{ liquibase.masterchangelogfile }}
+              # Execute Flyway
+              - ${{ each flyway in builddatabases.runflyway }}:             
+                - template: t-task-extend-flyway.yml
+                  parameters:
+                    connectionString: ${{ builddatabases.connectionString}}
+                    config_dir: ${{ flyway.config_dir }}
+                    config_file: ${{ flyway.config_file }}
+                    migrations_dir:  ${{ flyway.migrations_dir }}
+                    user: ${{ flyway.user }}
+                    password: ${{ flyway.password }}                    
               # Execute utplsql tests      
               - ${{ each runutplsql in builddatabases.execute_tests }}:      
                 - template: t-task-extend-utplsqlcli.yml
@@ -304,7 +340,7 @@ stages:
                         script: ${{ script.script}}
                         displayName: ${{ script.displayName}}                         
                     # Execute Liquibase
-                    - ${{ each liquibase in stage.installsource }}:             
+                    - ${{ each liquibase in stage.runliquibase }}:             
                       - template: t-task-extend-sqlcl-liquibase.yml
                         parameters:
                           connectionString: ${{ stage.connectionString}}

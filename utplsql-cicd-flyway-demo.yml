@@ -28,8 +28,8 @@ extends:
   template: .azure_templates/t-pipeline-extend-cicd.yml
   parameters:
     enableBuild: true
-    enableDeployment: true
-    enableAnalysis: true
+    enableDeployment: false
+    enableAnalysis: false
     buildDatabase:
       - name: BuildDatabase
         containerRegistry: ${{ variables.containerRegistry }}
@@ -71,11 +71,12 @@ extends:
             password: "$(DB_PASS)"          
             script: "test/install.sql"
             work_dir: "$(Build.SourcesDirectory)"             
-        runliquibase:
-          - work_dir: "$(Build.SourcesDirectory)"
+        runflyway:
+          - config_dir: "$(Build.SourcesDirectory)"
+            config_file: ${{ flyway.config_file }}
+            migrations_dir:  ${{ flyway.migrations_dir }}
             user: $(DB_USER)
             password: $(DB_PASS)
-            masterchangelogfile: "utplsql_changelog.xml"
         gitCheckoutDetails:
           - gitRepo: ${{ variables.gitRepo }}
             branch: $(UTPLSQL_VERSION)
@@ -114,7 +115,7 @@ extends:
             password: "oracle"         
             script: "source/create_user.sql"
             work_dir: "$(Pipeline.Workspace)/${{ variables.artifactName }}"            
-        runliquibase:
+        installsource:
           - work_dir: "$(Pipeline.Workspace)/${{ variables.artifactName }}"
             user: $(DB_USER)
             password: $(DB_PASS)
