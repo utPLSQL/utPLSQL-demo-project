@@ -257,17 +257,14 @@ stages:
                   summaryFileLocation: 'cobertura.xml'
                   pathToSources: 'source'
                 displayName: 'Publish coverage'                    
-  
-  - ${{ if parameters.enableAnalysis }}:
-    - stage: Analysis
-      jobs:
-        - template: t-job-extend-sonarcloud.yml
-          parameters:
-            name: utplsqAnalysis
-            serviceConnection: "utplsql-SonarCloud"
-            organization: "utplsql"
-            Analysis:
-              configFile: "sonar-project.properties" 
+              - ${{ if parameters.enableAnalysis }}:
+                - template: t-job-extend-sonarcloud.yml
+                  parameters:
+                    name: utplsqAnalysis
+                    serviceConnection: "utplsql-SonarCloud"
+                    organization: "utplsql"
+                    Analysis:
+                      configFile: "sonar-project.properties" 
 
   - ${{ if parameters.enableDeployment }}:
     - ${{ each stage in parameters.deployStages }}:
