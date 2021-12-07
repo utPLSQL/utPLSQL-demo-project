@@ -258,7 +258,7 @@ stages:
                   pathToSources: 'source'
                 displayName: 'Publish coverage'                    
               - ${{ if parameters.enableAnalysis }}:
-                - template: t-job-extend-sonarcloud.yml
+                - template: t-task-extend-sonarcloud.yml
                   parameters:
                     name: utplsqAnalysis
                     serviceConnection: "utplsql-SonarCloud"
