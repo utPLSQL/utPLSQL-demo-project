@@ -25,13 +25,12 @@ steps:
       containerRegistry: ${{ parameters.containerRegistry }}
       command: 'login'   
   - bash: |
-        echo "Using connection string: jdbc:oracle:thin:@//${{ parameters.jdbcConnectionString }} "
         time docker run --rm  \
             -v ${{ parameters.migrations_dir }}:/flyway/sql \
             -v ${{ parameters.config_dir }}:/flyway/conf \
             -v ${{ parameters.driver_dir }}:/flyway/drivers \
             flyway/flyway migrate \
-              -url=jdbc:oracle:thin:@//${{ parameters.jdbcConnectionString }} \
+              -url=jdbc:oracle:thin:@${{ parameters.jdbcConnectionString }} \
               -configFiles="/flyway/conf/${{ parameters.config_file }}" \
               -user="${{ parameters.user }}" \
               -password="${{ parameters.password }}"
