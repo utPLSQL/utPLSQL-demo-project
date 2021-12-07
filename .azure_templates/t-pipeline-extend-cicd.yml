@@ -263,8 +263,7 @@ stages:
                     name: utplsqAnalysis
                     serviceConnection: "utplsql-SonarCloud"
                     organization: "utplsql"
-                    Analysis:
-                      configFile: "sonar-project.properties" 
+                    configFile: "sonar-project.properties" 
 
   - ${{ if parameters.enableDeployment }}:
     - ${{ each stage in parameters.deployStages }}:
