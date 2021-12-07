@@ -25,6 +25,7 @@ jobs:
         configMode: 'file'
         configFile:  ${{ parameters.Analysis.configFile }}
         extraProperties: ${{ parameters.Analysis.sonarExtraProperties }}
+        
     - task: SonarCloudAnalyze@1
 
     - task: SonarCloudPublish@1

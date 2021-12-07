@@ -29,7 +29,7 @@ extends:
   parameters:
     enableBuild: true
     enableDeployment: true
-    enableAnalysis: true
+    enableAnalysis: false
     buildDatabase:
       - name: BuildDatabase
         containerRegistry: ${{ variables.containerRegistry }}
