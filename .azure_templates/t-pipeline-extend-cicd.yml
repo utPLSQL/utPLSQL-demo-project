@@ -136,7 +136,7 @@ parameters:
             default: "zip"
           - name: addToPath
             default: "" 
-            
+
 stages:
   - ${{ if parameters.enableBuild }}:
     - ${{ each builddatabases in parameters.buildDatabase }}:
@@ -246,7 +246,7 @@ stages:
                   # Download binaries
                   - template: t-task-extend-download-binaries.yml
                     parameters:
-                      packages: ${{ builddatabases.packages }}                  
+                      packages: ${{ stage.packages }}                  
                   # Create Docker databases 
                   - ${{ each dockerdb in stage.createDatabase }}:
                     - template: t-task-extend-create-docker-database.yml
