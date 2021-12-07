@@ -19,7 +19,7 @@ parameters:
 - ${{ if parameters.enableAnalysis }}:
 - stage: Analysis
   jobs:
-  - template: m-job-extend-sonarcloud.yml
+  - template: t-job-extend-sonarcloud.yml
     parameters:
       name: ${{ parameters.name }}
       serviceConnection: ${{ parameters.serviceConnection }}

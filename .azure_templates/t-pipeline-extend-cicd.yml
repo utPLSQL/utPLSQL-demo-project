@@ -261,7 +261,7 @@ stages:
   - ${{ if parameters.enableAnalysis }}:
     - stage: Analysis
       jobs:
-        - template: m-job-extend-sonarcloud.yml
+        - template: t-job-extend-sonarcloud.yml
           parameters:
             name: utplsqAnalysis
             serviceConnection: "utplsql-SonarCloud"
