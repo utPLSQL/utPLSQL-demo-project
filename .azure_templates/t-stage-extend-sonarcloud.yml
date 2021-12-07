@@ -1,0 +1,27 @@
+parameters:
+  - name: enableAnalysis
+    type: boolean
+    default: true
+  - name: name 
+    default: ""
+  - name: serviceConnection
+    default: "utplsql-SonarCloud"
+  - name: organization
+    default: "utplsql"
+  - name: Analysis
+    type: object
+    default:
+      - name: sonarExtraProperties
+        default: ""
+      - name: configFile
+        default : "sonar-project.properties" 
+
+- ${{ if parameters.enableAnalysis }}:
+- stage: Analysis
+  jobs:
+  - template: m-job-extend-sonarcloud.yml
+    parameters:
+      name: ${{ parameters.name }}
+      serviceConnection: ${{ parameters.serviceConnection }}
+      organization: ${{ parameters.organization }}
+      Analysis: ${{ parameters.Analysis }}
