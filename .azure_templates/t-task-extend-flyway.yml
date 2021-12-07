@@ -1,4 +1,6 @@
 parameters:
+  - name : containerRegistry
+    default: ""   
   - name: connectionString
     default: ""
   - name: config_dir

@@ -242,6 +242,7 @@ stages:
               - ${{ each flyway in builddatabases.runflyway }}:             
                 - template: t-task-extend-flyway.yml
                   parameters:
+                    containerRegistry: ${{ builddatabases.containerRegistry }}
                     connectionString: ${{ builddatabases.connectionString}}
                     config_dir: ${{ flyway.config_dir }}
                     config_file: ${{ flyway.config_file }}
