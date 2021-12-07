@@ -30,7 +30,7 @@ steps:
             -v ${{ parameters.config_dir }}:/flyway/conf \
             -v ${{ parameters.driver_dir }}:/flyway/drivers \
             flyway/flyway migrate \
-              -url=jdbc:oracle:thin:@${{ parameters.jdbcConnectionString }} \
+              -url=jdbc:oracle:thin:@${{ parameters.jdbcConnectionString }}?oracle.net.disableOob=true \
               -configFiles="/flyway/conf/${{ parameters.config_file }}" \
               -user="${{ parameters.user }}" \
               -password="${{ parameters.password }}"
