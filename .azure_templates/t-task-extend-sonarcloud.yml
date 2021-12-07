@@ -11,9 +11,10 @@ parameters:
       - name: sonarExtraProperties
         default: ""
       - name: configFile
-        default : "sonar-project.properties"  
-                  
- - task: SonarCloudPrepare@1
+        default : "sonar-project.properties"
+
+ steps:                 
+  - task: SonarCloudPrepare@1
     inputs:
       SonarCloud: ${{ parameters.serviceConnection }}
       organization: ${{ parameters.organization }}
@@ -21,9 +22,7 @@ parameters:
       configMode: 'file'
       configFile:  ${{ parameters.Analysis.configFile }}
       extraProperties: ${{ parameters.Analysis.sonarExtraProperties }}
-        
-- task: SonarCloudAnalyze@1
-
-- task: SonarCloudPublish@1
-  inputs:
-    pollingTimeoutSec: '300'
+  - task: SonarCloudAnalyze@1
+  - task: SonarCloudPublish@1
+    inputs:
+      pollingTimeoutSec: '300'
