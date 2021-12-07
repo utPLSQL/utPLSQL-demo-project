@@ -23,13 +23,12 @@ steps:
       containerRegistry: ${{ parameters.containerRegistry }}
       command: 'login'   
   - bash: |
-        time docker pull flyway/flyway-azure:latest-alpine flyway
         # start the docker container (DB)
         time docker run --rm  \
             -v ${{ parameters.migrations_dir }}:/flyway/sql \
             -v ${{ parameters.config_dir }}:/flyway/conf \
             -v /absolute/path/to/my/driverdir:/flyway/drivers \
-            flyway/flyway-azure:latest-alpine migrate \
+            flyway/flyway migrate \
               -url=jdbc:oracle:thin:@//${{ parameters.connectionString }} \
               -configFiles="${{ parameters.config_file }}" \
               -user="${{ parameters.user }}" \
