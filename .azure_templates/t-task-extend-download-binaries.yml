@@ -7,7 +7,7 @@ parameters:
       - name: download_location
         default: ""
       - name: unpack_location
-        default: "$(Build.BinariesDirectory)"    
+        default: ""    
       - name: url
         default: ""
       - name: archive
@@ -21,13 +21,18 @@ parameters:
 steps:
 - ${{ each package in parameters.packages }}:
   - bash: |    
-      curl -Lk -o ${{package.download_location}} \
+      curl -Lk -o --create-dirs ${{package.download_location}} \
             ${{package.url}}
 
-      echo Unzipping to ${{package.unpack_location}}
-      unzip   -qq -d ${{package.unpack_location}} ${{package.download_location}}
-      chmod -R u+x ${{package.unpack_location}}
-      rm -rf ${{package.download_location}}
+      if [[ ! -z ${{package.unpack_location}} ]]; then
+        echo Unzipping to ${{package.unpack_location}}
+        unzip   -qq -d ${{package.unpack_location}} ${{package.download_location}}
+        chmod -R u+x ${{package.unpack_location}}
+        rm -rf ${{package.download_location}}
+      else
+        chmod -R u+x ${{package.download_location}}  
+      fi
+
       if [[ ! -z ${{package.addToPath}} ]]; then
         echo "Add package to path"
         echo "##vso[task.prependpath]${{package.addToPath}}"

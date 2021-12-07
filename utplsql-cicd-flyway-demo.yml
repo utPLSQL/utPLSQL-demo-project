@@ -38,18 +38,21 @@ extends:
         environment: "build"
         artifactName: ${{ variables.artifactName }}
         packages:
-          - name: sqlcl
+          - name: downloadSqlcl
             download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"
             unpack_location: "$(Build.BinariesDirectory)"
             url: ${{ variables.sqlclUrl }}
             archive: "zip"
             addtoPath: "$(SQLCL_DIR)/bin"
-          - name: utlplsqlcli
+          - name: downloadUtlplsqlcli
             download_location: "$(Build.BinariesDirectory)/utPLSQL-cli.zip"
             unpack_location: "$(Build.BinariesDirectory)"
             url: ${{ variables.utplsqlcliUrl }}
             archive: "zip"
             addToPath: "$(UTPLSQL_CLI_DIR)/bin"
+          - name: DownloadOjdbc8
+            download_location: "$(Build.BinariesDirectory)/drivers/ojdbc8.jar "
+            url: ${{ variables.ojdbcurl }}        
         createDatabase:
           - dbname: UTBUILD
             oracleVersion: "19c-se2-small"
@@ -75,6 +78,7 @@ extends:
           - config_dir: "$(Build.SourcesDirectory)"
             config_file: "utplsql_flyway.conf"
             migrations_dir:  "$(Build.SourcesDirectory)/source"
+            driver_dir: "$(Build.BinariesDirectory)/drivers"
             user: $(DB_USER)
             password: $(DB_PASS)
         gitCheckoutDetails:

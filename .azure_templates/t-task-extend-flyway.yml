@@ -8,7 +8,9 @@ parameters:
   - name: config_file
     default: ""
   - name: migrations_dir
-    default: ""    
+    default: "" 
+  - name: driver_dir
+    default: ""         
   - name: user
     default: "sys"
   - name: password
@@ -30,7 +32,7 @@ steps:
         time docker run --rm  \
             -v ${{ parameters.migrations_dir }}:/flyway/sql \
             -v ${{ parameters.config_dir }}:/flyway/conf \
-            -v /absolute/path/to/my/driverdir:/flyway/drivers \
+            -v ${{ parameters.driver_dir }}:/flyway/drivers \
             flyway/flyway migrate \
               -url=jdbc:oracle:thin:@//${{ parameters.connectionString }} \
               -configFiles="/flyway/conf/${{ parameters.config_file }}" \
