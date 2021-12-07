@@ -21,4 +21,5 @@ steps:
         lb update -debug -changelog ${{ parameters.masterchangelogfile }} 
         exit;
         EOF
+        exit $?
   displayName: RunLiquibaseUpdate      
