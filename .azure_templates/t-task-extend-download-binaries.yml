@@ -24,7 +24,7 @@ steps:
       curl -Lk -o ${{package.download_location}} \
             ${{package.url}}
 
-      if [[ ! -z ${{package.unpack_location}} ]]; then
+      if [[ ! -z "${{package.unpack_location}}" ]]; then
         echo Unzipping to ${{package.unpack_location}}
         unzip -qq -d ${{package.unpack_location}} ${{package.download_location}}
         chmod -R u+x ${{package.unpack_location}}
@@ -33,7 +33,7 @@ steps:
         chmod -R u+x ${{package.download_location}}  
       fi
 
-      if [[ ! -z ${{package.addToPath}} ]]; then
+      if [[ ! -z "${{package.addToPath}}" ]]; then
         echo "Add package to path"
         echo "##vso[task.prependpath]${{package.addToPath}}"
       fi
