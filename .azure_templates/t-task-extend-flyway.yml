@@ -23,6 +23,9 @@ steps:
       containerRegistry: ${{ parameters.containerRegistry }}
       command: 'login'   
   - bash: |
+        ls -ltr ${{ parameters.config_dir }}
+        cat ${{ parameters.config_dir }}/${{ parameters.config_file }}
+        
         # start the docker container (DB)
         time docker run --rm  \
             -v ${{ parameters.migrations_dir }}:/flyway/sql \
