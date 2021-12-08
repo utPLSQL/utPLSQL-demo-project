@@ -250,17 +250,18 @@ stages:
                       password: ${{ liquibase.password }}
                       masterchangelogfile: ${{ liquibase.masterchangelogfile }}
               # Execute Flyway
-              - ${{ each flyway in builddatabases.runflyway }}:             
-                - template: t-task-extend-flyway.yml
-                  parameters:
-                    containerRegistry: ${{ builddatabases.containerRegistry }}
-                    jdbcConnectionString: ${{ builddatabases.jdbcConnectionString}}
-                    config_dir: ${{ flyway.config_dir }}
-                    config_file: ${{ flyway.config_file }}
-                    migrations_dir:  ${{ flyway.migrations_dir }}
-                    driver_dir:  ${{ flyway.driver_dir }}
-                    user: ${{ flyway.user }}
-                    password: ${{ flyway.password }}                    
+              - ${{ if eq(builddatabases.releaseMethod,'flyway') }}:              
+                - ${{ each flyway in builddatabases.runflyway }}:             
+                  - template: t-task-extend-flyway.yml
+                    parameters:
+                      containerRegistry: ${{ builddatabases.containerRegistry }}
+                      jdbcConnectionString: ${{ builddatabases.jdbcConnectionString}}
+                      config_dir: ${{ flyway.config_dir }}
+                      config_file: ${{ flyway.config_file }}
+                      migrations_dir:  ${{ flyway.migrations_dir }}
+                      driver_dir:  ${{ flyway.driver_dir }}
+                      user: ${{ flyway.user }}
+                      password: ${{ flyway.password }}                    
               # Execute utplsql tests      
               - ${{ each runutplsql in builddatabases.execute_tests }}:      
                 - template: t-task-extend-utplsqlcli.yml
@@ -285,12 +286,20 @@ stages:
                   Contents: '**'
                   TargetFolder: $(Build.ArtifactStagingDirectory)/test
                   Overwrite: true                                     
-              - task: CopyFiles@2
-                inputs:
-                  SourceFolder: $(Build.SourcesDirectory)
-                  Contents: 'utplsql_changelog.xml'
-                  TargetFolder: $(Build.ArtifactStagingDirectory)
-                  Overwrite: true  
+              - ${{ if eq(builddatabases.releaseMethod,'liquibase') }}:
+                - task: CopyFiles@2
+                  inputs:
+                    SourceFolder: $(Build.SourcesDirectory)
+                    Contents: 'utplsql_changelog.xml'
+                    TargetFolder: $(Build.ArtifactStagingDirectory)
+                    Overwrite: true
+              - ${{ if eq(builddatabases.releaseMethod,'flyway') }}:
+                - task: CopyFiles@2
+                  inputs:
+                    SourceFolder: $(Build.SourcesDirectory)
+                    Contents: 'utplsql_flyway.conf'
+                    TargetFolder: $(Build.ArtifactStagingDirectory)
+                    Overwrite: true                      
               - publish: $(Build.ArtifactStagingDirectory)
                 artifact: ${{ builddatabases.artifactName}}                                     
               #Publish test results      
