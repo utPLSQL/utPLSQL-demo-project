@@ -28,7 +28,7 @@ extends:
   template: .azure_templates/t-pipeline-extend-cicd.yml
   parameters:
     enableBuild: true
-    enableDeployment: false
+    enableDeployment: true
     enableAnalysis: false
     buildDatabase:
       - name: BuildDatabase
@@ -115,15 +115,19 @@ extends:
             url: ${{ variables.sqlclUrl }}
             archive: "zip"
             addtoPath: "$(SQLCL_DIR)/bin"
+          - name: DownloadOjdbc8
+            download_location: "$(Build.BinariesDirectory)/ojdbc8.jar "
+            url: ${{ variables.ojdbcurl }}            
         scripts:            
           - displayName: "Create Test User"
             user: "sys"
             password: "oracle"         
             script: "source/create_user.sql"
-            work_dir: "$(Pipeline.Workspace)/${{ variables.artifactName }}"            
-        installsource:
-          - work_dir: "$(Pipeline.Workspace)/${{ variables.artifactName }}"
+            work_dir: "$(Pipeline.Workspace)/${{ variables.artifactName }}"                       
+        runflyway:
+          - config_dir: "$(Pipeline.Workspace)/${{ variables.artifactName }}"
+            config_file: "utplsql_flyway.conf"
+            migrations_dir:  "$(Pipeline.Workspace)/${{ variables.artifactName }}/source"
+            driver_dir: "$(Build.BinariesDirectory)"
             user: $(DB_USER)
             password: $(DB_PASS)
-            masterchangelogfile: "utplsql_changelog.xml"            
-    
