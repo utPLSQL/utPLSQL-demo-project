@@ -2,7 +2,7 @@ parameters:
   - name : containerRegistry
     default: ""   
   - name: jdbcConnectionString
-    default: ""
+    default: "" 
   - name: config_dir
     default: ""    
   - name: config_file
@@ -24,6 +24,16 @@ steps:
     inputs:
       containerRegistry: ${{ parameters.containerRegistry }}
       command: 'login'   
+ - bash: |
+        # Relates to : https://community.oracle.com/tech/developers/discussion/4490418/sqlcl-production-build-21-3-0-278-1045-throwing-warning-terminal-cannot-be-created-paused
+        export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
+        #Issue with 19.3 docker images. fixed in 21
+        sql ${{ parameters.user }}/${{ parameters.password }}@//127.0.0.1:1521/ORCLCDB?oracle.net.disableOob=true<<EOF
+        show pdbs;
+        exit;
+        EOF
+        exit $?
+  displayName: Test           
   - bash: |
         time docker run --rm  \
             -v ${{ parameters.migrations_dir }}:/flyway/sql \
