@@ -8,7 +8,7 @@
     <changeSet author="utplsql" id="01_award_bonus">
       <sqlFile dbms="oracle"
                endDelimiter=";"
-               path="employees_test.sql"
+               path="V1.01__employees_test.sql"
                relativeToChangelogFile="true"
                splitStatements="true"
                stripComments="false"/>
@@ -16,7 +16,7 @@
     <changeSet author="utplsql" id="02_award_bonus_prc" runOnChange="true">
       <sqlFile dbms="oracle"
                endDelimiter=";"
-               path="award_bonus.prc"
+               path="R__award_bonus.prc"
                relativeToChangelogFile="true"
                splitStatements="false"
                stripComments="false"/>
