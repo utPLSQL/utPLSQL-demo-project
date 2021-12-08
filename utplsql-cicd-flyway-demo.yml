@@ -30,6 +30,7 @@ extends:
     enableBuild: true
     enableDeployment: true
     enableAnalysis: false
+    releaseMethod: "flyway"    
     buildDatabase:
       - name: BuildDatabase
         containerRegistry: ${{ variables.containerRegistry }}
@@ -38,7 +39,6 @@ extends:
         jdbcConnectionString: "UTBUILD:1521:ORCLCDB"
         environment: "build"
         artifactName: ${{ variables.artifactName }}
-        releaseMethod: "flyway"
         packages:
           - name: downloadSqlcl
             download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"
