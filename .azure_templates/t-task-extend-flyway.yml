@@ -31,8 +31,8 @@ steps:
         #Issue with 19.3 docker images. fixed in 21
         sql ${{ parameters.user }}/${{ parameters.password }}@//127.0.0.1:1521/ORCLCDB?oracle.net.disableOob=true<<EOF
         
-        SELECT CDB FROM V$DATABASE;
-        SELECT NAME, CON_ID, DBID, CON_UID, GUID FROM V$CONTAINERS ORDER BY CON_ID;
+        SELECT CDB FROM V\$DATABASE;
+        SELECT NAME, CON_ID, DBID, CON_UID, GUID FROM V\$CONTAINERS ORDER BY CON_ID;
         exit;
         EOF
         exit $?
