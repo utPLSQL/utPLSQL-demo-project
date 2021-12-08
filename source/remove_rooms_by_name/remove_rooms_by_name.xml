@@ -8,7 +8,7 @@
     <changeSet author="utplsql" id="03_remove_rooms_by_names">
       <sqlFile dbms="oracle"
                endDelimiter=";"
-               path="v1.00__rooms.sql"
+               path="V1.00__rooms.sql"
                relativeToChangelogFile="true"
                splitStatements="true"
                stripComments="false"/>
