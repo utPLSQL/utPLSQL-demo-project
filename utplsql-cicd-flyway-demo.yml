@@ -38,6 +38,7 @@ extends:
         jdbcConnectionString: "UTBUILD:1521:ORCLCDB"
         environment: "build"
         artifactName: ${{ variables.artifactName }}
+        releaseMethod: "flyway"
         packages:
           - name: downloadSqlcl
             download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"
@@ -103,7 +104,7 @@ extends:
         containerRegistry: ${{ variables.containerRegistry }}
         dockerRepo: ${{ variables.dockerRepo }}     
         createDatabase:
-          - dbname: UTTEST
+          - dbname: UTBUILD
             oracleVersion: "19c-se2-small"
             dockerPortMap: "1521"
             dockerOptions: "--shm-size=1g"        

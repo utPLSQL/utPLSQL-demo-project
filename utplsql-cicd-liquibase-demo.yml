@@ -37,6 +37,7 @@ extends:
         connectionString: "127.0.0.1:1521/ORCLCDB"
         environment: "build"
         artifactName: ${{ variables.artifactName }}
+        releaseMethod: "liquibase"
         packages:
           - name: sqlcl
             download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"

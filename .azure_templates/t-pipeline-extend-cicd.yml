@@ -7,7 +7,13 @@ parameters:
     default: true
   - name: enableAnalysis
     type: boolean
-    default: true    
+    default: true
+  - name: releaseMethod
+    type: string
+    default: 'liquibase'
+    values:
+    - 'liquibase'
+    - 'flyway'
   - name: buildDatabase
     type: object
     default:
@@ -234,14 +240,15 @@ stages:
                     script: ${{ script.script}}
                     displayName: ${{ script.displayName}}   
               # Execute Liquibase
-              - ${{ each liquibase in builddatabases.runliquibase }}:             
-                - template: t-task-extend-sqlcl-liquibase.yml
-                  parameters:
-                    connectionString: ${{ builddatabases.connectionString}}
-                    work_dir: ${{ liquibase.work_dir }}
-                    user: ${{ liquibase.user }}
-                    password: ${{ liquibase.password }}
-                    masterchangelogfile: ${{ liquibase.masterchangelogfile }}
+              - $ {{ if eq(builddatabases.releaseMethod,'liquibase') }}:
+                - ${{ each liquibase in builddatabases.runliquibase }}:             
+                  - template: t-task-extend-sqlcl-liquibase.yml
+                    parameters:
+                      connectionString: ${{ builddatabases.connectionString}}
+                      work_dir: ${{ liquibase.work_dir }}
+                      user: ${{ liquibase.user }}
+                      password: ${{ liquibase.password }}
+                      masterchangelogfile: ${{ liquibase.masterchangelogfile }}
               # Execute Flyway
               - ${{ each flyway in builddatabases.runflyway }}:             
                 - template: t-task-extend-flyway.yml
