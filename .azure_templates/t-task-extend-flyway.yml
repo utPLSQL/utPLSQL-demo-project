@@ -23,7 +23,8 @@ steps:
     displayName: Docker Login
     inputs:
       containerRegistry: ${{ parameters.containerRegistry }}
-      command: 'login'   
+      command: 'login'
+      
   - bash: |
         # Relates to : https://community.oracle.com/tech/developers/discussion/4490418/sqlcl-production-build-21-3-0-278-1045-throwing-warning-terminal-cannot-be-created-paused
         export JAVA_TOOL_OPTIONS=-Dorg.jline.terminal.dumb=true
@@ -33,7 +34,8 @@ steps:
         exit;
         EOF
         exit $?
-  displayName: Test           
+    displayName: Test
+
   - bash: |
         time docker run --rm  \
             -v ${{ parameters.migrations_dir }}:/flyway/sql \
