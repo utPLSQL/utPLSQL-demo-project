@@ -139,7 +139,9 @@ parameters:
       - name: dockerRepo
         default: ""  
       - name : connectionString
-        default : ""        
+        default : ""
+      - name: jdbcConnectionString
+        default : ""            
       - name: createDatabase           
         type: object
         default:
