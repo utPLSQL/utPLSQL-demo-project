@@ -240,7 +240,7 @@ stages:
                     script: ${{ script.script}}
                     displayName: ${{ script.displayName}}   
               # Execute Liquibase
-              - $ {{ if eq(builddatabases.releaseMethod,'liquibase') }}:
+              - ${{ if eq(builddatabases.releaseMethod,'liquibase') }}:
                 - ${{ each liquibase in builddatabases.runliquibase }}:             
                   - template: t-task-extend-sqlcl-liquibase.yml
                     parameters:
