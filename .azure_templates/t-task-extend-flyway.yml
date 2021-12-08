@@ -30,6 +30,7 @@ steps:
             -v ${{ parameters.migrations_dir }}:/flyway/sql \
             -v ${{ parameters.config_dir }}:/flyway/conf \
             -v ${{ parameters.driver_dir }}:/flyway/drivers \
+            --network utplsql_network \
             flyway/flyway migrate \
               -url=jdbc:oracle:thin:@${{ parameters.jdbcConnectionString }} \
               -configFiles="/flyway/conf/${{ parameters.config_file }}" \

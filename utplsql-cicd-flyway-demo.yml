@@ -35,7 +35,7 @@ extends:
         containerRegistry: ${{ variables.containerRegistry }}
         dockerRepo: ${{ variables.dockerRepo }}
         connectionString: "127.0.0.1:1521/ORCLCDB"
-        jdbcConnectionString: "localhost:1521:ORCLCDB"
+        jdbcConnectionString: "UTBUILD:1521:ORCLCDB"
         environment: "build"
         artifactName: ${{ variables.artifactName }}
         packages:
