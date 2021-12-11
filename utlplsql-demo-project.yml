@@ -44,6 +44,8 @@ jobs:
       
   - template: .azure_templates/t-extend-database-build.yml
     parameters:
+      containerRegistry: utPLSQL-docker
+      dockerRepo: utplsqlv3/oracledb    
       utplsqlVersion: ${UTPLSQL_VERSION}
       utplsqlDir: ${UTPLSQL_DIR}
       test_user: ${DB_USER}
