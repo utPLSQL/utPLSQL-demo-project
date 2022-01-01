@@ -1,0 +1,82 @@
+trigger: 
+  - develop
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  CACHE_DIR: $(Pipeline.Workspace)/.cache
+  SQLCL_DIR: $(Build.BinariesDirectory)/sqlcl
+  UTPLSQL_DIR: $(Build.BinariesDirectory)/utPLSQL
+  UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
+  UTPLSQL_CLI_VERSION: 'v3.1.8'
+  UTPLSQL_VERSION: 'v3.1.11' 
+  DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
+  DB_USER: ut3_demo
+  DB_PASS: ut3_demo  
+
+jobs:
+- job: utPLSQL_demo_project
+  displayName: Build utPLSQL-demo-project
+  strategy:
+    matrix:
+      Oracle19_2:
+        ORACLE_VERSION: "19c-se2-small"
+    maxParallel: 2
+
+  steps:
+  - template: .azure_templates/t-extend-download-binaries.yml
+    parameters:
+      packages:
+        - name: sqlcl
+          download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"
+          unpack_location: "$(Build.BinariesDirectory)"
+          url: "https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip"
+          archive: "zip"
+          addtoPath: "$(SQLCL_DIR)/bin"
+
+        - name: utlplsqlcli
+          download_location: "$(Build.BinariesDirectory)/utPLSQL-cli.zip"
+          unpack_location: "$(Build.BinariesDirectory)"
+          url: "https://github.com/utPLSQL/utPLSQL-cli/releases/download/$(UTPLSQL_CLI_VERSION)/utPLSQL-cli.zip"
+          archive: "zip"
+          addToPath: "$(UTPLSQL_CLI_DIR)/bin"
+      
+  - template: .azure_templates/t-extend-database-build.yml
+    parameters:
+      containerRegistry: utPLSQL-docker
+      dockerRepo: utplsqlv3/oracledb    
+      utplsqlVersion: ${UTPLSQL_VERSION}
+      utplsqlDir: ${UTPLSQL_DIR}
+      test_user: ${DB_USER}
+      test_pwd: ${DB_PASS}
+      targetDatabases:
+        - oracleVersion: "19c-se2-small"
+          connectionString: "127.0.0.1:1521/ORCLCDB"
+          dockerPortMap: "1521"
+          dockerOptions: "--shm-size=1g"
+          scripts:
+            - displayName: "Install utPLSQL"
+              user: "sys"
+              password: "oracle"           
+              script: "install_headless.sql UT3 UT3 users"
+              work_dir: "${UTPLSQL_DIR}/source"
+
+            - displayName: "Create Test User"
+              user: "sys"
+              password: "oracle"           
+              script: "source/create_user.sql"
+              work_dir: "$(Build.SourcesDirectory)"
+
+            - displayName: "Install Source"
+              user: "${DB_USER}"
+              password: "${DB_PASS}"           
+              script: "source/install.sql"
+              work_dir: "$(Build.SourcesDirectory)"
+
+            - displayName: "Install Tests"
+              user: "${DB_USER}"
+              password: "${DB_PASS}"           
+              script: "test/install.sql"
+              work_dir: "$(Build.SourcesDirectory)" 
+

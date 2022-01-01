@@ -4,3 +4,4 @@
 @test/between_string/test_betwnstr.pkb
 @test/remove_rooms_by_name/test_remove_rooms_by_name.pks
 @test/remove_rooms_by_name/test_remove_rooms_by_name.pkb
+exit
