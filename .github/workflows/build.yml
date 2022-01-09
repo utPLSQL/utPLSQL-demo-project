@@ -8,6 +8,9 @@ on:
 
   workflow_dispatch:
 
+  repository_dispatch:
+    types: [utPLSQL-build]
+
 jobs:
   build:
 
