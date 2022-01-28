@@ -2,7 +2,7 @@ parameters:
   - name: containerRegistry
     default: "utPLSQL-docker"
   - name: dockerRepo
-    default: "utplsqlv3/oracledb"
+    default: "gvenzl/oracle-xe"
   - name: utplsqlVersion
     default: ""
   - name: utplsqlDir
