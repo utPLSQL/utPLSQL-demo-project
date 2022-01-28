@@ -9,7 +9,3 @@ utPLSQL-cli/bin/utplsql run ut3_demo/ut3_demo@//127.0.0.1:1521/XE \
   -f=ut_sonar_test_reporter     -o=test_results.xml \
   --failure-exit-code=0
 
-echo The content of coverage.xml file:
-echo -----------------------------
-cat coverage.xml
-echo -----------------------------
