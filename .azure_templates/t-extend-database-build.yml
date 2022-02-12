@@ -64,7 +64,7 @@ steps:
     displayName: 'Start Oracle DB Docker container: ${{ trg_db.oracleVersion }}'
                 
   - ${{ each script in trg_db.scripts }}:
-    - template: t-extend-sqlcl.yml
+    - template: t-task-extend-sqlcl.yml
       parameters:
         work_dir: ${{ script.work_dir}}
         user: ${{ script.user}}
@@ -73,7 +73,7 @@ steps:
         script: ${{ script.script}}
         displayName: ${{ script.displayName}}
 
-  - template: t-extend-utplsqlcli.yml
+  - template: t-task-extend-utplsqlcli.yml
     parameters:
       work_dir: $(Build.SourcesDirectory)
       connectionString: ${{ trg_db.connectionString}}
