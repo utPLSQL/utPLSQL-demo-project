@@ -1,0 +1,391 @@
+parameters:
+  - name: enableBuild
+    type: boolean
+    default: true
+  - name: enableDeployment
+    type: boolean
+    default: true
+  - name: enableAnalysis
+    type: boolean
+    default: true
+  - name: releaseMethod
+    type: string
+    default: 'liquibase'
+    values:
+    - 'liquibase'
+    - 'flyway'
+  - name: buildDatabase
+    type: object
+    default:
+      - name: name
+        default: ""
+      - name: containerRegistry
+        default: ""
+      - name: dockerRepo
+        default: ""  
+      - name : connectionString
+        default : ""
+      - name: jdbcConnectionString
+        default : ""  
+      - name: environment
+        default: ""
+      - name: artifactName
+        default: "" 
+      - name: packages
+        type: object
+        default:
+          - name: name
+            default: ""  
+          - name: download_location
+            default: ""
+          - name: unpack_location
+            default: ""    
+          - name: url
+            default: ""
+          - name: archive
+            default: "zip"
+          - name: addToPath
+            default: ""             
+      - name: createDatabase           
+        type: object
+        default:
+          - name: dbname
+            default: ""
+          - name: oracleVersion
+            default: ""  
+          - name: dockerOptions
+            default: "--shm-size=1g"
+          - name: dockerPortMap
+            default: "1521"
+      - name: gitCheckoutDetails
+        type: object
+        default:
+          - name: gitRepo
+            default: ""
+          - name: branch
+            default: ""
+          - name: checkoutDir
+            default: ""             
+      - name: scripts
+        type: object
+        default:
+          - name: work_dir
+            default: ""
+          - name: user
+            default: ""
+          - name: password
+            default: ""
+          - name: script
+            default: ""
+          - name: displayName
+            default: ""               
+      - name: runliquibase
+        type: object
+        default:
+          - name: work_dir
+            default: ""
+          - name: user
+            default: "sys"
+          - name: password
+            default: "oracle"
+          - name: masterchangelogfile
+            default: ""
+      - name: runflyway
+        type: object
+        default:
+          - name: config_dir
+            default: ""    
+          - name: config_file
+            default: ""
+          - name: migrations_dir
+            default: "" 
+          - name: driver_dir
+            default: ""               
+          - name: user
+            default: "sys"
+          - name: password
+            default: "oracle"
+          - name: configfile
+            default: ""         
+      - name: execute_tests
+        type: object
+        default:
+          - name : work_dir
+            default: $(Build.SourcesDirectory)
+          - name: test_user
+            default: ""  
+          - name: test_pwd
+            default: ""
+          - name: source_path
+            default: ""
+          - name: test_path
+            default: ""
+          - name: options
+            default: ""
+
+  - name: deployStages
+    type: object
+    default:
+      - name: name
+        default: ""
+      - name: dependsOn
+        default: ""
+      - name: display_name
+        default: ""
+      - name: target_env
+        default: ""
+      - name: containerRegistry
+        default: ""
+      - name: dockerRepo
+        default: ""  
+      - name : connectionString
+        default : ""
+      - name: jdbcConnectionString
+        default : ""            
+      - name: createDatabase           
+        type: object
+        default:
+          - name: dbname
+            default: ""
+          - name: oracleVersion
+            default: ""  
+          - name: dockerOptions
+            default: "--shm-size=1g"
+          - name: dockerPortMap
+            default: "1521"
+      - name: packages
+        type: object
+        default:
+          - name: name
+            default: ""  
+          - name: download_location
+            default: ""
+          - name: unpack_location
+            default: "$(Build.BinariesDirectory)"    
+          - name: url
+            default: ""
+          - name: archive
+            default: "zip"
+          - name: addToPath
+            default: ""
+      - name: scripts
+        type: object
+        default:
+          - name: work_dir
+            default: ""
+          - name: user
+            default: ""
+          - name: password
+            default: ""
+          - name: script
+            default: ""
+          - name: displayName
+            default: "" 
+      - name: runliquibase
+        type: object
+        default:
+          - name: work_dir
+            default: ""
+          - name: user
+            default: "sys"
+          - name: password
+            default: "oracle"
+          - name: masterchangelogfile
+            default: ""                                     
+      - name: runflyway
+        type: object
+        default:
+          - name: work_dir
+            default: ""
+          - name: user
+            default: "sys"
+          - name: password
+            default: "oracle"
+          - name: configfile
+            default: ""             
+
+stages:
+  - ${{ if parameters.enableBuild }}:
+    - ${{ each builddatabases in parameters.buildDatabase }}:
+      - stage: ${{ builddatabases.name }}
+        displayName: Build Database
+        jobs:
+          - job: BuildDatabase
+            displayName: Build Database  
+            steps:
+              # Download binaries
+              - template: t-task-extend-download-binaries.yml
+                parameters:
+                  packages: ${{ builddatabases.packages }}
+              # Create Docker databases 
+              - ${{ each dockerdb in builddatabases.createDatabase }}:
+                - template: t-task-extend-create-docker-database.yml
+                  parameters:
+                    containerRegistry: ${{ builddatabases.containerRegistry }}
+                    dockerRepo: ${{ builddatabases.dockerRepo }}
+                    dbname: ${{ dockerdb.dbname }}
+                    oracleVersion: ${{ dockerdb.oracleVersion }}
+                    dockerOptions: ${{ dockerdb.dockerOptions }}
+                    dockerPortMap: ${{ dockerdb.dockerPortMap }}
+              # Checkout utplsql
+              - template: t-task-extend-git-clone.yml
+                parameters:
+                  gitCheckoutDetails: ${{ builddatabases.gitCheckoutDetails }}
+              # Execute SQL scripts           
+              - ${{ each script in builddatabases.scripts }}:
+                - template: t-task-extend-sqlcl.yml
+                  parameters:
+                    work_dir: ${{ script.work_dir}}
+                    user: ${{ script.user}}
+                    password: ${{ script.password}}
+                    connectionString: ${{ builddatabases.connectionString}}
+                    script: ${{ script.script}}
+                    displayName: ${{ script.displayName}}   
+              # Execute Liquibase
+              - ${{ if eq(parameters.releaseMethod,'liquibase') }}:
+                - ${{ each liquibase in builddatabases.runliquibase }}:             
+                  - template: t-task-extend-sqlcl-liquibase.yml
+                    parameters:
+                      connectionString: ${{ builddatabases.connectionString}}
+                      work_dir: ${{ liquibase.work_dir }}
+                      user: ${{ liquibase.user }}
+                      password: ${{ liquibase.password }}
+                      masterchangelogfile: ${{ liquibase.masterchangelogfile }}
+              # Execute Flyway
+              - ${{ if eq(parameters.releaseMethod,'flyway') }}:              
+                - ${{ each flyway in builddatabases.runflyway }}:             
+                  - template: t-task-extend-flyway.yml
+                    parameters:
+                      containerRegistry: ${{ builddatabases.containerRegistry }}
+                      jdbcConnectionString: ${{ builddatabases.jdbcConnectionString}}
+                      config_dir: ${{ flyway.config_dir }}
+                      config_file: ${{ flyway.config_file }}
+                      migrations_dir:  ${{ flyway.migrations_dir }}
+                      driver_dir:  ${{ flyway.driver_dir }}
+                      user: ${{ flyway.user }}
+                      password: ${{ flyway.password }}                    
+              # Execute utplsql tests      
+              - ${{ each runutplsql in builddatabases.execute_tests }}:      
+                - template: t-task-extend-utplsqlcli.yml
+                  parameters:
+                    connectionString: ${{ builddatabases.connectionString}}
+                    work_dir: ${{ runutplsql.work_dir}}
+                    test_user: ${{ runutplsql.test_user}}
+                    test_pwd: ${{ runutplsql.test_pwd}}
+                    source_path: ${{ runutplsql.source_path}}
+                    test_path: ${{ runutplsql.test_path}}
+                    options: ${{ runutplsql.options}}
+              #Publish Artifact
+              - task: CopyFiles@2
+                displayName: Copy Sources
+                inputs:
+                  SourceFolder: $(Build.SourcesDirectory)/source
+                  Contents: '**'
+                  TargetFolder: $(Build.ArtifactStagingDirectory)/source
+                  Overwrite: true
+              - task: CopyFiles@2
+                displayName: Copy Tests
+                inputs:
+                  SourceFolder: $(Build.SourcesDirectory)/test
+                  Contents: '**'
+                  TargetFolder: $(Build.ArtifactStagingDirectory)/test
+                  Overwrite: true                                     
+              - ${{ if eq(parameters.releaseMethod,'liquibase') }}:
+                - task: CopyFiles@2
+                  displayName: Copy configuration
+                  inputs:
+                    SourceFolder: $(Build.SourcesDirectory)
+                    Contents: 'utplsql_changelog.xml'
+                    TargetFolder: $(Build.ArtifactStagingDirectory)
+                    Overwrite: true
+              - ${{ if eq(parameters.releaseMethod,'flyway') }}:
+                - task: CopyFiles@2
+                  displayName: Copy configuration
+                  inputs:
+                    SourceFolder: $(Build.SourcesDirectory)
+                    Contents: 'utplsql_flyway.conf'
+                    TargetFolder: $(Build.ArtifactStagingDirectory)
+                    Overwrite: true                      
+              - publish: $(Build.ArtifactStagingDirectory)
+                artifact: ${{ builddatabases.artifactName}}                                     
+              #Publish test results      
+              - task: PublishTestResults@2
+                inputs:
+                  testResultsFormat: 'JUnit'
+                  testResultsFiles: '**/junit_test_results.xml'
+                  testRunTitle: 'Publish test results'
+                displayName: 'Publish test results'
+              - task: PublishCodeCoverageResults@1
+                inputs:
+                  codeCoverageTool: 'Cobertura'
+                  summaryFileLocation: 'cobertura.xml'
+                  pathToSources: 'source'
+                displayName: 'Publish coverage'                    
+              - ${{ if parameters.enableAnalysis }}:
+                - template: t-task-extend-sonarcloud.yml
+                  parameters:
+                    name: utplsqAnalysis
+                    serviceConnection: "utplsql-SonarCloud"
+                    organization: "utplsql"
+                    configFile: "sonar-project.properties" 
+
+  - ${{ if parameters.enableDeployment }}:
+    - ${{ each stage in parameters.deployStages }}:
+      - stage: ${{ stage.name }}
+        displayName: ${{ stage.display_name }}
+        ${{ if stage.dependsOn }}:
+          dependsOn: ${{ stage.dependsOn }}
+        jobs:
+          - deployment:
+            displayName: Deploy Code to Database
+            environment: ${{ stage.target_environment }}
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                  # Download binaries
+                  - template: t-task-extend-download-binaries.yml
+                    parameters:
+                      packages: ${{ stage.packages }}                  
+                  # Create Docker databases 
+                  - ${{ each dockerdb in stage.createDatabase }}:
+                    - template: t-task-extend-create-docker-database.yml
+                      parameters:
+                        containerRegistry: ${{ stage.containerRegistry }}
+                        dockerRepo: ${{ stage.dockerRepo }}
+                        dbname: ${{ dockerdb.dbname }}
+                        oracleVersion: ${{ dockerdb.oracleVersion }}
+                        dockerOptions: ${{ dockerdb.dockerOptions }}
+                        dockerPortMap: ${{ dockerdb.dockerPortMap }}
+                  # Execute SQL scripts           
+                  - ${{ each script in stage.scripts }}:
+                    - template: t-task-extend-sqlcl.yml
+                      parameters:
+                        work_dir: ${{ script.work_dir}}
+                        user: ${{ script.user}}
+                        password: ${{ script.password}}
+                        connectionString: ${{ stage.connectionString}}
+                        script: ${{ script.script}}
+                        displayName: ${{ script.displayName}}  
+                    - ${{ if eq(parameters.releaseMethod,'liquibase') }}:                           
+                      # Execute Liquibase
+                      - ${{ each liquibase in stage.runliquibase }}:             
+                        - template: t-task-extend-sqlcl-liquibase.yml
+                          parameters:
+                            connectionString: ${{ stage.connectionString}}
+                            work_dir: ${{ liquibase.work_dir }}
+                            user: ${{ liquibase.user }}
+                            password: ${{ liquibase.password }}
+                            masterchangelogfile: ${{ liquibase.masterchangelogfile }}
+                    - ${{ if eq(parameters.releaseMethod,'flyway') }}:              
+                      - ${{ each flyway in stage.runflyway }}:             
+                        - template: t-task-extend-flyway.yml
+                          parameters:
+                            containerRegistry: ${{ stage.containerRegistry }}
+                            jdbcConnectionString: ${{ stage.jdbcConnectionString}}
+                            config_dir: ${{ flyway.config_dir }}
+                            config_file: ${{ flyway.config_file }}
+                            migrations_dir:  ${{ flyway.migrations_dir }}
+                            driver_dir:  ${{ flyway.driver_dir }}
+                            user: ${{ flyway.user }}
+                            password: ${{ flyway.password }}                                

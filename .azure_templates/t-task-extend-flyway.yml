@@ -1,0 +1,42 @@
+parameters:
+  - name : containerRegistry
+    default: ""   
+  - name: jdbcConnectionString
+    default: "" 
+  - name: config_dir
+    default: ""    
+  - name: config_file
+    default: ""
+  - name: migrations_dir
+    default: "" 
+  - name: driver_dir
+    default: ""         
+  - name: user
+    default: "sys"
+  - name: password
+    default: "oracle"
+  - name: configfile
+    default: ""
+
+steps:
+  - task: Docker@2
+    displayName: Docker Login
+    inputs:
+      containerRegistry: ${{ parameters.containerRegistry }}
+      command: 'login'
+
+  - bash: |
+        time docker run --rm  \
+            -v ${{ parameters.migrations_dir }}:/flyway/sql \
+            -v ${{ parameters.config_dir }}:/flyway/conf \
+            -v ${{ parameters.driver_dir }}:/flyway/drivers \
+            --network utplsql_network \
+            flyway/flyway migrate \
+              -url=jdbc:oracle:thin:@${{ parameters.jdbcConnectionString }} \
+              -configFiles="/flyway/conf/${{ parameters.config_file }}" \
+              -user="${{ parameters.user }}" \
+              -password="${{ parameters.password }}"
+
+        exit $?
+    displayName: 'Run Flyway migration'     
+   

@@ -1,0 +1,29 @@
+parameters:
+  - name: connectionString
+    default: ""
+  - name : work_dir
+    default: $(Build.SourcesDirectory)
+  - name: test_user
+    default: ""  
+  - name: test_pwd
+    default: ""
+  - name: source_path
+    default: ""
+  - name: test_path
+    default: ""
+  - name: options
+    default: ""
+
+steps:
+- bash: |
+        cd ${{ parameters.work_dir }}
+        utplsql run ${{ parameters.test_user }}/${{ parameters.test_pwd }}@//${{ parameters.connectionString }}?oracle.net.disableOob=true \
+          -source_path=${{ parameters.source_path }} \
+          -test_path=${{ parameters.test_path }} \
+          -f=ut_documentation_reporter      -c \
+          -f=ut_coverage_sonar_reporter     -o=coverage.xml \
+          -f=ut_sonar_test_reporter         -o=test_results.xml \
+          -f=ut_coverage_cobertura_reporter -o=cobertura.xml \
+          -f=ut_junit_reporter              -o=junit_test_results.xml \
+          ${{ parameters.options }}
+  displayName: 'Run Tests'

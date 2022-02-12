@@ -69,7 +69,7 @@ steps:
         work_dir: ${{ script.work_dir}}
         user: ${{ script.user}}
         password: ${{ script.password}}
-        connectionString: ${{ trg_db.connectionString}}
+        connectionString: ${{ script.connectionString}}
         script: ${{ script.script}}
         displayName: ${{ script.displayName}}
 

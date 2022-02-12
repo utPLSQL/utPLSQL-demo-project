@@ -1,0 +1,25 @@
+parameters:
+  - name: name 
+    default: ""
+  - name: serviceConnection
+    default: "utplsql-SonarCloud"
+  - name: organization
+    default: "utplsql"
+  - name: sonarExtraProperties
+    default: ""
+  - name: configFile
+    default : "sonar-project.properties"
+
+steps:                 
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: ${{ parameters.serviceConnection }}
+      organization: ${{ parameters.organization }}
+      scannerMode: 'CLI'
+      configMode: 'file'
+      configFile:  ${{ parameters.configFile }}
+      extraProperties: ${{ parameters.sonarExtraProperties }}
+  - task: SonarCloudAnalyze@1
+  - task: SonarCloudPublish@1
+    inputs:
+      pollingTimeoutSec: '300'         

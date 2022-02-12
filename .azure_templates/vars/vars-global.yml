@@ -1,0 +1,7 @@
+variables:
+  containerRegistry: "utPLSQL-docker"
+  dockerRepo: "utplsqlv3/oracledb"
+  gitRepo: "https://github.com/utPLSQL/utPLSQL.git"
+  sqlclUrl: "https://download.oracle.com/otn_software/java/sqldeveloper/sqlcl-latest.zip"
+  utplsqlcliUrl: "https://github.com/utPLSQL/utPLSQL-cli/releases/download/$(UTPLSQL_CLI_VERSION)/utPLSQL-cli.zip"
+  ojdbcurl: "https://download.oracle.com/otn-pub/otn_software/jdbc/213/ojdbc8.jar"

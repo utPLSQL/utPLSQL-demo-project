@@ -1,0 +1,34 @@
+parameters:
+  - name: containerRegistry
+    default: ""
+  - name: dockerRepo
+    default: ""
+  - name: dbname
+    default: ""
+  - name: oracleVersion
+    default: ""  
+  - name: dockerOptions
+    default: "--shm-size=1g"
+  - name: dockerPortMap
+    default: "1521"
+
+steps:
+  - task: Docker@2
+    displayName: Docker Login
+    inputs:
+      containerRegistry: ${{ parameters.containerRegistry }}
+      command: 'login'   
+  - bash: |
+        #as test enable network
+        docker network create utplsql_network
+        # download Oracle Database docker image from private repo and start the DB
+        time docker pull ${{ parameters.dockerRepo }}:${{ parameters.oracleVersion }}
+        # start the docker container (DB)
+        time docker run -d --name ${{ parameters.dbname }} \
+                        ${{ parameters.dockerOptions }} \
+                        -p 1521:${{ parameters.dockerPortMap }} \
+                        --network utplsql_network \
+                        ${{ parameters.dockerRepo }}:${{ parameters.oracleVersion }}
+        # Wait for DB startup
+        time docker logs -f ${{ parameters.dbname }} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
+    displayName: 'Start Oracle DB Docker container: ${{ parameters.dbname }}:${{ parameters.oracleVersion }}'      

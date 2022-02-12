@@ -1,0 +1,134 @@
+trigger: 
+  - none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+# Using this variable, the template references the correct variable template file (vars-dev.yaml, vars-qa.yaml or vars-prd.yaml) from the vars folder.
+  - template: .azure_templates/vars/vars-global.yml  
+  - name: SQLCL_DIR
+    value: $(Build.BinariesDirectory)/sqlcl
+  - name : UTPLSQL_DIR
+    value: $(Build.BinariesDirectory)/utPLSQL
+  - name : UTPLSQL_CLI_DIR
+    value: $(Build.BinariesDirectory)/utPLSQL-cli
+  - name : UTPLSQL_CLI_VERSION
+    value:  'v3.1.8'
+  - name : UTPLSQL_VERSION
+    value:  'v3.1.11' 
+  - name : DB_USER
+    value:  ut3_demo
+  - name : DB_PASS
+    value:  ut3_demo
+  - name: artifactName
+    value: ReleaseArtifact
+  
+extends:
+  template: .azure_templates/t-pipeline-extend-cicd.yml
+  parameters:
+    enableBuild: true
+    enableDeployment: true
+    enableAnalysis: false
+    releaseMethod: "flyway"    
+    buildDatabase:
+      - name: BuildDatabase
+        containerRegistry: ${{ variables.containerRegistry }}
+        dockerRepo: ${{ variables.dockerRepo }}
+        connectionString: "127.0.0.1:1521/ORCLCDB"
+        jdbcConnectionString: "UTBUILD:1521:ORCLCDB"
+        environment: "build"
+        artifactName: ${{ variables.artifactName }}
+        packages:
+          - name: downloadSqlcl
+            download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"
+            unpack_location: "$(Build.BinariesDirectory)"
+            url: ${{ variables.sqlclUrl }}
+            archive: "zip"
+            addtoPath: "$(SQLCL_DIR)/bin"
+          - name: downloadUtlplsqlcli
+            download_location: "$(Build.BinariesDirectory)/utPLSQL-cli.zip"
+            unpack_location: "$(Build.BinariesDirectory)"
+            url: ${{ variables.utplsqlcliUrl }}
+            archive: "zip"
+            addToPath: "$(UTPLSQL_CLI_DIR)/bin"
+          - name: DownloadOjdbc8
+            download_location: "$(Build.BinariesDirectory)/ojdbc8.jar "
+            url: ${{ variables.ojdbcurl }}        
+        createDatabase:
+          - dbname: UTBUILD
+            oracleVersion: "19c-se2-small"
+            dockerPortMap: "1521"
+            dockerOptions: "--shm-size=1g"
+        scripts:
+          - displayName: "Install utPLSQL"
+            user: "sys"
+            password: "oracle"        
+            script: "install_headless.sql UT3 UT3 users"
+            work_dir: "${UTPLSQL_DIR}/source"
+          - displayName: "Create Test User"
+            user: "sys"
+            password: "oracle"         
+            script: "source/create_user.sql"
+            work_dir: "$(Build.SourcesDirectory)"
+          - displayName: "Install Tests"
+            user: "$(DB_USER)"
+            password: "$(DB_PASS)"          
+            script: "test/install.sql"
+            work_dir: "$(Build.SourcesDirectory)"             
+        runflyway:
+          - config_dir: "$(Build.SourcesDirectory)"
+            config_file: "utplsql_flyway.conf"
+            migrations_dir:  "$(Build.SourcesDirectory)/source"
+            driver_dir: "$(Build.BinariesDirectory)"
+            user: $(DB_USER)
+            password: $(DB_PASS)
+        gitCheckoutDetails:
+          - gitRepo: ${{ variables.gitRepo }}
+            branch: $(UTPLSQL_VERSION)
+            checkoutDir: $(UTPLSQL_DIR)
+        execute_tests:
+          - work_dir: $(Build.SourcesDirectory)
+            test_user: $(DB_USER)
+            test_pwd: $(DB_PASS)
+            source_path: "source"
+            test_path: "test"
+            options: "--debug --failure-exit-code=0"
+
+    deployStages:
+      - name: ReleaseCode
+        display_name: Deploy code to Test Env
+        dependsOn: BuildDatabase
+        target_environment: TEST
+        connectionString: "127.0.0.1:1521/ORCLCDB"
+        jdbcConnectionString: "UTTEST:1521:ORCLCDB"
+        containerRegistry: ${{ variables.containerRegistry }}
+        dockerRepo: ${{ variables.dockerRepo }}     
+        createDatabase:
+          - dbname: UTTEST
+            oracleVersion: "19c-se2-small"
+            dockerPortMap: "1521"
+            dockerOptions: "--shm-size=1g"        
+        packages:
+          - name: sqlcl
+            download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"
+            unpack_location: "$(Build.BinariesDirectory)"
+            url: ${{ variables.sqlclUrl }}
+            archive: "zip"
+            addtoPath: "$(SQLCL_DIR)/bin"
+          - name: DownloadOjdbc8
+            download_location: "$(Build.BinariesDirectory)/ojdbc8.jar "
+            url: ${{ variables.ojdbcurl }}            
+        scripts:            
+          - displayName: "Create Test User"
+            user: "sys"
+            password: "oracle"         
+            script: "source/create_user.sql"
+            work_dir: "$(Pipeline.Workspace)/${{ variables.artifactName }}"                       
+        runflyway:
+          - config_dir: "$(Pipeline.Workspace)/${{ variables.artifactName }}"
+            config_file: "utplsql_flyway.conf"
+            migrations_dir:  "$(Pipeline.Workspace)/${{ variables.artifactName }}/source"
+            driver_dir: "$(Build.BinariesDirectory)"
+            user: $(DB_USER)
+            password: $(DB_PASS)

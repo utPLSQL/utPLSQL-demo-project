@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="utplsql" id="01_award_bonus">
+      <sqlFile dbms="oracle"
+               endDelimiter=";"
+               path="V1.01__employees_test.sql"
+               relativeToChangelogFile="true"
+               splitStatements="true"
+               stripComments="false"/>
+    </changeSet>
+    <changeSet author="utplsql" id="02_award_bonus_prc" runOnChange="true">
+      <sqlFile dbms="oracle"
+               endDelimiter=";"
+               path="R__award_bonus.prc"
+               relativeToChangelogFile="true"
+               splitStatements="false"
+               stripComments="false"/>
+    </changeSet>
+</databaseChangeLog>
