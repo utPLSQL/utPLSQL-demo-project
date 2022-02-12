@@ -1,6 +1,14 @@
 [![Build](https://github.com/utPLSQL/utPLSQL-demo-project/actions/workflows/build.yml/badge.svg)](https://github.com/utPLSQL/utPLSQL-demo-project/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=utPLSQL%3AutPLSQL-demo-project&metric=alert_status)](https://sonarcloud.io/dashboard?id=utPLSQL%3AutPLSQL-demo-project)
 
+Main utPLSQL Project Build:
+[![Build Status](https://dev.azure.com/utplsql/utplsql/_apis/build/status/utPLSQL.utPLSQL-demo-project?branchName=develop)](https://dev.azure.com/utplsql/utplsql/_build/latest?definitionId=5&branchName=develop)
+
+utPLSQL build using Liquibase
+[![Build Status](https://dev.azure.com/utplsql/utplsql/_apis/build/status/utPLSQL.utPLSQL-demo-sqlcl-liquibase-cicd?branchName=develop)](https://dev.azure.com/utplsql/utplsql/_build/latest?definitionId=6&branchName=develop)
+
+utPLSQL build using RedgateFlyway
+[![Build Status](https://dev.azure.com/utplsql/utplsql/_apis/build/status/utPLSQL.utPLSQL-demo-flyway-cicd?branchName=develop)](https://dev.azure.com/utplsql/utplsql/_build/latest?definitionId=7&branchName=develop)
 
 # CI/CD and Unit Testing for Oracle PLSQL
 
