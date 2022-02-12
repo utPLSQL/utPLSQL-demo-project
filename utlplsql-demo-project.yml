@@ -25,7 +25,7 @@ jobs:
     maxParallel: 2
 
   steps:
-  - template: .azure_templates/t-extend-download-binaries.yml
+  - template: .azure_templates/t-task-extend-download-binaries.yml
     parameters:
       packages:
         - name: sqlcl
