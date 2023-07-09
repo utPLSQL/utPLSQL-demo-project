@@ -34,7 +34,7 @@ extends:
       - name: BuildDatabase
         containerRegistry: ${{ variables.containerRegistry }}
         dockerRepo: ${{ variables.dockerRepo }}
-        connectionString: "127.0.0.1:1521/ORCLCDB"
+        connectionString: "127.0.0.1:1521/XE"
         environment: "build"
         artifactName: ${{ variables.artifactName }}
         releaseMethod: "liquibase"
@@ -53,9 +53,9 @@ extends:
             addToPath: "$(UTPLSQL_CLI_DIR)/bin"
         createDatabase:
           - dbname: UTBUILD
-            oracleVersion: "19c-se2-small"
+            oracleVersion: "21-faststart"
             dockerPortMap: "1521"
-            dockerOptions: "--shm-size=1g"
+            dockerOptions: ""
         scripts:
           - displayName: "Install utPLSQL"
             user: "sys"
@@ -94,14 +94,14 @@ extends:
         display_name: Deploy code to Test Env
         dependsOn: BuildDatabase
         target_environment: TEST
-        connectionString: "127.0.0.1:1521/ORCLCDB"
+        connectionString: "127.0.0.1:1521/XE"
         containerRegistry: ${{ variables.containerRegistry }}
         dockerRepo: ${{ variables.dockerRepo }}     
         createDatabase:
           - dbname: UTTEST
-            oracleVersion: "19c-se2-small"
+            oracleVersion: "21-faststart"
             dockerPortMap: "1521"
-            dockerOptions: "--shm-size=1g"        
+            dockerOptions: ""
         packages:
           - name: sqlcl
             download_location: "$(Build.BinariesDirectory)/sqlcl-latest.zip"

@@ -11,7 +11,7 @@ variables:
   UTPLSQL_CLI_DIR: $(Build.BinariesDirectory)/utPLSQL-cli
   UTPLSQL_CLI_VERSION: 'v3.1.8'
   UTPLSQL_VERSION: 'v3.1.11' 
-  DOCKHER_HUB_REPO: 'utplsqlv3/oracledb'
+  DOCKHER_HUB_REPO: 'gvenzl/oracle-xe'
   DB_USER: ut3_demo
   DB_PASS: ut3_demo  
 
@@ -45,16 +45,16 @@ jobs:
   - template: .azure_templates/t-extend-database-build.yml
     parameters:
       containerRegistry: utPLSQL-docker
-      dockerRepo: utplsqlv3/oracledb    
+      dockerRepo: gvenzl/oracle-xe
       utplsqlVersion: ${UTPLSQL_VERSION}
       utplsqlDir: ${UTPLSQL_DIR}
       test_user: ${DB_USER}
       test_pwd: ${DB_PASS}
       targetDatabases:
-        - oracleVersion: "19c-se2-small"
-          connectionString: "127.0.0.1:1521/ORCLCDB"
+        - oracleVersion: "21-faststart"
+          connectionString: "127.0.0.1:1521/XE"
           dockerPortMap: "1521"
-          dockerOptions: "--shm-size=1g"
+          dockerOptions: "21-faststart"
           scripts:
             - displayName: "Install utPLSQL"
               user: "sys"
