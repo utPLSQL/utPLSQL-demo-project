@@ -51,7 +51,7 @@ jobs:
       test_user: ${DB_USER}
       test_pwd: ${DB_PASS}
       targetDatabases:
-        - oracleVersion: "21-faststart"
+        - oracleVersion: "21-slim"
           connectionString: "127.0.0.1:1521/XE"
           dockerPortMap: "1521"
           dockerOptions: ""

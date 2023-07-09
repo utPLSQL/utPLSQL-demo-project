@@ -53,7 +53,7 @@ extends:
             addToPath: "$(UTPLSQL_CLI_DIR)/bin"
         createDatabase:
           - dbname: UTBUILD
-            oracleVersion: "21-faststart"
+            oracleVersion: "21-slim"
             dockerPortMap: "1521"
             dockerOptions: ""
         scripts:
@@ -99,7 +99,7 @@ extends:
         dockerRepo: ${{ variables.dockerRepo }}     
         createDatabase:
           - dbname: UTTEST
-            oracleVersion: "21-faststart"
+            oracleVersion: "21-slim"
             dockerPortMap: "1521"
             dockerOptions: ""
         packages:

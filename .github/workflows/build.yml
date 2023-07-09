@@ -24,9 +24,9 @@ jobs:
 
     services:
       oracle:
-        image: gvenzl/oracle-xe:18-slim
+        image: gvenzl/oracle-xe:21-slim
         env:
-          DB_IMAGE: gvenzl/oracle-xe:18-slim
+          DB_IMAGE: gvenzl/oracle-xe:21-slim
           ORACLE_PASSWORD: oracle
         ports:
           - 1521:1521
