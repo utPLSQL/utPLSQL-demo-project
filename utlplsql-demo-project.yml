@@ -54,7 +54,7 @@ jobs:
         - oracleVersion: "21-faststart"
           connectionString: "127.0.0.1:1521/XE"
           dockerPortMap: "1521"
-          dockerOptions: "21-faststart"
+          dockerOptions: ""
           scripts:
             - displayName: "Install utPLSQL"
               user: "sys"
