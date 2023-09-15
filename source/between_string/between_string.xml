@@ -8,7 +8,7 @@
     <changeSet author="utplsql" id="05_between_string" runOnChange="true">
       <sqlFile dbms="oracle"
                endDelimiter=";"
-               path="R__betwnstr.fnc"
+               path="R__ut3_demo.betwnstr.fnc"
                relativeToChangelogFile="true"
                splitStatements="false"
                stripComments="false"/>
