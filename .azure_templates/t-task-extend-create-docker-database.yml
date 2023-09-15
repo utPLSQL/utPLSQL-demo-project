@@ -28,6 +28,7 @@ steps:
                         ${{ parameters.dockerOptions }} \
                         -p 1521:${{ parameters.dockerPortMap }} \
                         --network utplsql_network \
+                        -e "ORACLE_PASSWORD=oracle" \
                         ${{ parameters.dockerRepo }}:${{ parameters.oracleVersion }}
         # Wait for DB startup
         time docker logs -f ${{ parameters.dbname }} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
