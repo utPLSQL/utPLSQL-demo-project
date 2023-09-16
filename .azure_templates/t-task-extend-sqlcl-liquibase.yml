@@ -18,7 +18,7 @@ steps:
         #Issue with 19.3 docker images. fixed in 21
         sql ${{ parameters.user }}/${{ parameters.password }}@//${{ parameters.connectionString }}?oracle.net.disableOob=true<<EOF
         lb version
-        lb update -debug -changelog ${{ parameters.masterchangelogfile }} 
+        lb update -debug -changelog-file ${{ parameters.masterchangelogfile }} 
         exit;
         EOF
         exit $?
