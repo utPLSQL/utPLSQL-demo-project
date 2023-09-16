@@ -66,17 +66,18 @@ extends:
             user: "sys"
             password: "oracle"         
             script: "source/create_user.sql"
-            work_dir: "$(Build.SourcesDirectory)"
-          - displayName: "Install Tests"
-            user: "$(DB_USER)"
-            password: "$(DB_PASS)"          
-            script: "test/install.sql"
-            work_dir: "$(Build.SourcesDirectory)"             
+            work_dir: "$(Build.SourcesDirectory)"         
         runliquibase:
           - work_dir: "$(Build.SourcesDirectory)"
             user: $(DB_USER)
             password: $(DB_PASS)
             masterchangelogfile: "utplsql_changelog.xml"
+        scripts:    
+          - displayName: "Install Tests"
+            user: "$(DB_USER)"
+            password: "$(DB_PASS)"          
+            script: "test/install.sql"
+            work_dir: "$(Build.SourcesDirectory)"            
         gitCheckoutDetails:
           - gitRepo: ${{ variables.gitRepo }}
             branch: $(UTPLSQL_VERSION)
