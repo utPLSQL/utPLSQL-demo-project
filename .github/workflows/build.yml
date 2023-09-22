@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        utplsql-version: [develop, v3.1.8, v3.1.13]
+        utplsql-version: [develop, v3.1.13]
 
     services:
       oracle:
