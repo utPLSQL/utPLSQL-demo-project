@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        utplsql-version: [develop, v3.1.8, v3.1.11]
+        utplsql-version: [develop, v3.1.13]
 
     services:
       oracle:
@@ -45,7 +45,7 @@ jobs:
         run: echo Installing ${UTPLSQL_VERSION} && sh ${{ github.workspace }}/scripts/1_install_utplsql.sh
 
       - name: Install utPLSQL-cli
-        run: curl -Lk -o utPLSQL-cli.zip "https://github.com/utPLSQL/utPLSQL-cli/releases/download/v3.1.8/utPLSQL-cli.zip" && unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
+        run: curl -Lk -o utPLSQL-cli.zip "https://github.com/utPLSQL/utPLSQL-cli/releases/download/3.1.9/utPLSQL-cli.zip" && unzip utPLSQL-cli.zip && chmod -R u+x utPLSQL-cli
 
       - name: Install demo project
         run: sh ${{ github.workspace }}/scripts/2_install_demo_project.sh

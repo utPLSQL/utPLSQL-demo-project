@@ -19,7 +19,15 @@ steps:
         cd ${{ parameters.work_dir }}
         utplsql run ${{ parameters.test_user }}/${{ parameters.test_pwd }}@//${{ parameters.connectionString }}?oracle.net.disableOob=true \
           -source_path=${{ parameters.source_path }} \
+          -regex_expression="(\w+)/(\w+)/(R__)(\w+)\.(\w+)\.(\w+)$" \
+          -owner_subexpression=4 \
+          -name_subexpression=5 \
+          -type_subexpression=6 \
           -test_path=${{ parameters.test_path }} \
+          -regex_expression="(\w+)/(\w+)/(\w+)\.(\w+)\.(\w+)$" \
+          -owner_subexpression=1 \
+          -type_subexpression=5 \
+          -name_subexpression=4 \
           -f=ut_documentation_reporter      -c \
           -f=ut_coverage_sonar_reporter     -o=coverage.xml \
           -f=ut_sonar_test_reporter         -o=test_results.xml \

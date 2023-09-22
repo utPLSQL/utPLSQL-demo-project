@@ -16,7 +16,7 @@
     <changeSet author="utplsql" id="04_remove_rooms_by_name_prc" runOnChange="true">
       <sqlFile dbms="oracle"
                endDelimiter=";"
-               path="R__remove_rooms_by_name.prc"
+               path="R__ut3_demo.remove_rooms_by_name.prc"
                relativeToChangelogFile="true"
                splitStatements="false"
                stripComments="false"/>
