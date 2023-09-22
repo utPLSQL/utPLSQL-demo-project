@@ -56,13 +56,13 @@ steps:
 - ${{ each trg_db in parameters.targetDatabases }}:
   - template: t-task-extend-create-docker-database.yml
     parameters:
-      containerRegistry: ${{ builddatabases.containerRegistry }}
+      containerRegistry: ${{ parameters.containerRegistry }}
       dockerRepo: ${{ parameters.dockerRepo }}
       dbname: ${{ trg_db.oracleVersion }}
       oracleVersion: ${{ trg_db.oracleVersion }}
       dockerOptions: ${{ trg_db.dockerOptions }}
       dockerPortMap: ${{ trg_db.dockerPortMap }}
-                      
+
   - ${{ each script in trg_db.scripts }}:
     - template: t-task-extend-sqlcl.yml
       parameters:
