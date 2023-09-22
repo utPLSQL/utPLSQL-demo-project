@@ -54,15 +54,15 @@ steps:
     addBaseImageData: false
                
 - ${{ each trg_db in parameters.targetDatabases }}:
-  - bash: |
-      # download Oracle Database docker image from private repo and start the DB
-      time docker pull ${{ parameters.dockerRepo }}:${{ trg_db.oracleVersion }}
-      # start the docker container (DB)
-      time docker run -d --name ${{ trg_db.oracleVersion }} ${{ trg_db.dockerOptions }} -p 1521:${{ trg_db.dockerPortMap }} ${{ parameters.dockerRepo }}:${{ trg_db.oracleVersion }}
-      # Wait for DB startup
-      time docker logs -f ${{ trg_db.oracleVersion }} | grep -m 1 "DATABASE IS READY TO USE!" --line-buffered
-    displayName: 'Start Oracle DB Docker container: ${{ trg_db.oracleVersion }}'
-                
+  - template: t-task-extend-create-docker-database.yml
+    parameters:
+      containerRegistry: ${{ builddatabases.containerRegistry }}
+      dockerRepo: ${{ parameters.dockerRepo }}
+      dbname: ${{ trg_db.oracleVersion }}
+      oracleVersion: ${{ trg_db.oracleVersion }}
+      dockerOptions: ${{ trg_db.dockerOptions }}
+      dockerPortMap: ${{ trg_db.dockerPortMap }}
+                      
   - ${{ each script in trg_db.scripts }}:
     - template: t-task-extend-sqlcl.yml
       parameters:
