@@ -6,6 +6,9 @@ create or replace package test_remove_rooms_by_name as
   -- %beforeall
   procedure setup_rooms;
 
+  --%context(Rooms)
+  --%name
+
   -- %test
   -- %displayname(Removes a room without content in it)
   procedure remove_empty_room;
@@ -17,6 +20,8 @@ create or replace package test_remove_rooms_by_name as
   -- %test
   -- %displayname(Raises exception when null room name given)
   procedure null_room_name;
+  
+  --%endcontext
 
 end;
 /
