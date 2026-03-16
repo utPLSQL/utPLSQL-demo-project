@@ -17,6 +17,7 @@ jobs:
     env:
       UTPLSQL_VERSION: ${{matrix.utplsql-version}}
       ORACLE_DOCKER_IMAGE: gvenzl/oracle-free:23-slim-faststart
+      SERVICE_NAME: FREEPDB1
 
     runs-on: ubuntu-latest
     strategy:
