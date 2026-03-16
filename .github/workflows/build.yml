@@ -24,7 +24,7 @@ jobs:
 
     services:
       oracle:
-        image: gvenzl/oracle-free:23-slim-faststart
+        image: gvenzl/oracle-free:21-slim
         env:
           ORACLE_PASSWORD: oracle
         ports:
